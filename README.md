@@ -2,15 +2,22 @@
 
 ## Installation
 1. Install Python 3
-2. Install python3-venv
+2. Install the following packages:
+  - python3-venv
+  - python3-dev
+  - build-essentials
+  - libpq-dev
 3. Clone the repository
-4. Run `source source_me.sh`
-5. Run `pip install --upgrade pip` to make sure that pip is running the latest version
-6. Run `pip install -r requirements.txt`
-7. Use `cd registrationSystem` to enter the website directory
-8. Run `./manage.py migrate` to setup the database structure
-9. Run `./manage.py createsuperuser` to add a new admin user
-10. Run `./manage.py runserver` to start your local server
+4. Copy the file `.env-template` and name the copy `.env`
+5. Fill in the necessary variables in `.env`
+6. Clone the repository
+7. Run `source source_me.sh`
+8. Run `pip install --upgrade pip` to make sure that pip is running the latest version
+9. Run `pip install -r requirements.txt`
+10. Use `cd registrationSystem` to enter the website directory
+11. Run `./manage.py migrate` to setup the database structure
+12. Run `./manage.py createsuperuser` to add a new admin user
+13. Run `./manage.py runserver` to start your local server
 
 You can now visit `localhost:8000` and login with the user created in the previous steps
 
