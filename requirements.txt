@@ -4,4 +4,4 @@ Django[argon2]==3.1.1
 psycopg2==2.8.6
 
 # Logging to sentry
-sentry-sdk==0.17.4
+sentry-sdk==0.17.8
