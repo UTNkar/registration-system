@@ -1,0 +1,43 @@
+{% if msg %}
+<script>
+    alert('{{msg}}')
+</script>
+{% endif %} {% load static %}
+
+<html lang="en">
+<html>
+{% include "head.html" %}
+
+<body>
+    <main class="flex-container-start-page">
+        <div class="images-container">
+            <img src="{% static 'images/forsränning.png' %}" id="forsranning">
+            <img src="{% static 'images/arr_av_utn.png' %}" id="arr">
+        </div>
+        <div class="form-container">
+            <h1>
+                Anmälan är öppen!
+            </h1>
+            <form method="POST" action="{% url 'start' %}" class="event-form"></form>
+            <div id="flex-container-content">
+                <div class="content">
+                    Namn <br> {{ form.name }}
+                </div>
+                <div class="content">
+                    E-mail <br> {{ form.email }}
+                </div>
+            </div>
+            <div id="flex-container-content">
+                <div class="content">
+                    Personnummer <br> {{ form.personnr }}
+                </div>
+            </div>
+            </form>
+            <button>
+                Skicka in
+            </button>
+        </div>
+    </main>
+</body>
+
+</html>
