@@ -3,6 +3,7 @@ from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 
+
 class InterestCheck(models.Model):
     """
     Interest checks start out as unconfirmed, and once
@@ -20,7 +21,8 @@ class InterestCheck(models.Model):
     Those pending can also become declined, stopping them from further
     reapplying.
     """
-    CHOICES   = (
+
+    CHOICES = (
         ("mail unconfirmed", "Mail-Unconfirmed"),
         ("mail confirmed", "Mail-Confirmed"),
         ("won", "Won"),
@@ -29,44 +31,56 @@ class InterestCheck(models.Model):
         ("pending", "Pending"),
         ("declined", "Declined")
     )
+
     name      = models.CharField(max_length=254)
     email     = models.EmailField()
     personnr  = models.CharField(max_length=13)
     status    = models.CharField(max_length=20, choices=CHOICES)
 
+
 class AbstractUser(AbstractBaseUser):
-    namn              = models.CharField(max_length=254)
-    mail              = models.EmailField()
-    password          = models.CharField(max_length=254)
+    namn = models.CharField(max_length=254)
+    mail = models.EmailField()
+    password = models.CharField(max_length=254)
     # TODO: These are not showing up when creating
     # a user through the admin interface.
     # Investigate if the fields exist in the database.
     phone_nr          = models.CharField(max_length=20)
     personnr          = models.CharField(max_length=13)
     is_utn_member     = models.BooleanField()
-    belongs_to_group  = models.ForeignKey("Group", on_delete=models.SET_NULL, null=True)
+    belongs_to_group = models.ForeignKey(
+        "Group",
+        on_delete=models.SET_NULL,
+        null=True
+    )
 
     class Meta():
         abstract = True
+
 
 class User(AbstractUser):
     pass
 
+
 class RiverraftingUser(User):
     pass
 
+
 class AbstractGroup(models.Model):
-    leader    = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
-    name      = models.CharField(max_length=254, blank=True)
+    leader = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
+    name = models.CharField(max_length=254, blank=True)
 
     class Meta():
         abstract = True
 
+
 class Group(AbstractGroup):
     pass
 
+
 class RiverraftingGroup(Group):
     pass
+
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)
