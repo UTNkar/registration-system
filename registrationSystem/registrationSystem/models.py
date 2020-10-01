@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
-from registrationSystem.fields import PersonNumberField, PhoneNumberField
 
 
 class InterestCheck(models.Model):
@@ -32,10 +31,10 @@ class InterestCheck(models.Model):
         ("declined", "Declined")
     )
 
-    name      = models.CharField(max_length=254)
-    email     = models.EmailField()
-    personnr  = models.CharField(max_length=13)
-    status    = models.CharField(max_length=20, choices=CHOICES)
+    name = models.CharField(max_length=254)
+    email = models.EmailField()
+    personnr = models.CharField(max_length=13)
+    status = models.CharField(max_length=20, choices=CHOICES)
 
 
 class AbstractUser(AbstractBaseUser):
@@ -45,9 +44,9 @@ class AbstractUser(AbstractBaseUser):
     # TODO: These are not showing up when creating
     # a user through the admin interface.
     # Investigate if the fields exist in the database.
-    phone_nr          = models.CharField(max_length=20)
-    personnr          = models.CharField(max_length=13)
-    is_utn_member     = models.BooleanField()
+    phone_nr = models.CharField(max_length=20)
+    personnr = models.CharField(max_length=13)
+    is_utn_member = models.BooleanField()
     belongs_to_group = models.ForeignKey(
         "Group",
         on_delete=models.SET_NULL,
