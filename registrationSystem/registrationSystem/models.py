@@ -12,8 +12,12 @@ class InterestCheck(models.Model):
     lost or won states. Those who have won are done; those who have lost
     can reapply and then enter the reapplying state.
 
-    Those who reapply can also win or lose, repeating the pattern.
-    Reapplicants can also become declined, stopping them from further
+    Those who reapply can also win or lose. Reapplicants who win enter the
+    pending state, where they can win once they claim their spot.
+
+    Reapplicants who lose can reapply again, repeating the cycle.
+
+    Those pending can also become declined, stopping them from further
     reapplying.
     """
     CHOICES   = (
@@ -22,6 +26,7 @@ class InterestCheck(models.Model):
         ("won", "Won"),
         ("lost", "Lost"),
         ("reapplying", "Reapplying"),
+        ("pending", "Pending"),
         ("declined", "Declined")
     )
     namn      = models.CharField(max_length=254)
