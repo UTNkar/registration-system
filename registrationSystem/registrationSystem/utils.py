@@ -1,5 +1,6 @@
 from django.core import validators
 
+
 # TODO: Change regex to only support YYYYMMDD-XXXX
 class SSNValidator(validators.RegexValidator):
     century = r'[1-2][0|9]'  # YY-- Only allows 19-- and 20--
@@ -20,5 +21,5 @@ class SSNValidator(validators.RegexValidator):
 
         super(SSNValidator, self).__init__(
             regex=regex_pattern,
-            message=_('Use the format YYYYMMDD-XXXX.')
+            message='Use the format YYYYMMDD-XXXX.'
         )
