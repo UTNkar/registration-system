@@ -13,6 +13,12 @@ Postgresql is the database management system (DBMS) used by the registration sys
 5. Run this command to start postgres automatically on startup `launchctl load ~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist`. 
 **NOTE** the path `~/Library/LaunchAgents/homebrew.mxcl.postgresql.plist` might be different on your computer! Dubblecheck if it is different!
 
+You might have to add the following lines to your .zprofile
+```
+    export LDFLAGS="-L/usr/local/opt/openssl/lib"
+    export CPPFLAGS="-I/usr/local/opt/openssl/include"
+```
+
 ### Ubuntu
 
 Follow the installation instructions on [postgresql's website](https://www.postgresql.org/download/linux/ubuntu/)
