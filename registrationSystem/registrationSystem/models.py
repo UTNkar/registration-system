@@ -33,25 +33,29 @@ class InterestCheck(models.Model):
 
     name = models.CharField(max_length=254)
     email = models.EmailField()
-    personnr = models.CharField(max_length=13)
+    person_nr = models.CharField(max_length=13)
     status = models.CharField(max_length=20, choices=CHOICES)
 
 
 class AbstractUser(AbstractBaseUser):
-    namn = models.CharField(max_length=254)
-    mail = models.EmailField()
+    name = models.CharField(max_length=254)
+    email = models.EmailField()
     password = models.CharField(max_length=254)
-    # TODO: These are not showing up when creating
-    # a user through the admin interface.
-    # Investigate if the fields exist in the database.
     phone_nr = models.CharField(max_length=20)
-    personnr = models.CharField(max_length=13)
+    person_nr = models.CharField(max_length=13)
     is_utn_member = models.BooleanField()
     belongs_to_group = models.ForeignKey(
         "Group",
         on_delete=models.SET_NULL,
         null=True
     )
+
+    USERNAME_FIELD = "person_nr"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["name", "email", "phone_nr", "is_utn_member"]
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.person_nr)
 
     class Meta():
         abstract = True
@@ -66,8 +70,15 @@ class RiverraftingUser(User):
 
 
 class AbstractGroup(models.Model):
-    leader = models.ForeignKey("User", on_delete=models.SET_NULL, null=True)
+    leader = models.ForeignKey("User",
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               blank=True)
+
     name = models.CharField(max_length=254, blank=True)
+
+    def __str__(self):
+        return '{} ({})'.format(self.name, self.leader.name, )
 
     class Meta():
         abstract = True
