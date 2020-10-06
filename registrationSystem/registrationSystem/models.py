@@ -56,7 +56,7 @@ class AbstractUser(AbstractBaseUser):
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.person_nr)
-    
+
     class Meta():
         abstract = True
 
@@ -70,12 +70,16 @@ class RiverraftingUser(User):
 
 
 class AbstractGroup(models.Model):
-    leader = models.ForeignKey("User", on_delete=models.SET_NULL, null=True, blank=True)
+    leader = models.ForeignKey("User",
+                               on_delete=models.SET_NULL,
+                               null=True,
+                               blank=True)
+
     name = models.CharField(max_length=254, blank=True)
 
     def __str__(self):
         return '{} ({})'.format(self.name, self.leader.name, )
-    
+
     class Meta():
         abstract = True
 
