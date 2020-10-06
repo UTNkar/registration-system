@@ -2,16 +2,13 @@
 
 ## Installation
 1. Install Python 3
+2. [Install postgresql](INSTALLING_POSTGRES.md)
 2. Install the following packages:
   - python3-venv
   - python3-dev
   - build-essentials
   - libpq-dev
-3. On mac you might have to add the following lines to your .zprofile
-```
-    export LDFLAGS="-L/usr/local/opt/openssl/lib"
-    export CPPFLAGS="-I/usr/local/opt/openssl/include"
-```
+
 3. Clone the repository
 4. Copy the file `.env-template` and name the copy `.env`
 5. Fill in the necessary variables in `.env`
