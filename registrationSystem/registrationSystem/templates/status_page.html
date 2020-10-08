@@ -1,0 +1,17 @@
+{% if msg %}
+<script>
+    alert('{{msg}}')
+</script>
+{% endif %} {% load static %}
+
+<html lang="en">
+<html>
+{% include "head.html" %}
+
+<body>
+    <main class="flex-container-status">
+        {{interest_user.name}}
+    </main>
+</body>
+
+</html>
