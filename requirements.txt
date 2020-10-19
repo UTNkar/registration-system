@@ -4,7 +4,7 @@ Django[argon2]==3.1.2
 psycopg2==2.8.6
 
 # Logging to sentry
-sentry-sdk==0.18.0
+sentry-sdk==0.19.0
 
 # Phonenumber validation
 phonenumbers==8.12.11
