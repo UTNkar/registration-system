@@ -7,7 +7,7 @@ def create_account(request, uid):
     context = {
         # 'uid':
         'name': user.name,
-        'personnummer': user.person_nr,
+        'person_nr': user.person_nr,
         'email': user.email
     }
     return render(request, 'registrationSystem/create_account.html', context)
