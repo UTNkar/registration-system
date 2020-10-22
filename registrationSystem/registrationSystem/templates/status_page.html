@@ -10,7 +10,12 @@
 
 <body>
     <main class="flex-container-status">
-        {{ request.session.id }}
+        <div class="form-container">
+            {{ interest_check_obj.name }}!
+            <div>
+                !!{{ interest_check_obj.status }}!! Vi har skickat ett mail till {{ interest_check_obj.email}}
+            </div>
+        </div>
     </main>
 </body>
 

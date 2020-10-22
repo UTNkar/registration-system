@@ -14,34 +14,15 @@
             <img src="{% static 'images/forsränning.png' %}" id="forsranning">
             <img src="{% static 'images/arr_av_utn.png' %}" id="arr">
         </div>
-        <div class="form-container">
-            <h1>
-                Anmälan är öppen!
-            </h1>
-            <form method="post">
-                {% csrf_token %} {{ form.errors }}
-
-                <div id="flex-container-content">
-                    <div class="content">
-                        Namn <br> {{ form.name }}
-                    </div>
-                    <div class="content">
-                        E-mail <br> {{ form.email }}
-                    </div>
-                </div>
-                <div id="flex-container-content">
-                    <div class="content">
-                        Personnummer <br> {{ form.personnr }}
-                    </div>
-                </div>
-
-                <button>
-                    <a class="button" type="submit" value="Submit">
-                        OK
-                    </a>
-                </button>
-            </form>
-        </div>
+        <h1>
+            Anmälan är öppen!
+        </h1>
+        <form method="post">
+            {% csrf_token %} {{ form.errors }} Namn <br> {{ form.name }} <br> E-mail <br> {{ form.email }} <br> Personnummer <br> {{ form.personnr }} <br>
+            <button type="submit" value="Submit">
+                OK
+            </button>
+        </form>
     </main>
 </body>
 
