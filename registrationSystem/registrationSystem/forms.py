@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from registrationSystem.models import InterestCheck
+from registrationSystem.models import InterestCheck, RiverraftingUser
 
 
 class InterestCheckForm(ModelForm):
@@ -7,4 +7,13 @@ class InterestCheckForm(ModelForm):
         model = InterestCheck
         fields = ['name',
                   'email',
-                  'personnr']
+                  'person_nr']
+
+
+class CreateAccountForm(ModelForm):
+    class Meta:
+        model = RiverraftingUser
+        fields = [  'name',
+                    'person_nr',
+                    'email',
+                    'password']
