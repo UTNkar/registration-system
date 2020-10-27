@@ -5,28 +5,37 @@ from django.contrib.auth.models import AbstractBaseUser
 
 class InterestCheck(models.Model):
     """
-    Interest checks start out as unconfirmed, and once
-    the mail has been confirmed checks progress in to the confirmed status.
+    Interest checks start out as 'mail unconfirmed', and once
+    the mail has been confirmed, they progress to "In the raffle".
 
-    Once a raffle has been held, an interest check can enter either the
-    lost or won states. Those who have won are done; those who have lost
-    can reapply and then enter the reapplying state.
+    Once the first raffle has been held, an interest check, with status
+    "In the raffle" can enter either the lost or won states.
+    Those who have won will receive an email and create an account.
+    Those who have lost can reapply during the second raffle and then
+    enter "In the raffle" once again.
 
-    Those who reapply can also win or lose. Reapplicants who win enter the
-    pending state, where they can win once they claim their spot.
+    During the second raffle, interest checks that are selected in the raffle
+    enter the pending state. If the person claims their spot their status
+    is set to won. If the person does not claim their spot their status is set
+    to declined, stopping them from applying again.
 
-    Reapplicants who lose can reapply again, repeating the cycle.
+    The second raffle can also be reseted. All interest checks
+    that are in the state "In the raffle" are then set to "must reapply". If
+    a person wants to be a part of the raffle again they have to reapply
+    and will then enter the state "In the raffle" once again.
 
-    Those pending can also become declined, stopping them from further
-    reapplying.
+    When a person who has received a spot and has created an account, the
+    status of their interest check is set to confirmed so that the
+    administrators knows that the person has accepted their spot.
     """
 
     CHOICES = (
         ("mail unconfirmed", "Mail-Unconfirmed"),
-        ("mail confirmed", "Mail-Confirmed"),
+        ("in the raffle", "In the raffle"),
+        ("confirmed", "Confirmed"),
         ("won", "Won"),
         ("lost", "Lost"),
-        ("reapplying", "Reapplying"),
+        ("must reapply", "Must reapply"),
         ("pending", "Pending"),
         ("declined", "Declined")
     )
