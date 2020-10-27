@@ -1,8 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from registrationSystem.models import InterestCheck
+from registrationSystem.models import InterestCheck, Group, User
 from registrationSystem.forms import InterestCheckForm
-
 
 def start(request):
     if request.POST:
@@ -36,3 +35,9 @@ def status(request):
     return render(request,
                   "status_page.html",
                   {"interest_check_obj": interest_check_obj})
+
+def overview(request):
+    fields = User._meta.get_fields()
+    return render(request,
+                  "overview.html",
+                  {"fields": fields})

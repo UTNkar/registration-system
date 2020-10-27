@@ -38,16 +38,18 @@ class InterestCheck(models.Model):
 
 
 class AbstractUser(AbstractBaseUser):
-    name = models.CharField(max_length=254)
-    email = models.EmailField()
-    password = models.CharField(max_length=254)
-    phone_nr = models.CharField(max_length=20)
-    person_nr = models.CharField(max_length=13)
-    is_utn_member = models.BooleanField()
+    name = models.CharField(max_length=254, verbose_name='Name')
+    email = models.EmailField(verbose_name='Email')
+    password = models.CharField(max_length=254, verbose_name='Password')
+    phone_nr = models.CharField(max_length=20, verbose_name='Phone number')
+    person_nr = models.CharField(max_length=13, verbose_name='Person number')
+    is_utn_member = models.BooleanField(verbose_name='UTN Member')
     belongs_to_group = models.ForeignKey(
         "Group",
         on_delete=models.SET_NULL,
-        null=True
+        null=True,
+        blank=True,
+        verbose_name='Group'
     )
 
     USERNAME_FIELD = "person_nr"
@@ -90,7 +92,6 @@ class Group(AbstractGroup):
 
 class RiverraftingGroup(Group):
     pass
-
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)

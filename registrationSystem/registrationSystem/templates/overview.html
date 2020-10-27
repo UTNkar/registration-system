@@ -1,0 +1,30 @@
+<html lang="en">
+<html>
+  {% include "head.html" %}
+
+  <body>
+    <main class="flex-container-start-page">
+      <h1>
+        Forsränningen 2020
+      </h1>
+      <div class="team-information">
+        <h3>
+          { <!-- team name --> }
+        </h3>
+
+        <!--
+            !-- These should be based on model attributes for
+            !-- extensibility, but hard coded for now.
+          -->
+
+        {% for field in fields %}
+        {{ field.verbose_name }}
+        {% endfor %}
+
+        <!-- osv -->
+
+      </div>
+    </main>
+  </body>
+
+</html>
