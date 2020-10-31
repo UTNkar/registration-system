@@ -11,6 +11,8 @@ class InterestCheckForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
+    password_check = CharField( widget=PasswordInput(),
+                                label='Bekräfta ditt lösenord'  )
     class Meta:
         model = RiverraftingUser
         fields = [  'name',
@@ -20,8 +22,9 @@ class CreateAccountForm(ModelForm):
 
         labels = {  'name': 'Namn',
                     'person_nr': 'Personnummer',
-                    'email': 'E-postadress' }
+                    'email': 'E-postadress',
+                    'password': 'Välj ett lösenord' }
 
         widgets = { 'name': TextInput(attrs={'disabled': True}),
                     'person_nr': TextInput(attrs={'disabled': True}),
-                    'email': EmailInput(attrs={'disabled': True}) }
+                    'password': PasswordInput(), }
