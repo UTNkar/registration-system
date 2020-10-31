@@ -1,0 +1,32 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<div class="info-container">
+    <h1 id="welcome-text">
+        Welcome to the River Rafting!
+    </h1>
+    <h2>
+        Sign in to your account with email address and password.
+    </h2>
+</div>
+<form action="/login/" method="post">
+    {% csrf_token %}
+    <div class="input-container">
+        <div class="input-div">
+            <input type="text" id="email" name="email" required />
+            <label class="form-control-label" for="email">E-mail address</label>
+        </div>
+
+        <div class="input-div">
+            <input type="password" id="password" name="password" maxlength="10" />
+            <label class="form-control-label" for="password">Password</label>
+        </div>
+    </div>
+    <div class="raft-redirect">
+        Don't have a raft yet? &nbsp;
+        <a href="{% url 'register' %}">Click here.</a>
+    </div>
+    <div class=" button-container ">
+        <button type="submit " value="Submit ">Sign in</button>
+    </div>
+</form>
+
+{% endblock %}

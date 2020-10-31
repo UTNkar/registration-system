@@ -1,0 +1,60 @@
+.info-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-div {
+    position: relative;
+    min-height: 3.5em;
+}
+
+input {
+    height: 5em;
+    width: 100%;
+    background-color: white !important;
+    border: 2px solid #C4C4C4;
+    border-radius: 0.6em;
+    padding-left: 0.5em;
+    padding-bottom: 0;
+    margin-bottom: 1em;
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid black;
+}
+
+label.form-control-label {
+    position: absolute;
+    font-size: 1em;
+    top: 0.5em;
+    left: 0.5em;
+    color: #C4C4C4;
+}
+
+input:focus+label {
+    color: black;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+.raft-redirect {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2em;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (min-width: 600px) {}
