@@ -6,10 +6,10 @@ from django.contrib.auth.models import AbstractBaseUser
 class InterestCheck(models.Model):
     """Interest checks start out as unconfirmed, and once the mail has
     been confirmed, the Interest check is considered active and
-    "waiting" to receive a spot .
+    "waiting" to receive a spot.
 
     Once a raffle has been held, a "waiting" interest check is moved
-    to either the lost or won states. Those who have won are can then
+    to either the lost or won states. Those who have won can then
     decide to accept their spot and move into the "accepted" state, or
     decline and move to the "declined" state.
 
