@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TextInput, EmailInput
+from django.forms import ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError
 from registrationSystem.models import InterestCheck, RiverraftingUser
 
 
@@ -11,6 +11,17 @@ class InterestCheckForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
+    def clean_password_check(self):
+        password = self.cleaned_data.get('password')
+        password_check = self.cleaned_data.get('password_check')
+
+        if not password_check:
+            raise ValidationError("Du måste bekräfta ditt lösenord!")
+        if password != password_check:
+            raise ValidationError("Lösenorden matchar inte!")
+        return password_check
+
+
     password_check = CharField( widget=PasswordInput(),
                                 label='Bekräfta ditt lösenord'  )
     class Meta:

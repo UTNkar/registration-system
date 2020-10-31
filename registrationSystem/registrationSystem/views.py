@@ -20,8 +20,10 @@ def received(request):
     received_form = CreateAccountForm(request.POST)
     if received_form.is_valid():
         data = received_form.cleaned_data
-        print(data)
+        del data['password_check']
         RiverraftingUser.objects.create(**data, is_utn_member=True)
+    else:
+        print('NOT VALID')
 
     context = {
         'name': request.POST.get('name'),
