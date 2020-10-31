@@ -1,16 +1,28 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.urls import reverse
 from registrationSystem.models import InterestCheck
 from registrationSystem.forms import InterestCheckForm
 
 
-def login(request):
+def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
         return redirect('/raft_info')
     else:
         return render(request, "login_page.html")
+
+
+def login_user(request):
+    uname = request.POST.get('username')
+    passw = request.POST.get("pass")
+    user = authenticate(request, username=uname, password=passw)
+    if user is not None:
+        login(request, user)
+        return redirect('/')
+    else:
+        return redirect('/raft_info')
 
 
 @login_required
@@ -41,19 +53,18 @@ def status(request):
 
     if interest_check_obj.status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
-    elif interest_check_obj.status == "mail confirmed":
-        template = "mail_confirmed.html"
+    elif interest_check_obj.status == "waiting":
+        template = "waiting.html"
     elif interest_check_obj.status == "won":
         template = "won.html"
     elif interest_check_obj.status == "lost":
         template = "lost.html"
-    elif interest_check_obj.status == "reapplying":
-        template = "reapplying.html"
-    elif interest_check_obj.status == "pending":
-        template = "pending.html"
+    elif interest_check_obj.status == "accepted":
+        template = "accepted.html"
     elif interest_check_obj.status == "declined":
         template = "declined.html"
 
     return render(request,
                   "status/" + template,
                   {"interest_check_obj": interest_check_obj})
+
