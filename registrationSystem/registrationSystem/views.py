@@ -1,10 +1,24 @@
 from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from registrationSystem.models import InterestCheck
 from registrationSystem.forms import InterestCheckForm
 
 
-def start(request):
+def login(request):
+    current_user = request.user
+    if current_user.is_authenticated:
+        return redirect('/raft_info')
+    else:
+        return render(request, "login_page.html")
+
+
+@login_required
+def raft_info(request):
+    return render(request, "raft_info.html")
+
+
+def register(request):
     if request.POST:
         form = InterestCheckForm(request.POST)
 
@@ -18,7 +32,7 @@ def start(request):
             return redirect(reverse('status'))
     else:
         form = InterestCheckForm()
-    return render(request, "start_page.html", {'form': form})
+    return render(request, "register_page.html", {'form': form})
 
 
 def status(request):
