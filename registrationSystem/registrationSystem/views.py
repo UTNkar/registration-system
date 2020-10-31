@@ -7,15 +7,12 @@ def create_account(request, uid):
     user = get_object_or_404(InterestCheck, id=uid)
                                     'email': user.email })
     context = {
-        # 'uid':
-        'form': form,
-        # 'name': user.name,
-        # 'person_nr': user.person_nr,
-        # 'email': user.email
+        'uid': uid,
+        'form': form
     }
     return render(request, 'registrationSystem/create_account.html', context)
 
-def received(request):
+def received(request, uid):
     print(request.POST)
     received_form = CreateAccountForm(request.POST)
     if received_form.is_valid():
