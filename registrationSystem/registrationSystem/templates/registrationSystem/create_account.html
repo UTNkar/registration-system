@@ -9,8 +9,8 @@
     <p>Om någon av dina uppgifter inte stämmer, klicka <a href="">här</a> </p>
     <p>Här är context: {{name}}, {{person_nr}}, {{email}}</p>
 
-    <form action="" method="POST">
-        {{form}}
+    <form action="/received/" method="POST">
+        {% csrf_token %}
         <!-- <label for="name">Namn</label>
         <input  type="text" id="name" name="name" value="{{name}}" disabled><br>
 

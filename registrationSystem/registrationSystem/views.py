@@ -14,3 +14,18 @@ def create_account(request, uid):
         # 'email': user.email
     }
     return render(request, 'registrationSystem/create_account.html', context)
+
+def received(request):
+    print(request.POST)
+    received_form = CreateAccountForm(request.POST)
+    if received_form.is_valid():
+        data = received_form.cleaned_data
+        print(data)
+        RiverraftingUser.objects.create(**data, is_utn_member=True)
+
+    context = {
+        'name': request.POST.get('name'),
+        'email': request.POST.get('email'),
+        'person_nr': request.POST.get('person_nr')
+    }
+    return render(request, 'registrationSystem/temp.html', context)
