@@ -34,6 +34,7 @@ class InterestCheck(models.Model):
     name = models.CharField(max_length=254)
     email = models.EmailField()
     person_nr = models.CharField(max_length=13)
+    is_utn_member = models.BooleanField(default=False)
     status = models.CharField(max_length=20, choices=CHOICES)
 
 
@@ -43,7 +44,7 @@ class AbstractUser(AbstractBaseUser):
     password = models.CharField(max_length=254)
     phone_nr = models.CharField(max_length=20)
     person_nr = models.CharField(max_length=13)
-    is_utn_member = models.BooleanField()
+    is_utn_member = models.BooleanField(default=False)
     belongs_to_group = models.ForeignKey(
         "Group",
         on_delete=models.SET_NULL,
@@ -86,6 +87,7 @@ class AbstractGroup(models.Model):
 
 class Group(AbstractGroup):
     pass
+
 
 
 class RiverraftingGroup(Group):
