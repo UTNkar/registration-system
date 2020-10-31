@@ -7,6 +7,15 @@
 <html lang="en">
 <html>
 {% include "head.html" %}
+
 <body>
-    {% block content %}{% endblock %}
+    <header>
+        <img src="{% static 'images/forsränning.png' %}" id="forsranning">
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
+    </footer>
 </body>
