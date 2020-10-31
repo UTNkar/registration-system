@@ -8,10 +8,10 @@ class InterestCheck(models.Model):
     been confirmed, the Interest check is considered active and
     "waiting" to receive a spot .
 
-    Once a raffle has been held, a waiting interest check can enter
-    either the lost or won states. Those who have won are can then
+    Once a raffle has been held, a "waiting" interest check is moved
+    to either the lost or won states. Those who have won are can then
     decide to accept their spot and move into the "accepted" state, or
-    decline and move to the "declined" state. 
+    decline and move to the "declined" state.
 
     If a new raffle is held, those who have "lost" can choose to move back
     into the "waiting" state to join another round of the raffle.
@@ -21,7 +21,6 @@ class InterestCheck(models.Model):
     declined yet), they are moved to the lost state and are allowed to
     join the raffle again by transitioning to the "waiting" state,
     should they choose to.
-
     """
 
     CHOICES = (
