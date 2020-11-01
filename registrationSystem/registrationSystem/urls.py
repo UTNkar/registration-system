@@ -17,7 +17,6 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
-app_name = 'registrationSystem'
 urlpatterns = [
     path('create_account/<str:uid>', views.create_account, name='create_account'),
     path('temp/', views.temp, name='temp'),
