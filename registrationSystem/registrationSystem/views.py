@@ -38,7 +38,7 @@ def register(request):
             interest_check_obj, _ = InterestCheck.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                personnr=form.cleaned_data['personnr'],
+                person_nr=form.cleaned_data['person_nr'],
             )
             request.session['interest_check_id'] = interest_check_obj.id
             return redirect(reverse('status'))
