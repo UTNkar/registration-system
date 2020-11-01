@@ -28,7 +28,8 @@ class InterestCheck(models.Model):
         ("lost", "Lost"),
         ("reapplying", "Reapplying"),
         ("pending", "Pending"),
-        ("declined", "Declined")
+        ("declined", "Declined"),
+        ("confirmed", "Confirmed")
     )
 
     name = models.CharField(max_length=254)
