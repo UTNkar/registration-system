@@ -5,10 +5,14 @@ from .forms import CreateAccountForm
 
 def create_account(request, uid):
     user = get_object_or_404(InterestCheck, id=uid)
-    form = CreateAccountForm(request.POST or None)
-    # initial={  'name': user.name,
-    #                                                     'person_nr': user.person_nr,
-    #                                                     'email': user.email }   )
+
+    if request.method == "POST":
+        form = CreateAccountForm(request.POST)
+    else:
+        form = CreateAccountForm(initial={ 'name': user.name, 'person_nr': user.person_nr, 'email': user.email })
+        # Doing it this way avoids triggering validation errors since the password fields are not
+        # initially filled.
+        # Initializing form = CreateAccountForm(request.POST or initial={...}) triggers the errors.
 
     if form.is_valid():
         # Linus jobbar på en lösning för att automatiskt hasha alla lösenord i databasen.
