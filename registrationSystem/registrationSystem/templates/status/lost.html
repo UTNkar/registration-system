@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<h2>Du har inte fått en plats :( Snart kan du klicka på knappen nedan för att vara med i utlottningen igen!</h2>
-<button>KNAPP</button>
+<h2>Du har inte fått en plats :( Snart (när knappen är röd) kan du klicka på knappen nedan för att vara med i utlottningen igen!</h2>
+<div>
+    {% comment %} TODO gör riktig variabel button {% endcomment %}
+    {% if not button %}
+    {% comment %} {% if button %} {% endcomment %}
+        <button>
+            <a class="button-link" href="{% url 'reapply' %}">Jag vill vara med i utlottningen!</a>
+        </button>
+    {% else %}
+        <button class="inactive-button">
+            Snart går det att klicka här!
+        </button>
+    {% endif %}
+</div>
 {% endblock %}

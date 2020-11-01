@@ -1,5 +1,13 @@
-{% extends "base.html" %}
-{% load static %}
-{% block content %}
+{% extends "base.html" %} {% load static %} {% block content %}
 <h2>Du har fått en plats!!</h2>
+<div>
+    {% comment %} TODO gör riktig variabel manual_approval {% endcomment %}
+    {% if manual_approval %}
+        Gå och bekräfta din plats!
+    {% else %}
+        <button>
+            <a class="button-link" href="{% url 'accepted' %}">I accept my spot!</a>
+        </button>
+    {% endif %}
+</div>
 {% endblock %}

@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block content %}
-<h2>Vi har skickat ett mail till {{ interest_check_obj.email }} </h2>
+<h2>Vi har skickat ett mail till {{ interest_check_obj.email }}. Inte fått något mail? &nbsp;
+    {% comment %} TODO! skriv riktig länk {% endcomment %}
+    <a href="{% url 'sign_in' %}">Klicka här.</a> </h2>
 {% endblock %}

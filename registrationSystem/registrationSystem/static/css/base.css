@@ -69,6 +69,11 @@ button {
     border-radius: 5em;
 }
 
+.button-link {
+    text-decoration: none;
+    color: white;
+}
+
 #forsranning {
     width: 85%;
 }

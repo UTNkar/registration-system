@@ -21,6 +21,8 @@ urlpatterns = [
     path('', views.sign_in, name='sign_in'),
     path('register/', views.register, name='register'),
     path('status/', views.status, name='status'),
+    path('accepted/', views.accepted, name='accepted'),
+    path('reapply/', views.reapply, name='reapply'),
     path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
 ]
