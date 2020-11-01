@@ -17,14 +17,14 @@ class CreateAccountForm(ModelForm):
         password_check = self.cleaned_data.get('password_check')
 
         if not password_check:
-            raise ValidationError("Du måste bekräfta ditt lösenord!")
+            raise ValidationError("You must confirm you password!")
         if password != password_check:
-            raise ValidationError("Lösenorden matchar inte!")
+            raise ValidationError("The passwords do not match!")
         return password_check
 
 
     password_check = CharField( widget=PasswordInput(),
-                                label='Bekräfta ditt lösenord'  )
+                                label='Confirm your password'  )
     class Meta:
         model = RiverraftingUser
         fields = [  'name',
@@ -32,10 +32,10 @@ class CreateAccountForm(ModelForm):
                     'email',
                     'password' ]
 
-        labels = {  'name': 'Namn',
-                    'person_nr': 'Personnummer',
-                    'email': 'E-postadress',
-                    'password': 'Välj ett lösenord' }
+        labels = {  'name': 'Full name',
+                    'person_nr': 'Social security number',
+                    'email': 'E-mail address',
+                    'password': 'Choose a password' }
 
         widgets = {
                     'name': TextInput(attrs={'readonly': 'readonly'}),

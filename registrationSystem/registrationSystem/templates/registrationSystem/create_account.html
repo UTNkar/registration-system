@@ -9,9 +9,9 @@
 </head>
 <body>
     <div class="wrapper">
-    <h1>Registrera ditt konto</h1>
-    <h2>Kontrollera dina uppgifter och välj ett lösenord</h2>
-    <p>Om någon av dina uppgifter inte stämmer, klicka <a href="">här</a> </p>
+    <h1>Register your account</h1>
+    <h2>Make sure your information is correct and choose a password.</h2>
+    <p>If any of your information is incorrect, click <a href="">here</a></p>
 
     <form action="{% url 'create_account' uid %}" method="POST">
         {% csrf_token %}
