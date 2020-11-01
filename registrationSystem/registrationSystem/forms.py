@@ -37,6 +37,8 @@ class CreateAccountForm(ModelForm):
                     'email': 'E-postadress',
                     'password': 'Välj ett lösenord' }
 
-        widgets = { 'name': TextInput(attrs={'disabled': True}),
-                    'person_nr': TextInput(attrs={'disabled': True}),
+        widgets = {
+                    'name': TextInput(attrs={'disabled': True }),
+                    'person_nr': TextInput(attrs={'disabled': True }),
+                    'email': EmailInput(attrs={'disabled': True }),
                     'password': PasswordInput(), }

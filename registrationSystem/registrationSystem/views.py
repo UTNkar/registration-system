@@ -17,9 +17,12 @@ def create_account(request, uid):
     if form.is_valid():
         # Linus jobbar på en lösning för att automatiskt hasha alla lösenord i databasen.
         # Den här funktionen behöver i nuläget inte hasha själv!
-        data = form.cleaned_data
-        del data['password_check'] # Creating the user from data gives error if included since it matches no field in the model.
-        RiverraftingUser.objects.create(**data, is_utn_member=True)
+        password = form.cleaned_data['password']
+        RiverraftingUser.objects.create(name=user.name,
+                                        email=user.email,
+                                        person_nr=user.person_nr,
+                                        password=password,
+                                        is_utn_member=True)
         return HttpResponseRedirect('/temp/')
 
     context = {
