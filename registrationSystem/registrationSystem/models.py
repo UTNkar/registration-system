@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
@@ -94,3 +95,10 @@ class RiverraftingGroup(Group):
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)
+
+
+class EmailConfirmations(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    interestCheckId = models.ForeignKey(
+        "InterestCheck", on_delete=models.CASCADE
+        )
