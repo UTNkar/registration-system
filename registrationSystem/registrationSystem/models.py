@@ -139,7 +139,7 @@ class RiverraftingUser(User):
     def properties(self):
         relevants = ['Name', 'Email', 'Phone number', 'Lifevest size']
         fields = get_user_model()._meta.fields
-        return [ (field.verbose_name, getattr(self, field.name) ) for field in fields
+        return [ (field.name, field.verbose_name, getattr(self, field.name) ) for field in fields
                  if field.verbose_name in relevants ]
 
 
@@ -164,6 +164,9 @@ class Group(AbstractGroup):
 
 class RiverraftingGroup(Group):
     pass
+
+def get_group_model():
+    return RiverraftingGroup
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)

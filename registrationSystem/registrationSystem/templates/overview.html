@@ -1,6 +1,5 @@
 <html lang="en">
   {% include "head.html" %}
-
   <body>
     <main class="flex-container-start-page">
       <h1>
@@ -10,29 +9,63 @@
         <h2>
           {{ group.name }}
         </h2>
-
-        <h3>me</h3>
-        <button>edit me</button>
-        {% for name, value in user.properties %}
-        <h4>{{ name }}</h4>
-        <p>{{ value }}</p>
-        {% endfor %}
-
-
-        <h3>others</h3>
-        {% for other in others %}
-        {% for name, value in other.properties %}
-        <form>
-          <button class='edit_button'>edit me</button>
-          <h4>{{ name }}</h4>
-          <p>{{ value }}</p>
-        </form>
-        {% endfor %}
-        {% endfor %}
-        <!-- osv -->
-
       </div>
-    </main>
-  </body>
 
+      <h3>me</h3>
+      <form action="{% url 'overview' %}" method='POST'>
+        {% csrf_token %}
+        <button type='button'
+                onclick='toggleForm(this)'>Edit</button>
+        <input name="id" id="id-{{user.id}}" value="{{user.id}}" type="hidden" readonly/>
+        {% for name, pretty_name, value in user.properties %}
+        <label for="{{ name }}">{{ pretty_name }}:</label>
+        <input
+          id="{{ name }}-{{ user.id }}"
+          name="{{ name }}"
+          value="{{ value }}"
+          readonly/>
+        {% endfor %}
+      </form>
+
+
+      <h3>others</h3>
+      {% for other in others %}
+      <form action="{% url 'overview' %}" method='POST'>
+        {% csrf_token %}
+        {% if group.leader.id == user.id %}
+        <button type='button'
+                onclick='toggleForm(this)'>Edit</button>
+        <input name="id" id="id-{{other.id}}" value="{{other.id}}" type="hidden" readonly/>
+        {% endif %}
+        {% for name, pretty_name, value in other.properties %}
+        <label for="{{ prop_name }}">{{ pretty_name }}:</label>
+        <input
+          id="{{ name }}-{{ other.id }}"
+          name="{{ name }}"
+          value="{{ value }}"
+          readonly/>
+        {% endfor %}
+      </form>
+      {% endfor %}
+      <!-- osv -->
+
+</div>
+</main>
+</body>
+
+<script type="text/javascript">
+  const toggleForm = button => {
+      form = event.target.parentElement
+      formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"])');
+
+      for (const element of formElements)
+          element.toggleAttribute('readonly')
+
+      if (formElements[0] && formElements[0].readOnly) {
+          form.submit();
+      } else {
+          event.target.innerHTML = 'Save';
+      }
+  }
+</script>
 </html>

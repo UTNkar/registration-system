@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import InterestCheck, Group, User, RiverraftingUser
+from registrationSystem.models import InterestCheck, Group, User, RiverraftingUser, get_group_model
 from registrationSystem.forms import InterestCheckForm
 
 def start(request):
@@ -28,7 +28,7 @@ def start(request):
         form = InterestCheckForm(initial={'status': 'Mail-Unconfirmed'})
         print('heloa')
         print(form['status'])
-    return render(request, "start_page.html", {'form': form})
+    return render(request, "start_page.html", {'form': form })
 
 
 def status(request):
@@ -40,15 +40,24 @@ def status(request):
 
 def overview(request):
     user_model = get_user_model()
-    user = user_model.objects.get(id=2)
+    group_model = get_group_model()
+    user_id = 2 # temp
 
-    group = Group.objects.get(leader=user.id)
-    others = user_model.objects.filter(belongs_to_group=group.id)
-    editing = [false for x in others]
+    if request.method == 'POST':
+        user_id = request.user.id
+
+        req = request.POST.copy()
+
+        del req['csrfmiddlewaretoken']
+
+        user_model.objects.update_or_create(id=user_id, defaults=req)
+
+    user = user_model.objects.get(id=user_id)
+    group = Group.objects.get(id=user.belongs_to_group.id)
+    others = user_model.objects.filter(belongs_to_group=group.id).exclude(id=user_id)
 
     return render(request,
                   "overview.html",
                   { "user": user,
                     "group": group,
-                    "others": others,
-                    })
+                    "others": others, })
