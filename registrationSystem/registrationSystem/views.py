@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from .models import InterestCheck, RiverraftingUser
 from .forms import CreateAccountForm
 
 def create_account(request, uid):
     user = get_object_or_404(InterestCheck, id=uid)
-                                    'email': user.email })
+    form = CreateAccountForm(   initial={   'name': user.name,
+                                            'person_nr': user.person_nr,
+                                            'email': user.email }   )
     context = {
         'uid': uid,
         'form': form
@@ -14,8 +16,7 @@ def create_account(request, uid):
 
 
 
-def received(request, uid):
-    print(request.POST)
+def create_account_received(request, uid):
     received_form = CreateAccountForm(request.POST)
     if received_form.is_valid():
         # Linus jobbar på en lösning för att automatiskt hasha alla lösenord i databasen.
@@ -30,6 +31,7 @@ def received(request, uid):
         'uid': uid
     }
     return render(request, 'registrationSystem/create_account.html', context)
+
 
 
 def temp(request):
