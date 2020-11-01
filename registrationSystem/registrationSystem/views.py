@@ -1,6 +1,9 @@
+from django.http import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from registrationSystem.models import InterestCheck
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from registrationSystem.models import InterestCheck, EmailConfirmations
 from registrationSystem.forms import InterestCheckForm
 
 
@@ -17,16 +20,30 @@ def start(request):
             )
             status = form.cleaned_data['status']
             if not status:
-                print('pls')
+                confirmation = EmailConfirmations.objects.create(
+                  interestCheckId=interest_check_obj
+                )
+            confirmation.save()
 
-            print('heloa2')
-            print(status)
+            message = render_to_string(
+                'email/confirm_email.html',
+                {
+                    'name': interest_check_obj.name,
+                    'domain': 'localhost:8000',
+                    'token': confirmation.id,
+                }
+            )
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(
+                'Derp', message, to=[to_email]
+            )
+
+            email.send()
             request.session['interest_check_id'] = interest_check_obj.id
             return redirect(reverse('status'))
     else:
         form = InterestCheckForm(initial={'status': 'Mail-Unconfirmed'})
-        print('heloa')
-        print(form['status'])
+
     return render(request, "start_page.html", {'form': form})
 
 
@@ -36,3 +53,14 @@ def status(request):
     return render(request,
                   "status_page.html",
                   {"interest_check_obj": interest_check_obj})
+
+
+def activate(request, token):
+    try:
+        confirmation = EmailConfirmations.objects.get(pk=token)
+        user = confirmation.interestCheckId
+        # TODO Set user status to active?
+        user.save()
+        return redirect(reverse('status'))
+    except(InterestCheck.DoesNotExist):
+        return HttpResponse('Activation link is invalid!')
