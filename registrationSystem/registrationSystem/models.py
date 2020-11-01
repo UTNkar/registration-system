@@ -2,7 +2,60 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 
+class AbstractSingletonModel(models.Model):
+    """
+    Taken from
+    https://stackoverflow.com/questions/49735906/how-to-implement-singleton-in-django
+    """
+    class Meta:
+        abstract = True
 
+    def save(self, *args, **kwargs):
+        """
+        Save object to the database. Removes all other entries if there
+        are any.
+        """
+        self.__class__.objects.exclude(id=self.id).delete()
+        super(AbstractSingletonModel, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+    
+    @classmethod
+    def load(cls):
+        """
+        Load object from the database. Failing that, create a new empty
+        (default) instance of the object and return it (without saving it
+        to the database).
+        """
+        try:
+            return cls.objects.get()
+        except cls.DoesNotExist:
+            return cls()
+
+
+class RiverRaftingRaffleState(AbstractSingletonModel):
+    """The raffle state holds the state for the current raffle. The
+    raffle can be:
+    Open: The raffle is open and lost applicants can choose to join
+    Drawn: The raffle has been drawn and winners can accept or
+    decline their spot
+    Closed: The raffle is closed, winners that have not accepted are
+    moved into the lost state and losers cannot apply for another
+    round until the raffle opens again
+    """
+    class Meta:
+        verbose_name = 'The River Rafting Raffle'
+        verbose_name_plural = 'The River Rafting Raffle'
+        
+    CHOICES = (
+        ("open", "Open"),
+        ("drawn", "Drawn"),
+        ("closed", "Closed")
+    )
+    state = models.CharField(max_length=20, choices=CHOICES)
+
+    
 class InterestCheck(models.Model):
     """Interest checks start out as unconfirmed, and once the mail has
     been confirmed, the Interest check is considered active and
@@ -22,7 +75,7 @@ class InterestCheck(models.Model):
     join the raffle again by transitioning to the "waiting" state,
     should they choose to.
     """
-
+    
     CHOICES = (
         ("mail unconfirmed", "Mail-Unconfirmed"),
         ("waiting", "Waiting"),

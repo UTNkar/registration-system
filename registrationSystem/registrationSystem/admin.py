@@ -1,14 +1,21 @@
 from django.contrib import admin
-from registrationSystem.models import InterestCheck
+from registrationSystem.models import InterestCheck, RiverRaftingRaffleState
 from django.utils.html import format_html
 from django.urls import reverse, path
 from django.conf.urls import url
 from django.shortcuts import redirect
 from django.http import HttpResponseRedirect
 
+@admin.register(RiverRaftingRaffleState)
+class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
+    list_display = ["state"]
+    # Raffle system
+    change_list_template = "admin/riverraftingrafflestate/riverraftingrafflestate_changelist.html"
+
+
 @admin.register(InterestCheck)
-class RaffleAdmin(admin.ModelAdmin):
-    list_display = ["name", "status"]
+class InterestCheckAdmin(admin.ModelAdmin):
+    list_display = ["name", "status", "is_utn_member"]
     ordering = ["name"]
     actions = ["set_raffle_status_won", "set_raffle_status_lost"]
 
@@ -46,4 +53,4 @@ class RaffleAdmin(admin.ModelAdmin):
         extra_context['utn_percentage'] = "{:.0f}".format(
             self.model.objects.filter(is_utn_member=True).count() / self.model.objects.all().count() * 100
         )
-        return super(RaffleAdmin, self).changelist_view(request, extra_context=extra_context)
+        return super(InterestCheckAdmin, self).changelist_view(request, extra_context=extra_context)
