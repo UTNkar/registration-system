@@ -40,4 +40,3 @@ env.bak/
 venv.bak/
 
 .vscode/
-registrationSystem/registrationSystem/migrations/0003_auto_20201029_1801.py
