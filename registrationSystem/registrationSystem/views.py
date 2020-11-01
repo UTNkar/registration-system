@@ -23,6 +23,8 @@ def create_account(request, uid):
                                         person_nr=user.person_nr,
                                         password=password,
                                         is_utn_member=True)
+
+        InterestCheck.objects.get(id=uid).delete()
         return HttpResponseRedirect('/temp/')
 
     context = {
