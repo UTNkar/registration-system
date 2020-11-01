@@ -1,17 +1,28 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'registrationSystem/style.css' %}">
+
 <!DOCTYPE html>
 <html>
 <head>
 
 </head>
 <body>
+    <div class="wrapper">
     <h1>Registrera ditt konto</h1>
     <h2>Kontrollera dina uppgifter och välj ett lösenord</h2>
     <p>Om någon av dina uppgifter inte stämmer, klicka <a href="">här</a> </p>
 
     <form action="{% url 'create_account' uid %}" method="POST">
         {% csrf_token %}
-        {{ form }}
+        {% for field in form.visible_fields %}
+            <div class=input-container>
+                <p class=label>{{ field.label }}</p>
+                {{ field }}
+            </div>
+        {% endfor %}
         <input type="submit" value="Registrera">
     </form>
+    </div>
 </body>
 </html>
