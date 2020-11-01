@@ -12,7 +12,7 @@ def start(request):
             interest_check_obj, _ = InterestCheck.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                personnr=form.cleaned_data['personnr'],
+                person_nr=form.cleaned_data['person_nr'],
                 status=form.cleaned_data['status']
             )
             status = form.cleaned_data['status']
