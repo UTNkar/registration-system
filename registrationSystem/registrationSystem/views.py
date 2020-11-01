@@ -1,6 +1,8 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from registrationSystem.models import InterestCheck, Group, User
+from django.contrib.sites.models import Site
+from django.contrib.auth import get_user_model
+from registrationSystem.models import InterestCheck, Group, User, RiverraftingUser
 from registrationSystem.forms import InterestCheckForm
 
 def start(request):
@@ -37,7 +39,16 @@ def status(request):
                   {"interest_check_obj": interest_check_obj})
 
 def overview(request):
-    fields = User._meta.get_fields()
+    user_model = get_user_model()
+    user = user_model.objects.get(id=2)
+
+    group = Group.objects.get(leader=user.id)
+    others = user_model.objects.filter(belongs_to_group=group.id)
+    editing = [false for x in others]
+
     return render(request,
                   "overview.html",
-                  {"fields": fields})
+                  { "user": user,
+                    "group": group,
+                    "others": others,
+                    })

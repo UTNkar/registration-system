@@ -1,5 +1,4 @@
 <html lang="en">
-<html>
   {% include "head.html" %}
 
   <body>
@@ -8,19 +7,28 @@
         Forsränningen 2020
       </h1>
       <div class="team-information">
-        <h3>
-          { <!-- team name --> }
-        </h3>
+        <h2>
+          {{ group.name }}
+        </h2>
 
-        <!--
-            !-- These should be based on model attributes for
-            !-- extensibility, but hard coded for now.
-          -->
-
-        {% for field in fields %}
-        {{ field.verbose_name }}
+        <h3>me</h3>
+        <button>edit me</button>
+        {% for name, value in user.properties %}
+        <h4>{{ name }}</h4>
+        <p>{{ value }}</p>
         {% endfor %}
 
+
+        <h3>others</h3>
+        {% for other in others %}
+        {% for name, value in other.properties %}
+        <form>
+          <button class='edit_button'>edit me</button>
+          <h4>{{ name }}</h4>
+          <p>{{ value }}</p>
+        </form>
+        {% endfor %}
+        {% endfor %}
         <!-- osv -->
 
       </div>
