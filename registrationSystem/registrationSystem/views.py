@@ -35,7 +35,7 @@ def start(request):
             )
             to_email = form.cleaned_data.get('email')
             email = EmailMessage(
-                'Derp', message, to=[to_email]
+                'Activate your account', message, to=[to_email]
             )
 
             email.send()
@@ -59,7 +59,6 @@ def activate(request, token):
     try:
         confirmation = EmailConfirmations.objects.get(pk=token)
         user = confirmation.interestCheckId
-        # TODO Set user status to active?
         user.status = 'waiting'
         confirmation.delete()
         user.save()
