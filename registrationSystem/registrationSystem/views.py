@@ -60,6 +60,7 @@ def activate(request, token):
         confirmation = EmailConfirmations.objects.get(pk=token)
         user = confirmation.interestCheckId
         # TODO Set user status to active?
+        user.status = 'waiting'
         user.save()
         return redirect(reverse('status'))
     except(InterestCheck.DoesNotExist):
