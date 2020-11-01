@@ -11,6 +11,7 @@ class InterestCheckForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
+
     def clean_password_check(self):
         password = self.cleaned_data.get('password')
         password_check = self.cleaned_data.get('password_check')

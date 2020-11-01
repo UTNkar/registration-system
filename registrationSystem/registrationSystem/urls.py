@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('create_account/<str:uid>', views.create_account, name='create_account'),
     path('create_account/<str:uid>/received/', views.received, name='received'),
+    path('temp/', views.temp, name='temp'),
     path('admin/', admin.site.urls),
 ]

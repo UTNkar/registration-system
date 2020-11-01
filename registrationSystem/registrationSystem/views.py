@@ -12,19 +12,25 @@ def create_account(request, uid):
     }
     return render(request, 'registrationSystem/create_account.html', context)
 
+
+
 def received(request, uid):
     print(request.POST)
     received_form = CreateAccountForm(request.POST)
     if received_form.is_valid():
+        # Linus jobbar på en lösning för att automatiskt hasha alla lösenord i databasen.
+        # Den här funktionen behöver i nuläget inte hasha själv!
         data = received_form.cleaned_data
         del data['password_check']
         RiverraftingUser.objects.create(**data, is_utn_member=True)
-    else:
-        print('NOT VALID')
+        return HttpResponseRedirect('/temp/')
 
     context = {
-        'name': request.POST.get('name'),
-        'email': request.POST.get('email'),
-        'person_nr': request.POST.get('person_nr')
+        'form': received_form,
+        'uid': uid
     }
-    return render(request, 'registrationSystem/temp.html', context)
+    return render(request, 'registrationSystem/create_account.html', context)
+
+
+def temp(request):
+    return render(request, 'registrationSystem/temp.html')
