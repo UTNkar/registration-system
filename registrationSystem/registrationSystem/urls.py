@@ -21,4 +21,5 @@ urlpatterns = [
     path('', views.start, name='start'),
     path('status/', views.status, name='status'),
     path('admin/', admin.site.urls),
+    path('confirm_email/<token>/', views.activate,  name='confirm_email'),
 ]
