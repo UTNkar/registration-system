@@ -41,6 +41,12 @@ def register(request):
                 person_nr=form.cleaned_data['person_nr'],
             )
             request.session['interest_check_id'] = interest_check_obj.id
+
+            # These three rows are not supposed to be here later
+            interest_check_obj.status = "mail unconfirmed"
+            interest_check_obj.save()
+            print(interest_check_obj.status)
+
             return redirect(reverse('status'))
     else:
         form = InterestCheckForm()
@@ -50,6 +56,8 @@ def register(request):
 def status(request):
     interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+
+    print(interest_check_obj.status)
 
     if interest_check_obj.status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
@@ -68,3 +76,22 @@ def status(request):
                   "status/" + template,
                   {"interest_check_obj": interest_check_obj})
 
+
+def accepted(request):
+    interest_check_id = request.session['interest_check_id']
+    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+
+    interest_check_obj.status = "accepted"
+    interest_check_obj.save()
+
+    return redirect(reverse('status'))
+
+
+def reapply(request):
+    interest_check_id = request.session['interest_check_id']
+    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+
+    interest_check_obj.status = "waiting"
+    interest_check_obj.save()
+
+    return redirect(reverse('status'))
