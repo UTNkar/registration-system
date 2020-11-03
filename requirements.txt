@@ -7,4 +7,4 @@ psycopg2==2.8.6
 sentry-sdk==0.19.2
 
 # Phonenumber validation
-phonenumbers==8.12.11
+phonenumbers==8.12.12
