@@ -1,7 +1,7 @@
-{% extends "base.html" %}
+{% extends "status_base.html" %}
 {% load static %}
-{% block content %}
-<h2>Du har inte fått en plats :( Snart (när knappen är röd) kan du klicka på knappen nedan för att vara med i utlottningen igen!</h2>
+{% block status_content %}
+<h2 class="status">Du har inte fått en plats :( Snart (när knappen är röd) kan du klicka på knappen nedan för att vara med i utlottningen igen!</h2>
 <div>
     {% comment %} TODO gör riktig variabel button {% endcomment %}
     {% if not button %}
