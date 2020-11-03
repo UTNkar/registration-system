@@ -26,10 +26,7 @@ class InterestCheck(models.Model):
         ("mail confirmed", "Mail-Confirmed"),
         ("won", "Won"),
         ("lost", "Lost"),
-        ("reapplying", "Reapplying"),
-        ("pending", "Pending"),
-        ("declined", "Declined"),
-        ("confirmed", "Confirmed")
+        ("declined", "Declined")
     )
 
     name = models.CharField(max_length=254)
