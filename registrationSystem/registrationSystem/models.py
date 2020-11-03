@@ -175,9 +175,8 @@ class RiverraftingGroup(Group):
     relevants = ['Team name', 'Presentation', 'Start Number']
 
     def properties(self):
-        members = get_user_model().objects.filter(belongs_to_group = self.id)
         fields = get_group_model()._meta.fields
-        return [('members', 'Team members', members)] + [
+        return [
             (field.name, field.verbose_name, getattr(self, field.name))
             for field in fields if field.verbose_name in self.relevants ]
 

@@ -4,13 +4,19 @@
     <main class="flex-container-start-page">
       <div class="team-information">
         <form action="{% url 'overview' %}" method="POST">
-          <button type='button'>Edit</button>
+          <button type='button' onclick='toggleForm(this)'>Edit</button>
           {% csrf_token %}
-          <ul>
-            {% for member in value %}
+
+          <input name="id" id="id-{{other.id}}" value="{{group.id}}" type="hidden" readonly/>
+          <input name="type" id="id-{{other.id}}" value="group" type="hidden" readonly/>
+
+          <label for="members">Team members:</label>
+          <ul name="members">
+            {% for member in all %}
             <li>{{ member.name }}</li>
             {% endfor %}
           </ul>
+
           {% for name, pretty_name, value in group.properties %}
           <label for="{{ name }}">{{ pretty_name }}:</label>
           <input
@@ -30,6 +36,7 @@
           Edit
         </button>
         <input name="id" id="id-{{user.id}}" value="{{user.id}}" type="hidden" readonly/>
+        <input name="type" id="id-{{other.id}}" value="user" type="hidden" readonly/>
         {% for name, pretty_name, value in user.properties %}
         <label for="{{ name }}">{{ pretty_name }}:</label>
         <input
@@ -49,6 +56,7 @@
         <button type='button'
                 onclick='toggleForm(this)'>Edit</button>
         <input name="id" id="id-{{other.id}}" value="{{other.id}}" type="hidden" readonly/>
+        <input name="type" id="id-{{other.id}}" value="user" type="hidden" readonly/>
         {% endif %}
         {% for name, pretty_name, value in other.properties %}
         <label for="{{ name }}">{{ pretty_name }}:</label>

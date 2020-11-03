@@ -62,23 +62,29 @@ def overview(request):
     user_id = 2 # temp
 
     if request.method == 'POST':
-        user_id = request.user.id
-
         req = request.POST.copy()
-
         del req['csrfmiddlewaretoken']
+        req_type = req['type']
 
-        user_model.objects.update_or_create(id=user_id, defaults=req)
+        # todo: check that people aren't trying to edit
+        # unique properties to things that already exist
+        if req_type == 'group':
+            group_model.objects.update_or_create(id=req['id'], defaults=req)
+        elif req_type == 'user':
+            user_model.objects.update_or_create(id=req['id'], defaults=req)
+        else:
+            pass # Error management here
 
     user = user_model.objects.get(id=user_id)
     group = group_model.objects.get(id=user.belongs_to_group.id)
-    others = user_model.objects.filter(belongs_to_group=group.id).exclude(id=user_id)
+    everyone = user_model.objects.filter(belongs_to_group=group.id)
 
     return render(request,
                   "overview.html",
                   { "user": user,
                     "group": group,
-                    "others": others, })
+                    "others": everyone.exclude(id=user_id),
+                    "all": everyone})
 
 def activate(request, token):
     try:
