@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 html,
 body {
     display: flex;
@@ -81,8 +85,8 @@ footer {
     display: flex;
     justify-content: center;
     color: #C4C4C4;
-    margin-top: auto;
     width: 100%;
+    margin-top: auto;
 }
 
 #dk {
@@ -114,14 +118,19 @@ footer {
     #forsranning {
         width: 70%;
     }
+    h2 {
+        font-size: 1.1em;
+    }
     div {
-        font-size: 0.8em;
+        font-size: 0.85em;
     }
     #dk {
         height: 1em;
         width: 1em;
     }
     footer {
+        position: absolute;
+        bottom: 0;
         background-color: rgb(163, 37, 40, 0.7);
         padding-top: 1em;
         padding-bottom: 1em;

@@ -1,6 +1,7 @@
 body.status,
 main.status {
     align-items: flex-start;
+    padding: 0;
 }
 
 .inactive-button {
