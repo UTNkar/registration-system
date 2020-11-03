@@ -42,34 +42,35 @@ def register(request):
             interest_check_obj, _ = InterestCheck.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                person_nr=form.cleaned_data['person_nr'],
-                status=form.cleaned_data['status']
+                person_nr=form.cleaned_data['person_nr']
             )
-            status = form.cleaned_data['status']
-            if not status:
+
+            status = interest_check_obj.status
+
+            if status == "mail unconfirmed":                         # fråga om detta
                 confirmation = EmailConfirmations.objects.create(
                   interestCheckId=interest_check_obj
                 )
-            confirmation.save()
+                confirmation.save()
 
-            message = render_to_string(
-                'email/confirm_email.html',
-                {
-                    'name': interest_check_obj.name,
-                    'domain': 'localhost:8000',
-                    'token': confirmation.id,
-                }
-            )
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                'Activate your account', message, to=[to_email]
-            )
+                message = render_to_string(
+                    'email/confirm_email.html',
+                    {
+                        'name': interest_check_obj.name,
+                        'domain': 'localhost:8000',
+                        'token': confirmation.id,
+                    }
+                )
+                to_email = form.cleaned_data.get('email')
+                email = EmailMessage(
+                    'Activate your account', message, to=[to_email]
+                )
 
-            email.send()
-            request.session['interest_check_id'] = interest_check_obj.id
+                email.send()
+                request.session['interest_check_id'] = interest_check_obj.id
 
             # These three rows are not supposed to be here later
-            interest_check_obj.status = "mail unconfirmed"
+            interest_check_obj.status = "won"
             interest_check_obj.save()
             print(interest_check_obj.status)
 
