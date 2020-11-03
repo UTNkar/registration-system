@@ -21,6 +21,7 @@ class CommonUserManager(UserManager):
             email=email,
             name=name,
             phone_nr=phone_nr,
+            password=password,
             is_utn_member=is_utn_member,
             is_staff=False,
             is_active=True,
@@ -44,6 +45,7 @@ class CommonUserManager(UserManager):
             email=email,
             name=name,
             phone_nr=phone_nr,
+            password=password,
             is_utn_member=is_utn_member,
             is_staff=True,
             is_active=True,
@@ -149,10 +151,13 @@ class AbstractGroup(models.Model):
                                null=True,
                                blank=True)
 
-    name = models.CharField(max_length=254, blank=True)
+    name = models.CharField(max_length=254, blank=True, verbose_name = 'Team name')
 
     def __str__(self):
         return '{}'.format(getattr(self, "name"))
+
+    def properties(self):
+        pass
 
     class Meta():
         abstract = True
@@ -163,7 +168,18 @@ class Group(AbstractGroup):
 
 
 class RiverraftingGroup(Group):
-    pass
+    number = models.IntegerField(verbose_name='Start Number', null=True, blank=True)
+    environment_raft = models.BooleanField(verbose_name='I want an environmentally friendly raft')
+    presentation = models.CharField(max_length = 250, verbose_name='Presentation', null=True, blank=True)
+    relevants = ['Team name', 'Presentation', 'Start Number']
+
+    def properties(self):
+        members = get_user_model().objects.filter(belongs_to_group = self.id)
+        fields = get_group_model()._meta.fields
+        return [('members', 'Team members', members)] + [
+            (field.name, field.verbose_name, getattr(self, field.name))
+            for field in fields if field.verbose_name in self.relevants ]
+
 
 def get_group_model():
     return RiverraftingGroup

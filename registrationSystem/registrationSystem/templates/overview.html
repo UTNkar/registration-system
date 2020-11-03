@@ -2,20 +2,33 @@
   {% include "head.html" %}
   <body>
     <main class="flex-container-start-page">
-      <h1>
-        Forsränningen 2020
-      </h1>
       <div class="team-information">
-        <h2>
-          {{ group.name }}
-        </h2>
+        <form action="{% url 'overview' %}" method="POST">
+          <button type='button'>Edit</button>
+          {% csrf_token %}
+          <ul>
+            {% for member in value %}
+            <li>{{ member.name }}</li>
+            {% endfor %}
+          </ul>
+          {% for name, pretty_name, value in group.properties %}
+          <label for="{{ name }}">{{ pretty_name }}:</label>
+          <input
+            id="{{ name }}-{{ other.id }}"
+            name="{{ name }}"
+            value="{{ value }}"
+            readonly/>
+          {% endfor %}
+        </form>
       </div>
 
       <h3>me</h3>
       <form action="{% url 'overview' %}" method='POST'>
         {% csrf_token %}
         <button type='button'
-                onclick='toggleForm(this)'>Edit</button>
+                onclick='toggleForm(this)'>
+          Edit
+        </button>
         <input name="id" id="id-{{user.id}}" value="{{user.id}}" type="hidden" readonly/>
         {% for name, pretty_name, value in user.properties %}
         <label for="{{ name }}">{{ pretty_name }}:</label>
@@ -38,7 +51,7 @@
         <input name="id" id="id-{{other.id}}" value="{{other.id}}" type="hidden" readonly/>
         {% endif %}
         {% for name, pretty_name, value in other.properties %}
-        <label for="{{ prop_name }}">{{ pretty_name }}:</label>
+        <label for="{{ name }}">{{ pretty_name }}:</label>
         <input
           id="{{ name }}-{{ other.id }}"
           name="{{ name }}"

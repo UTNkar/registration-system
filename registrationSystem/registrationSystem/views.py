@@ -53,7 +53,7 @@ def overview(request):
         user_model.objects.update_or_create(id=user_id, defaults=req)
 
     user = user_model.objects.get(id=user_id)
-    group = Group.objects.get(id=user.belongs_to_group.id)
+    group = group_model.objects.get(id=user.belongs_to_group.id)
     others = user_model.objects.filter(belongs_to_group=group.id).exclude(id=user_id)
 
     return render(request,
