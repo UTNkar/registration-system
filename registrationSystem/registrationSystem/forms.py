@@ -1,13 +1,24 @@
+from django import forms
 from django.forms import ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError
 from registrationSystem.models import InterestCheck, RiverraftingUser
+from registrationSystem.fields import PersonNumberField
 
 
 class InterestCheckForm(ModelForm):
+
+    person_nr = PersonNumberField()
+
+    status = forms.CharField(
+        widget=forms.HiddenInput(),
+        required=False
+    )
+
     class Meta:
         model = InterestCheck
         fields = ['name',
                   'email',
-                  'person_nr']
+                  'person_nr',
+                  'status']
 
 
 class CreateAccountForm(ModelForm):

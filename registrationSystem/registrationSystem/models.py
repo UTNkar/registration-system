@@ -1,32 +1,36 @@
+import uuid
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import AbstractBaseUser
 
 
 class InterestCheck(models.Model):
-    """
-    Interest checks start out as unconfirmed, and once
-    the mail has been confirmed checks progress in to the confirmed status.
+    """Interest checks start out as unconfirmed, and once the mail has
+    been confirmed, the Interest check is considered active and
+    "waiting" to receive a spot.
 
-    Once a raffle has been held, an interest check can enter either the
-    lost or won states. Those who have won are done; those who have lost
-    can reapply and then enter the reapplying state.
+    Once a raffle has been held, a "waiting" interest check is moved
+    to either the lost or won states. Those who have won can then
+    decide to accept their spot and move into the "accepted" state, or
+    decline and move to the "declined" state.
 
-    Those who reapply can also win or lose. Reapplicants who win enter the
-    pending state, where they can win once they claim their spot.
+    If a new raffle is held, those who have "lost" can choose to move back
+    into the "waiting" state to join another round of the raffle.
 
-    Reapplicants who lose can reapply again, repeating the cycle.
-
-    Those pending can also become declined, stopping them from further
-    reapplying.
+    Similarly, if a new raffle is executed while there are still
+    interest checks in the "won" state (whom has not accepted or
+    declined yet), they are moved to the lost state and are allowed to
+    join the raffle again by transitioning to the "waiting" state,
+    should they choose to.
     """
 
     CHOICES = (
         ("mail unconfirmed", "Mail-Unconfirmed"),
-        ("mail confirmed", "Mail-Confirmed"),
+        ("waiting", "Waiting"),
         ("won", "Won"),
         ("lost", "Lost"),
-        ("declined", "Declined")
+        ("declined", "Declined"),
+        ("confirmed", "Confirmed")
     )
 
     name = models.CharField(max_length=254)
@@ -92,3 +96,10 @@ class RiverraftingGroup(Group):
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)
+
+
+class EmailConfirmations(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    interestCheckId = models.ForeignKey(
+        "InterestCheck", on_delete=models.CASCADE
+        )

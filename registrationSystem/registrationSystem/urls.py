@@ -20,5 +20,8 @@ from . import views
 urlpatterns = [
     path('create_account/<str:uid>', views.create_account, name='create_account'),
     path('temp/', views.temp, name='temp'),
+    path('', views.start, name='start'),
+    path('status/', views.status, name='status'),
     path('admin/', admin.site.urls),
+    path('confirm_email/<token>/', views.activate,  name='confirm_email'),
 ]

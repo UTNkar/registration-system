@@ -1,0 +1,5 @@
+Hi {{ name }},
+
+Please click on the link to confirm your registration at {{ domain}},
+
+http://{{ domain }}{% url 'confirm_email' token=token %}
