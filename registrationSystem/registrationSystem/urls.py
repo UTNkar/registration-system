@@ -24,7 +24,7 @@ urlpatterns = [
         'create_account/<str:uid>', views.create_account, name='create_account'
     ),
     path('temp/', views.temp, name='temp'),
-    path('', views.start, name='start'),
+    path('', views.sign_in, name='start'),
     path('status/', views.status, name='status'),
     path('accepted/', views.accepted, name='accepted'),
     path('reapply/', views.reapply, name='reapply'),
