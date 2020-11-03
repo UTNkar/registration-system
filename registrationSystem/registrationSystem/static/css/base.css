@@ -1,18 +1,20 @@
-html {
-    display: flex;
-    flex-direction: column;
-    background-color: #E5E5E5;
-    font-family: Arial, Helvetica, sans-serif;
-    height: 100%;
-}
-
+html,
 body {
     display: flex;
     flex-direction: column;
     background-color: #E5E5E5;
     font-family: Arial, Helvetica, sans-serif;
     height: 100%;
-    margin: 1.5em;
+    width: 100%;
+    margin: 0;
+}
+
+main {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, Helvetica, sans-serif;
+    height: 100%;
+    padding: 1em;
 }
 
 header {
@@ -22,10 +24,13 @@ header {
     margin-bottom: 2em;
 }
 
-main {
+.box {
     display: flex;
+    background-color: #E5E5E5;
     width: 100%;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 h1 {
@@ -34,12 +39,6 @@ h1 {
     font-weight: 100;
     line-height: 130%;
     align-self: center;
-}
-
-main {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
 }
 
 #welcome-text {
@@ -83,8 +82,48 @@ footer {
     justify-content: center;
     color: #C4C4C4;
     margin-top: auto;
+    width: 100%;
 }
 
 #dk {
     width: 7%;
+}
+
+@media only screen and (min-width: 600px) {
+    html,
+    body {
+        background-image: url(../images/background.png);
+        margin: 0;
+        justify-content: center;
+        align-items: center;
+    }
+    .box {
+        width: 30%;
+        padding: 1em;
+        background-color: rgb(229, 229, 229, 0.35);
+        backdrop-filter: blur(1em);
+    }
+    header {
+        margin-top: 1.5em;
+        margin-bottom: 1em;
+    }
+    main {
+        margin: 0;
+        width: 80%;
+    }
+    #forsranning {
+        width: 70%;
+    }
+    div {
+        font-size: 0.8em;
+    }
+    #dk {
+        height: 1em;
+        width: 1em;
+    }
+    footer {
+        background-color: rgb(163, 37, 40, 0.7);
+        padding-top: 1em;
+        padding-bottom: 1em;
+    }
 }

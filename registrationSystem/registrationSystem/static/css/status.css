@@ -1,3 +1,26 @@
+body.status,
+main.status {
+    align-items: flex-start;
+}
+
 .inactive-button {
     background-color: #707070;
+}
+
+h2.status {
+    background-color: white;
+    padding: 1em;
+}
+
+@media only screen and (min-width: 600px) {
+    .box.status {
+        width: 50%;
+        height: 100%;
+        background-color: white;
+        justify-content: center;
+        align-items: center;
+    }
+    main.status {
+        width: 80%;
+    }
 }

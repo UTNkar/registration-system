@@ -1,7 +1,12 @@
-{% extends "base.html" %}
+{% extends "status_base.html" %}
 {% load static %}
-{% block content %}
-<h2>Vi har skickat ett mail till {{ interest_check_obj.email }}. Inte fått något mail? &nbsp;
+{% block status_content %}
+<h1 class="status">
+    Check you e-mail!
+</h1>
+<h2 class="status">
+    What’s next? Vi har skickat ett mail till {{ interest_check_obj.email }}. Gå på din mejl och bekräfta din anmälan plz. Först när du har gjort detta kommer du att vara med i utlottningen. Inte fått något mail?&nbsp;
     {% comment %} TODO! skriv riktig länk {% endcomment %}
-    <a href="{% url 'sign_in' %}">Klicka här.</a> </h2>
+    <a href="{% url 'sign_in' %}">Klicka här.</a>
+</h2>
 {% endblock %}
