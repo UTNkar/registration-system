@@ -30,6 +30,7 @@ class InterestCheck(models.Model):
         ("won", "Won"),
         ("lost", "Lost"),
         ("declined", "Declined"),
+        ("accepted", "Accepted"),
         ("confirmed", "Confirmed")
     )
 
