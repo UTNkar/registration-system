@@ -6,7 +6,7 @@ from registrationSystem.fields import PersonNumberField
 
 class InterestCheckForm(ModelForm):
 
-    personnr = PersonNumberField()
+    person_nr = PersonNumberField()
 
     status = forms.CharField(
         widget=forms.HiddenInput(),
@@ -17,5 +17,5 @@ class InterestCheckForm(ModelForm):
         model = InterestCheck
         fields = ['name',
                   'email',
-                  'personnr',
+                  'person_nr',
                   'status']

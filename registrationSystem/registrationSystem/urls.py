@@ -22,4 +22,5 @@ urlpatterns = [
     path('status/', views.status, name='status'),
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview')
+    path('confirm_email/<token>/', views.activate,  name='confirm_email'),
 ]
