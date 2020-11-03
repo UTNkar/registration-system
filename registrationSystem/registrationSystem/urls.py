@@ -25,4 +25,5 @@ urlpatterns = [
     path('reapply/', views.reapply, name='reapply'),
     path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
+    path('confirm_email/<token>/', views.activate,  name='confirm_email'),
 ]
