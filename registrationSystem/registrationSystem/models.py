@@ -29,8 +29,9 @@ class InterestCheck(models.Model):
         ("waiting", "Waiting"),
         ("won", "Won"),
         ("lost", "Lost"),
+        ("declined", "Declined"),
         ("accepted", "Accepted"),
-        ("declined", "Declined")
+        ("confirmed", "Confirmed")
     )
 
     name = models.CharField(max_length=254)
