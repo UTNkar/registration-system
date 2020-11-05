@@ -71,11 +71,6 @@ def register(request):
 
             request.session['interest_check_id'] = interest_check_obj.id
 
-            # These three rows are not supposed to be here later
-            interest_check_obj.status = "won"
-            interest_check_obj.save()
-            print(interest_check_obj.status)
-
             return redirect(reverse('status'))
     else:
         form = InterestCheckForm()
