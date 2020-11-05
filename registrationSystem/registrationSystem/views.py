@@ -14,7 +14,7 @@ from registrationSystem.forms import InterestCheckForm, CreateAccountForm
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
-        return redirect('/raft_info')
+        return redirect(reverse('raft_info'))
     else:
         return render(request, "login_page.html")
 
