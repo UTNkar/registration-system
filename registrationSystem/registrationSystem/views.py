@@ -9,7 +9,7 @@ from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm
+from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm
 
 def start(request):
     if request.POST:
@@ -58,35 +58,24 @@ def status(request):
                   "status_page.html",
                   {"interest_check_obj": interest_check_obj})
 
-def overview(request):
+def overview(request, id=None):
     user_model = get_user_model()
     group_model = get_group_model()
     user_id = 2 # temp
 
-    if request.method == 'POST':
-        req = request.POST.copy()
-        del req['csrfmiddlewaretoken']
-        req_type = req['type']
-
-        # todo: check that people aren't trying to edit
-        # unique properties to things that already exist
-        if req_type == 'group':
-            group_model.objects.update_or_create(id=req['id'], defaults=req)
-        elif req_type == 'user':
-            user_model.objects.update_or_create(id=req['id'], defaults=req)
-        else:
-            pass # Error management here
-
     user = user_model.objects.get(id=user_id)
     group = group_model.objects.get(id=user.belongs_to_group.id)
     everyone = user_model.objects.filter(belongs_to_group=group.id)
+    print(request.POST)
 
     return render(request,
                   "overview.html",
-                  { "user": user,
-                    "group": group,
-                    "others": everyone.exclude(id=user_id),
-                    "all": everyone})
+                  {
+                      "user": RiverraftingUserForm(instance=user),
+                      "others": [ RiverraftingUserForm(instance=other) for other in everyone.exclude(id=user.id) ],
+                      "group": group,
+                      "all": everyone
+                  })
 
 def activate(request, token):
     try:

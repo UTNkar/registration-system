@@ -5,9 +5,7 @@ from django.forms import (
 from registrationSystem.models import InterestCheck, RiverraftingUser
 from registrationSystem.fields import PersonNumberField
 
-
 class InterestCheckForm(ModelForm):
-
     person_nr = PersonNumberField()
 
     status = forms.CharField(
@@ -21,7 +19,6 @@ class InterestCheckForm(ModelForm):
                   'email',
                   'person_nr',
                   'status']
-
 
 class CreateAccountForm(ModelForm):
 
@@ -62,3 +59,29 @@ class CreateAccountForm(ModelForm):
             'email': EmailInput(attrs={'readonly': 'readonly'}),
             'password': PasswordInput(),
         }
+
+# todo: change to single user and instead have relational models depending on user type
+class RiverraftingUserForm(ModelForm):
+    id = CharField(disabled=True)
+
+    class Meta:
+        model = RiverraftingUser
+
+        fields = [
+            'name',
+            'person_nr',
+            'email',
+        ]
+
+        labels = {
+            'name': 'Full name',
+            'person_nr': 'Social security number',
+            'email': 'E-mail address',
+        }
+
+        widgets = {
+            'name': TextInput(attrs={'readonly': 'readonly'}),
+            'person_nr': TextInput(attrs={"disabled": True}),
+            'email': EmailInput(attrs={'readonly': 'readonly'}),
+        }
+    pass

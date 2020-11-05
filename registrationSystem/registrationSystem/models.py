@@ -129,7 +129,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
 class User(AbstractUser):
     pass
 
-
+# todo: change to single user and instead have relational models depending on user type
 class RiverraftingUser(User):
     LIFEVEST_SIZES = (
         ('XL', 'XL'),

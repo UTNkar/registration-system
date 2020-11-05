@@ -35,16 +35,8 @@
                 onclick='toggleForm(this)'>
           Edit
         </button>
-        <input name="id" id="id-{{user.id}}" value="{{user.id}}" type="hidden" readonly/>
-        <input name="type" id="id-{{other.id}}" value="user" type="hidden" readonly/>
-        {% for name, pretty_name, value in user.properties %}
-        <label for="{{ name }}">{{ pretty_name }}:</label>
-        <input
-          id="{{ name }}-{{ user.id }}"
-          name="{{ name }}"
-          value="{{ value }}"
-          readonly/>
-        {% endfor %}
+
+        {{ user }}
       </form>
 
 
@@ -52,20 +44,14 @@
       {% for other in others %}
       <form action="{% url 'overview' %}" method='POST'>
         {% csrf_token %}
+
         {% if group.leader.id == user.id %}
         <button type='button'
                 onclick='toggleForm(this)'>Edit</button>
-        <input name="id" id="id-{{other.id}}" value="{{other.id}}" type="hidden" readonly/>
-        <input name="type" id="id-{{other.id}}" value="user" type="hidden" readonly/>
         {% endif %}
-        {% for name, pretty_name, value in other.properties %}
-        <label for="{{ name }}">{{ pretty_name }}:</label>
-        <input
-          id="{{ name }}-{{ other.id }}"
-          name="{{ name }}"
-          value="{{ value }}"
-          readonly/>
-        {% endfor %}
+
+        {{ other }}
+        <input name="{{id}}" value="{{ other.instance.id }}"/>
       </form>
       {% endfor %}
       <!-- osv -->
