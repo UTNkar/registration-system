@@ -83,7 +83,7 @@ def register(request):
 
 
 def status(request):
-    interest_check_id = request.session['interest_check_id']
+    interest_check_id = request.session.get('interest_check_id', None)
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     print(interest_check_obj.status)
