@@ -69,6 +69,24 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
+def temp_set_to_won(request, uid):
+    # Temporary dev view. Will be removed once done.
+    # Allows changing of user's status with button press.
+
+    user = get_object_or_404(InterestCheck, id=uid)
+
+    if request.method == "POST":
+        user.status = 'won'
+        user.save()
+
+    context = {
+        'name': user.name,
+        'status': user.status,
+        'uid': uid
+    }
+    return render(request, 'registrationSystem/temp_set-to-won.html', context)
+
+
 def create_account(request, uid):
     user = get_object_or_404(InterestCheck, id=uid)
 
