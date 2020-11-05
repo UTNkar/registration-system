@@ -14,7 +14,7 @@ from registrationSystem.forms import InterestCheckForm, CreateAccountForm
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
-        return redirect('/raft_info')
+        return redirect(reverse('raft_info'))
     else:
         return render(request, "login_page.html")
 
@@ -83,7 +83,7 @@ def register(request):
 
 
 def status(request):
-    interest_check_id = request.session['interest_check_id']
+    interest_check_id = request.session.get('interest_check_id', None)
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "mail unconfirmed":
