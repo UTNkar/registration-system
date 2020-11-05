@@ -5,13 +5,13 @@
 </script>
 {% endif %} {% load static %}
 {% block base_content %}
-<body class="status">
+<body>
     <div class="box">
         <header>
             <img src="{% static 'images/forsränning.png' %}" id="forsranning">
         </header>
         <main>
-            {% block status_content %}{% endblock %}
+            {% block content %}{% endblock %}
         </main>
     </div>
     <footer>

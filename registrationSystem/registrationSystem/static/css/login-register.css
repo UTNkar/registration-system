@@ -5,17 +5,16 @@
 
 .input-div {
     position: relative;
-    min-height: 3.5em;
 }
 
 input {
-    height: 5em;
     width: 100%;
     background-color: white !important;
     border: 2px solid #C4C4C4;
     border-radius: 0.6em;
     padding-left: 0.5em;
-    padding-bottom: 0;
+    padding-top: 2em;
+    padding-bottom: 1em;
     margin-bottom: 1em;
 }
 
@@ -59,7 +58,8 @@ select:-webkit-autofill:focus {
 
 @media only screen and (min-width: 600px) {
     input {
-        height: 4em;
+        padding-top: 2em;
+        padding-bottom: 1em;
     }
     label {
         font-size: 1.2em;

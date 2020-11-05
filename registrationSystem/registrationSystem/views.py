@@ -27,7 +27,7 @@ def login_user(request):
         login(request, user)
         return redirect('/')
     else:
-        return redirect('/raft_info')
+        return redirect(reverse('raft_info'))
 
 
 @login_required
@@ -39,7 +39,6 @@ def register(request):
     if request.POST:
         form = InterestCheckForm(request.POST)
 
-        # fråga om detta
         if form.is_valid():
             interest_check_obj, _ = InterestCheck.objects.get_or_create(
                 name=form.cleaned_data['name'],
@@ -49,7 +48,7 @@ def register(request):
 
             status = interest_check_obj.status
 
-            if status == "mail unconfirmed":                         # fråga om detta
+            if status == "mail unconfirmed":
                 confirmation = EmailConfirmations.objects.create(
                   interestCheckId=interest_check_obj
                 )
@@ -69,7 +68,8 @@ def register(request):
                 )
 
                 email.send()
-                request.session['interest_check_id'] = interest_check_obj.id
+
+            request.session['interest_check_id'] = interest_check_obj.id
 
             # These three rows are not supposed to be here later
             interest_check_obj.status = "won"
@@ -85,8 +85,6 @@ def register(request):
 def status(request):
     interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
-
-    print(interest_check_obj.status)
 
     if interest_check_obj.status == "mail unconfirmed":
         template = "mail_unconfirmed.html"

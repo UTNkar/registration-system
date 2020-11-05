@@ -38,17 +38,12 @@ header {
 }
 
 h1 {
-    display: flex;
     font-size: 1.5em;
     font-weight: 100;
     line-height: 130%;
-    align-self: center;
 }
 
 #welcome-text {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     text-align: center;
 }
 
@@ -66,8 +61,10 @@ div {
 button {
     background-color: #C82D30;
     color: white;
-    height: 3em;
-    width: 11em;
+    padding-top: 1em;
+    padding-bottom: 1em;
+    padding-right: 5em;
+    padding-left: 5em;
     border: 0;
     border-radius: 5em;
 }
@@ -84,7 +81,7 @@ button {
 footer {
     display: flex;
     justify-content: center;
-    color: #C4C4C4;
+    color: #797979;
     width: 100%;
     margin-top: auto;
 }
@@ -94,9 +91,9 @@ footer {
 }
 
 @media only screen and (min-width: 600px) {
-    html,
     body {
         background-image: url(../images/background.png);
+        background-size: cover;
         margin: 0;
         justify-content: center;
         align-items: center;

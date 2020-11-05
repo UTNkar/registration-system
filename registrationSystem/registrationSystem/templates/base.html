@@ -1,23 +1,4 @@
-{% if msg %}
-<script>
-    alert('{{msg}}')
-</script>
-{% endif %} {% load static %}
-
 <html lang="en">
-<html>
+<html class="status">
 {% include "head.html" %}
-
-<body>
-    <div class="box">
-        <header>
-            <img src="{% static 'images/forsränning.png' %}" id="forsranning">
-        </header>
-        <main>
-            {% block content %}{% endblock %}
-        </main>
-    </div>
-    <footer>
-        Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
-    </footer>
-</body>
+{% block base_content %}{% endblock %}
