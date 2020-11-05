@@ -26,4 +26,5 @@ urlpatterns = [
     path('status/', views.status, name='status'),
     path('admin/', admin.site.urls),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
+    path('payment/', views.test_payment),
 ]

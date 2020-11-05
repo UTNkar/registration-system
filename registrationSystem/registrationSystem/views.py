@@ -7,6 +7,11 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
+from registrationSystem.utn_pay import createPaymentLink
+
+
+def test_payment(request):
+    return HttpResponse(createPaymentLink(1))
 
 
 def start(request):

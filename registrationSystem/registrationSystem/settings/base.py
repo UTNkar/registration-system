@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 
 import os
 
+# Environment variables
+PAY_API_KEY = os.environ.get('PAY_API_KEY', '')
+PAY_RECEIVER_ID = os.environ.get('PAY_RECEIVER_ID', '')
+
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

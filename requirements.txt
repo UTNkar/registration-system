@@ -8,3 +8,9 @@ sentry-sdk==0.19.2
 
 # Phonenumber validation
 phonenumbers==8.12.12
+
+# Requests 
+requests==2.24.0
+
+# Pay uses php serialize wich differs from pythons
+phpserialize==1.3
