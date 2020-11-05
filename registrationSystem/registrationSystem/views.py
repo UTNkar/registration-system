@@ -71,6 +71,9 @@ def register(request):
 
             request.session['interest_check_id'] = interest_check_obj.id
 
+            interest_check_obj.status = "won"
+
+            interest_check_obj.save()
             return redirect(reverse('status'))
     else:
         form = InterestCheckForm()
@@ -99,25 +102,17 @@ def status(request):
                   {"interest_check_obj": interest_check_obj})
 
 
-def accepted(request):
+def change_status(request):
     interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
-    interest_check_obj.status = "accepted"
+    if interest_check_obj.status == "won":
+        interest_check_obj.status = "accepted"
+    elif interest_check_obj.status == "lost":
+        interest_check_obj.status = "waiting"
+
     interest_check_obj.save()
-
     return redirect(reverse('status'))
-
-
-def reapply(request):
-    interest_check_id = request.session['interest_check_id']
-    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
-
-    interest_check_obj.status = "waiting"
-    interest_check_obj.save()
-
-    return redirect(reverse('status'))
-
 
 def activate(request, token):
     try:
