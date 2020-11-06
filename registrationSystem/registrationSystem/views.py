@@ -71,7 +71,8 @@ def activate(request, token):
 
 
 def temp_set_to_won(request, uid):
-    # Temporary dev view. Will be removed once done.
+    # Temporary dev view. Remove this when there is functionality
+    # to change winner's status to 'won'.
     # Allows changing of user's status with button press.
 
     user = get_object_or_404(InterestCheck, id=uid)
