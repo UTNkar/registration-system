@@ -7,6 +7,7 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
+from registrationSystem.utils import send_win_email
 
 
 def start(request):
@@ -78,6 +79,7 @@ def temp_set_to_won(request, uid):
     if request.method == "POST":
         user.status = 'won'
         user.save()
+        send_win_email(user)
 
     context = {
         'name': user.name,
