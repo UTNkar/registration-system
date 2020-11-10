@@ -68,4 +68,6 @@ class CreateAccountForm(ModelForm):
             'password': PasswordInput(),
         }
 
-    field_order = ['name', 'person_nr', 'email', 'phone_nr', 'password', 'password_check']
+    field_order = [
+        'name', 'person_nr', 'email', 'phone_nr', 'password', 'password_check'
+        ]
