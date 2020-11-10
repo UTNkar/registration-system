@@ -3,6 +3,20 @@
     flex-direction: column;
 }
 
+main {
+    display: flex;
+    background-color: #E5E5E5;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+}
+
+form {
+    width: 100%;
+}
+
 .input-div {
     position: relative;
 }
@@ -57,6 +71,16 @@ select:-webkit-autofill:focus {
 }
 
 @media only screen and (min-width: 600px) {
+    body {
+        justify-content: center;
+        align-items: center;
+    }
+    main {
+        width: 30%;
+        padding: 1em;
+        background-color: rgb(229, 229, 229, 0.35);
+        backdrop-filter: blur(1em);
+    }
     input {
         padding-top: 2em;
         padding-bottom: 1em;

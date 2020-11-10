@@ -13,27 +13,11 @@ body {
     margin: 0;
 }
 
-main {
-    display: flex;
-    flex-direction: column;
-    font-family: Arial, Helvetica, sans-serif;
-    padding: 1em;
-}
-
 header {
     display: flex;
     justify-content: center;
     margin-top: 2em;
     margin-bottom: 2em;
-}
-
-.box {
-    display: flex;
-    background-color: #E5E5E5;
-    width: 100%;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
 }
 
 h1 {
@@ -60,10 +44,7 @@ div {
 button {
     background-color: #C82D30;
     color: white;
-    padding-top: 1em;
-    padding-bottom: 1em;
-    padding-right: 5em;
-    padding-left: 5em;
+    padding: 1em 5em;
     border: 0;
     border-radius: 5em;
 }
@@ -83,6 +64,8 @@ footer {
     color: #797979;
     width: 100%;
     margin-top: auto;
+    align-items: center;
+    padding: .5em 0;
 }
 
 #dk {
@@ -94,22 +77,10 @@ footer {
         background-image: url(../images/background.png);
         background-size: cover;
         margin: 0;
-        justify-content: center;
-        align-items: center;
-    }
-    .box {
-        width: 30%;
-        padding: 1em;
-        background-color: rgb(229, 229, 229, 0.35);
-        backdrop-filter: blur(1em);
     }
     header {
         margin-top: 1.5em;
         margin-bottom: 1em;
-    }
-    main {
-        margin: 0;
-        width: 80%;
     }
     #forsranning {
         width: 70%;
@@ -128,6 +99,7 @@ footer {
         position: absolute;
         bottom: 0;
         background-color: rgb(163, 37, 40, 0.7);
+        color: white;
         padding-top: 1em;
         padding-bottom: 1em;
     }
