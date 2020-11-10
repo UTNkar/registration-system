@@ -32,8 +32,8 @@ def createPaymentLink(user_id):
         'receiver_id': settings.PAY_RECEIVER_ID,
         'callback_url': 'https://nowhere',
         # 'national_identification_number': user.person_nr,
-        'national_identification_number': '9101023977',
-        'first_name': 'Anton Fogelberg',
+        'national_identification_number': 'Some personnr',
+        'first_name': 'Förnamn',
         'last_name': 'efternamn',  # Kolla hur vi ville lösa detta. Ta bort i pay?
         # 'email': user.email,
         'email': 'derp@schnerp.com',
