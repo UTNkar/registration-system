@@ -1,6 +1,7 @@
 from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+import requests
 from registrationSystem.models import EmailConfirmations
 
 
@@ -33,6 +34,11 @@ def send_win_email(user):
     email.send()
 
     return
+
+
+def is_utn_member(person_nr):
+    r = requests.get('https://utn.se/member_check_api/')
+    return r
 
 
 # TODO: Change regex to only support YYYYMMDD-XXXX
