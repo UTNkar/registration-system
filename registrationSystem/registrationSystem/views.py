@@ -91,7 +91,8 @@ def temp_set_to_won(request, uid):
 
 
 def create_account(request, uid):
-    user = get_object_or_404(InterestCheck, id=uid)
+    connector = get_object_or_404(EmailConfirmations, id=uid)
+    user = connector.interestCheckId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -114,6 +115,12 @@ def create_account(request, uid):
 
         user.status = "confirmed"
         user.save()
+        # Keep the InterestCheck (user) with status 'confirmed'
+        # for statistical purposes.
+
+        connector.delete()
+        # Delete the EmailConfirmations. The randomized token
+        # should only be used once!
         return HttpResponseRedirect('/temp/')
 
     context = {
