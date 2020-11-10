@@ -35,6 +35,10 @@ class CreateAccountForm(ModelForm):
             raise ValidationError("The passwords do not match!")
         return password_check
 
+    def clean_phone_nr(self):
+        if not self.cleaned_data.get('phone_nr'):
+            raise ValidationError("You must enter a correct phone number!")
+
     phone_nr = PhoneNumberField()
     password_check = CharField(
         widget=PasswordInput(),
