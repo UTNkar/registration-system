@@ -1,8 +1,8 @@
 from django import forms
 from django.forms import (
-    ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError
+    ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError, CheckboxInput
 )
-from registrationSystem.models import InterestCheck, RiverraftingUser
+from registrationSystem.models import InterestCheck, RiverraftingUser, RiverraftingGroup
 from registrationSystem.fields import PersonNumberField
 
 class InterestCheckForm(ModelForm):
@@ -62,26 +62,46 @@ class CreateAccountForm(ModelForm):
 
 # todo: change to single user and instead have relational models depending on user type
 class RiverraftingUserForm(ModelForm):
-    id = CharField(disabled=True)
 
     class Meta:
         model = RiverraftingUser
 
         fields = [
             'name',
-            'person_nr',
             'email',
         ]
 
         labels = {
             'name': 'Full name',
-            'person_nr': 'Social security number',
             'email': 'E-mail address',
         }
 
         widgets = {
             'name': TextInput(attrs={'readonly': 'readonly'}),
-            'person_nr': TextInput(attrs={"disabled": True}),
             'email': EmailInput(attrs={'readonly': 'readonly'}),
         }
-    pass
+
+
+# todo: change to single user and instead have relational models depending on user type
+class RiverraftingGroupForm(ModelForm):
+
+    class Meta:
+        model = RiverraftingGroup
+
+        fields = [
+            'number',
+            'environment_raft',
+            'presentation',
+        ]
+
+        labels = {
+            'number': 'Start number',
+            'evironment_raft': 'I want an environmentally friendly raft',
+            'presentation': 'Group description',
+        }
+
+        widgets = {
+            'number': TextInput(attrs={'readonly': 'readonly', 'disabled': 'disabled'}),
+            'environment_raft': CheckboxInput(attrs={'onclick': 'return false'}),
+            'presentation': TextInput(attrs={'readonly': 'readonly'}),
+        }

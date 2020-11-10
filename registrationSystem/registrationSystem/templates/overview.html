@@ -3,76 +3,44 @@
   <body>
     <main class="flex-container-start-page">
       <div class="team-information">
-        <form action="{% url 'overview' %}" method="POST">
+        <form method="post">
           <button type='button' onclick='toggleForm(this)'>Edit</button>
           {% csrf_token %}
-
-          <input name="id" id="id-{{other.id}}" value="{{group.id}}" type="hidden" readonly/>
-          <input name="type" id="id-{{other.id}}" value="group" type="hidden" readonly/>
-
-          <label for="members">Team members:</label>
-          <ul name="members">
-            {% for member in all %}
-            <li>{{ member.name }}</li>
-            {% endfor %}
-          </ul>
-
-          {% for name, pretty_name, value in group.properties %}
-          <label for="{{ name }}">{{ pretty_name }}:</label>
-          <input
-            id="{{ name }}-{{ other.id }}"
-            name="{{ name }}"
-            value="{{ value }}"
-            readonly/>
-          {% endfor %}
+          <input name='type' value="group" type='hidden'/>
+          {{ group.as_p }}
         </form>
+
       </div>
 
-      <h3>me</h3>
-      <form action="{% url 'overview' %}" method='POST'>
+      <form method="post">
+        <button type='button' onclick='toggleForm(this)'>Edit</button>
         {% csrf_token %}
-        <button type='button'
-                onclick='toggleForm(this)'>
-          Edit
-        </button>
-
-        {{ user }}
+        {{ users.management_form }}
+        <input name='type' value="user" type="hidden"/>
+        {% for user in users %}
+        <div>
+          {{ user }}
+        </div>
+        {% endfor %}
       </form>
+    </main>
+  </body>
 
+  <script type="text/javascript">
+    const toggleForm = button => {
+        form = event.target.parentElement
+        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
 
-      <h3>others</h3>
-      {% for other in others %}
-      <form action="{% url 'overview' %}" method='POST'>
-        {% csrf_token %}
+        for (const element of formElements) {
+            if (element.onclick) element.toggleAttribute('onclick')
+            else element.toggleAttribute('readonly')
+        }
 
-        {% if group.leader.id == user.id %}
-        <button type='button'
-                onclick='toggleForm(this)'>Edit</button>
-        {% endif %}
-
-        {{ other }}
-        <input name="{{id}}" value="{{ other.instance.id }}"/>
-      </form>
-      {% endfor %}
-      <!-- osv -->
-
-</div>
-</main>
-</body>
-
-<script type="text/javascript">
-  const toggleForm = button => {
-      form = event.target.parentElement
-      formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"])');
-
-      for (const element of formElements)
-          element.toggleAttribute('readonly')
-
-      if (formElements[0] && formElements[0].readOnly) {
-          form.submit();
-      } else {
-          event.target.innerHTML = 'Save';
-      }
-  }
-</script>
+        if (formElements[0] && formElements[0].readOnly) {
+            form.submit();
+        } else {
+            event.target.innerHTML = 'Save';
+        }
+    }
+  </script>
 </html>

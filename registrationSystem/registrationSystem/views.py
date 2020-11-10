@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.forms import modelformset_factory
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
 from registrationSystem.models import InterestCheck, Group, User, RiverraftingUser, get_group_model
@@ -9,7 +10,7 @@ from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm
+from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingGroupForm
 
 def start(request):
     if request.POST:
@@ -64,17 +65,26 @@ def overview(request, id=None):
     user_id = 2 # temp
 
     user = user_model.objects.get(id=user_id)
-    group = group_model.objects.get(id=user.belongs_to_group.id)
-    everyone = user_model.objects.filter(belongs_to_group=group.id)
-    print(request.POST)
+    UserFormSet = modelformset_factory(user_model, form=RiverraftingUserForm)
+    GroupFormSet = modelformset_factory(group_model, form=RiverraftingGroupForm, max_num=1)
+    user_formset = UserFormSet(queryset = user_model.objects.filter(belongs_to_group=user.belongs_to_group.id))
+    group_formset = GroupFormSet(queryset = group_model.objects.filter(id=user.belongs_to_group.id))
+
+    if request.method == "POST":
+        if request.POST['type'] == 'group':
+            group_formset = GroupFormSet(request.POST, queryset = group_model.objects.filter(id=user.belongs_to_group.id))
+            if group_formset.is_valid():
+                group_formset.save()
+        else:
+            user_formset = UserFormSet(request.POST, queryset = user_model.objects.filter(belongs_to_group=user.belongs_to_group.id))
+            if user_formset.is_valid():
+                user_formset.save()
 
     return render(request,
                   "overview.html",
                   {
-                      "user": RiverraftingUserForm(instance=user),
-                      "others": [ RiverraftingUserForm(instance=other) for other in everyone.exclude(id=user.id) ],
-                      "group": group,
-                      "all": everyone
+                      "users": user_formset,
+                      "group": group_formset
                   })
 
 def activate(request, token):
