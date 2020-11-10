@@ -1,21 +1,7 @@
 {% extends "base.html" %}
-{% if msg %}
-<script>
-    alert('{{msg}}')
-</script>
-{% endif %} {% load static %}
-{% block base_content %}
-<body class="status">
-    <div class="status box">
-        <header>
-            <img src="{% static 'images/forsränning.png' %}" id="forsranning">
-        </header>
-        <main class="status">
-            {% block status_content %}{% endblock %}
-        </main>
-    </div>
-    <footer>
-        Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
-    </footer>
-</body>
+{% load static %}
+{% block content %}
+{% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/status.css' %}">
 {% endblock %}
