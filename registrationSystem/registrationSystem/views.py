@@ -103,7 +103,7 @@ def status(request):
 
 
 def change_status(request):
-    interest_check_id = request.session['interest_check_id']
+    interest_check_id = request.session.get('interest_check_id', None)
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "won":
@@ -113,6 +113,7 @@ def change_status(request):
 
     interest_check_obj.save()
     return redirect(reverse('status'))
+
 
 def activate(request, token):
     try:
