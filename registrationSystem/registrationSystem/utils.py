@@ -1,19 +1,27 @@
 from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from registrationSystem.models import EmailConfirmations
 
 
 def send_win_email(user):
-    # When a user wins a raft (InterestCheck's status turns 'won')
-    # call this function to send an email with a unique link
+    # Call this function when a user wins a raft
+    # (i.e. InterestCheck's status turns 'won')
+    # to send an email with containing a unique link
     # to create a full account.
+
+    connector = EmailConfirmations.objects.create(interestCheckId=user)
+    connector.save()
+    # The connector binds the randomized token
+    # to the InterestCheck from which the account
+    # information will be retreived.
 
     message = render_to_string(
                 'email/create-account_email.html',
                 {
                     'name': user.name,
                     'domain': 'localhost:8000',
-                    'token': '6',
+                    'token': connector.id,
                 }
             )
     to_email = user.email
@@ -23,6 +31,7 @@ def send_win_email(user):
         to=[to_email]
     )
     email.send()
+
     return
 
 
