@@ -162,12 +162,14 @@ def create_account(request, uid):
         })
 
     if form.is_valid():
+        phone_nr = form.cleaned_data['phone_nr']
         password = form.cleaned_data['password']
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
         RiverraftingUser.objects.create(name=user.name,
                                         email=user.email,
                                         person_nr=user.person_nr,
+                                        phone_nr=phone_nr,
                                         password=password,
                                         is_utn_member=True)
 

@@ -3,7 +3,7 @@ from django.forms import (
     ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError
 )
 from registrationSystem.models import InterestCheck, RiverraftingUser
-from registrationSystem.fields import PersonNumberField
+from registrationSystem.fields import PersonNumberField, PhoneNumberField
 
 
 class InterestCheckForm(ModelForm):
@@ -35,6 +35,7 @@ class CreateAccountForm(ModelForm):
             raise ValidationError("The passwords do not match!")
         return password_check
 
+    phone_nr = PhoneNumberField()
     password_check = CharField(
         widget=PasswordInput(),
         label='Confirm your password'
@@ -62,3 +63,7 @@ class CreateAccountForm(ModelForm):
             'email': EmailInput(attrs={'readonly': 'readonly'}),
             'password': PasswordInput(),
         }
+
+    field_order = [
+        'name', 'person_nr', 'email', 'phone_nr', 'password', 'password_check'
+    ]
