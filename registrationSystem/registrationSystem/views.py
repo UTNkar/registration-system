@@ -1,19 +1,20 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import InterestCheck, RiverraftingGroup, RiverraftingUser
+from registrationSystem.models import InterestCheck, RiverraftingTeam, RiverraftingUser
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations
 )
 from registrationSystem.utils import send_win_email
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingGroupForm
+from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingTeamForm
+
 
 def sign_in(request):
     current_user = request.user
@@ -54,7 +55,7 @@ def register(request):
 
             if status == "mail unconfirmed":
                 confirmation = EmailConfirmations.objects.create(
-                  interestCheckId=interest_check_obj
+                    interestCheckId=interest_check_obj
                 )
                 confirmation.save()
 
@@ -105,33 +106,47 @@ def status(request):
                   "status/" + template,
                   {"interest_check_obj": interest_check_obj})
 
+
 def overview(request, id=None):
     user_model = get_user_model()
-    group_model = RiverraftingGroup
-    user_id = 2 # temp
+    group_model = RiverraftingTeam
+    user_id = 2  # temp
 
     user = user_model.objects.get(id=user_id)
-    UserFormSet = modelformset_factory(user_model, form=RiverraftingProfileForm)
-    GroupFormSet = modelformset_factory(group_model, form=RiverraftingGroupForm, max_num=1)
-    user_formset = UserFormSet(queryset = user_model.objects.filter(belongs_to_group=user.belongs_to_group.id))
-    group_formset = GroupFormSet(queryset = group_model.objects.filter(id=user.belongs_to_group.id))
+    group = user.belongs_to_group
+
+    if not group:
+        raise Http404('There is no group associated to this user.')
+
+    UserFormSet = modelformset_factory(user_model, form=RiverraftingUserForm)
+    GroupFormSet = modelformset_factory(
+        group_model, form=RiverraftingTeamForm, max_num=1)
+    user_formset = UserFormSet(queryset=user_model.objects.filter(
+        belongs_to_group=user.belongs_to_group.id))
+    group_formset = GroupFormSet(
+        queryset=group_model.objects.filter(id=user.belongs_to_group.id))
 
     if request.method == "POST":
         if request.POST['type'] == 'group':
-            group_formset = GroupFormSet(request.POST, queryset = group_model.objects.filter(id=user.belongs_to_group.id))
+            group_formset = GroupFormSet(
+                request.POST, queryset=group_model.objects.filter(id=user.belongs_to_group.id))
             if group_formset.is_valid():
                 group_formset.save()
         else:
-            user_formset = UserFormSet(request.POST, queryset = user_model.objects.filter(belongs_to_group=user.belongs_to_group.id))
+            user_formset = UserFormSet(request.POST, queryset=user_model.objects.filter(
+                belongs_to_group=user.belongs_to_group.id))
             if user_formset.is_valid():
                 user_formset.save()
 
     return render(request,
                   "overview.html",
                   {
+                      "group_name": group.name,
+                      "group_nr": group.number,
                       "users": user_formset,
                       "group": group_formset
                   })
+
 
 def change_status(request):
     interest_check_id = request.session.get('interest_check_id', None)
@@ -196,10 +211,10 @@ def create_account(request, uid):
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
         RiverraftingProfile.objects.create(name=user.name,
-                                        email=user.email,
-                                        person_nr=user.person_nr,
-                                        password=password,
-                                        is_utn_member=True)
+                                           email=user.email,
+                                           person_nr=user.person_nr,
+                                           password=password,
+                                           is_utn_member=True)
 
         # Keep the InterestCheck (user) with status 'confirmed'
         # for statistical purposes.

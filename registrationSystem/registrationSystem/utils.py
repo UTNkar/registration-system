@@ -24,13 +24,13 @@ def send_win_email(user):
     connector.save()
 
     message = render_to_string(
-                'email/create-account_email.html',
-                {
-                    'name': user.name,
-                    'domain': 'localhost:8000',
-                    'token': connector.id,
-                }
-            )
+        'email/create-account_email.html',
+        {
+            'name': user.name,
+            'domain': 'localhost:8000',
+            'token': connector.id,
+        }
+    )
     to_email = user.email
     email = EmailMessage(
         'You have won a raft!',

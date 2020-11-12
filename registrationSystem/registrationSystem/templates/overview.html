@@ -1,11 +1,12 @@
 <html lang="en">
-  {% include "head.html" %}
   <body>
     <main class="flex-container-start-page">
       <div class="team-information">
         <form method="post">
           <button type='button' onclick='toggleForm(this)'>Edit</button>
           {% csrf_token %}
+          <h3>{{ group_name }}</h3>
+          <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
           <input name='type' value="group" type='hidden'/>
           {{ group.as_p }}
         </form>
