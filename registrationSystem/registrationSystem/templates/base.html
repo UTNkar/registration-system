@@ -1,0 +1,31 @@
+<html>
+{% load static %}
+
+<head>
+    <meta charset="UTF-8">
+    <title>Anmälan till Forsränningen</title>
+    <link rel="icon" type="image/ico" href="{% static 'images/logo_small.png' %}" />
+    {% block extra_css %}{% endblock %}
+    <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+{% if msg %}
+<script>
+    alert('{{msg}}')
+</script>
+{% endif %}
+<body>
+    <main>
+        <div class="box">
+            <header>
+                <img src="{% static 'images/forsränning.png' %}" id="forsranning">
+            </header>
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+    <footer>
+        Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
+    </footer>
+</body>
+</html>

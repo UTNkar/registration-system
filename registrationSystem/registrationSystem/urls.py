@@ -18,12 +18,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path('', views.sign_in, name='sign_in'),
+    path('register/', views.register, name='register'),
     path(
         'create_account/<str:uid>', views.create_account, name='create_account'
     ),
     path('temp/', views.temp, name='temp'),
-    path('', views.start, name='start'),
     path('status/', views.status, name='status'),
+    path('change_status/', views.change_status, name='change_status'),
+    # TODO add template for overview page later
+    path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
 ]
