@@ -93,7 +93,7 @@ class InterestCheck(models.Model):
     status = models.CharField(max_length=20, choices=CHOICES)
 
 
-class AbstractUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=254, verbose_name='Name')
     email = models.EmailField(verbose_name='Email')
     password = models.CharField(max_length=254, verbose_name='Password')
@@ -101,7 +101,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     person_nr = models.CharField(max_length=13, verbose_name='Person number', unique=True)
     is_utn_member = models.BooleanField(verbose_name='UTN Member')
     belongs_to_group = models.ForeignKey(
-        "Group",
+        "AbstractGroup",
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
@@ -119,18 +119,17 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return '{} ({})'.format(self.name, self.person_nr)
 
-    def properties(self):
-        pass
-
-    class Meta():
-        abstract = True
-
-
-class User(AbstractUser):
-    pass
 
 # todo: change to single user and instead have relational models depending on user type
-class RiverraftingUser(User):
+class RiverraftingProfile(User):
+    user = models.ForeignKey(
+        "User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Group'
+    )
+
     LIFEVEST_SIZES = (
         ('XL', 'XL'),
         ('L', 'L'),
@@ -140,12 +139,6 @@ class RiverraftingUser(User):
     )
     lifevest_size = models.CharField(max_length = 2, choices=LIFEVEST_SIZES, verbose_name='Lifevest size')
 
-    def properties(self):
-        relevants = ['Name', 'Email', 'Phone number', 'Lifevest size']
-        fields = get_user_model()._meta.fields
-        return [ (field.name, field.verbose_name, getattr(self, field.name) ) for field in fields
-                 if field.verbose_name in relevants ]
-
 
 class AbstractGroup(models.Model):
     leader = models.ForeignKey("User",
@@ -153,30 +146,31 @@ class AbstractGroup(models.Model):
                                null=True,
                                blank=True)
 
-    name = models.CharField(max_length=254, blank=True, verbose_name = 'Team name')
 
     def __str__(self):
         return '{}'.format(getattr(self, "name"))
-
-    def properties(self):
-        pass
 
     class Meta():
         abstract = True
 
 
-class Group(AbstractGroup):
-    pass
-
-class RiverraftingGroup(Group):
+class RiverraftingGroup(AbstractGroup):
+    name = models.CharField(max_length=254, blank=True, verbose_name = 'Team name')
     number = models.IntegerField(verbose_name='Start Number', null=True, blank=True)
     environment_raft = models.BooleanField(verbose_name='I want an environmentally friendly raft')
     presentation = models.CharField(max_length = 250, verbose_name='Presentation', null=True, blank=True)
 
+
 def get_group_model():
     return RiverraftingGroup
 
-admin.site.register(RiverraftingUser)
+
+def get_profile_model():
+    return RiverraftingProfile
+
+
+admin.site.register(User)
+admin.site.register(RiverraftingProfile)
 admin.site.register(RiverraftingGroup)
 
 

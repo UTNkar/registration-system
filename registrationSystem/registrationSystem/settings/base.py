@@ -17,8 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
 
-AUTH_USER_MODEL = 'registrationSystem.RiverraftingUser'
-GROUP_MODEL = 'registrationSystem.RiverraftingGroup'
+AUTH_USER_MODEL = 'registrationSystem.User'
 
 SITE_ID = 1
 

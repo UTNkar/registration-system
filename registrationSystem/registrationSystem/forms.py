@@ -2,7 +2,7 @@ from django import forms
 from django.forms import (
     ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError, CheckboxInput
 )
-from registrationSystem.models import InterestCheck, RiverraftingUser, RiverraftingGroup
+from registrationSystem.models import InterestCheck, RiverraftingProfile, RiverraftingGroup
 from registrationSystem.fields import PersonNumberField
 
 class InterestCheckForm(ModelForm):
@@ -38,7 +38,7 @@ class CreateAccountForm(ModelForm):
     )
 
     class Meta:
-        model = RiverraftingUser
+        model = RiverraftingProfile
         fields = [
             'name',
             'person_nr',
@@ -61,10 +61,10 @@ class CreateAccountForm(ModelForm):
         }
 
 # todo: change to single user and instead have relational models depending on user type
-class RiverraftingUserForm(ModelForm):
+class RiverraftingProfileForm(ModelForm):
 
     class Meta:
-        model = RiverraftingUser
+        model = RiverraftingProfile
 
         fields = [
             'name',

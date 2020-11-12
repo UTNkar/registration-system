@@ -4,13 +4,13 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import InterestCheck, Group, User, RiverraftingUser, get_group_model
+from registrationSystem.models import InterestCheck, User, RiverraftingProfile, get_group_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
-    InterestCheck, RiverraftingUser, EmailConfirmations
+    InterestCheck, EmailConfirmations
 )
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingGroupForm
+from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingProfileForm, RiverraftingGroupForm
 
 def start(request):
     if request.POST:
@@ -65,7 +65,7 @@ def overview(request, id=None):
     user_id = 2 # temp
 
     user = user_model.objects.get(id=user_id)
-    UserFormSet = modelformset_factory(user_model, form=RiverraftingUserForm)
+    UserFormSet = modelformset_factory(user_model, form=RiverraftingProfileForm)
     GroupFormSet = modelformset_factory(group_model, form=RiverraftingGroupForm, max_num=1)
     user_formset = UserFormSet(queryset = user_model.objects.filter(belongs_to_group=user.belongs_to_group.id))
     group_formset = GroupFormSet(queryset = group_model.objects.filter(id=user.belongs_to_group.id))
@@ -115,7 +115,7 @@ def create_account(request, uid):
         password = form.cleaned_data['password']
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
-        RiverraftingUser.objects.create(name=user.name,
+        RiverraftingProfile.objects.create(name=user.name,
                                         email=user.email,
                                         person_nr=user.person_nr,
                                         password=password,
