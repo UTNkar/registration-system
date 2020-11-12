@@ -37,7 +37,9 @@ class InterestCheck(models.Model):
     name = models.CharField(max_length=254)
     email = models.EmailField()
     person_nr = models.CharField(max_length=13)
-    status = models.CharField(max_length=20, choices=CHOICES)
+    status = models.CharField(max_length=20,
+                              choices=CHOICES,
+                              default=CHOICES[0][0])
 
 
 class AbstractUser(AbstractBaseUser):
