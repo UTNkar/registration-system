@@ -1,9 +1,10 @@
 from django import forms
 from django.forms import (
-    ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError, CheckboxInput
+    ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError, Select
 )
-from registrationSystem.models import InterestCheck, RiverraftingProfile, RiverraftingGroup
+from registrationSystem.models import InterestCheck, RiverraftingUser, RiverraftingGroup
 from registrationSystem.fields import PersonNumberField
+from django.contrib.auth import get_user_model
 
 class InterestCheckForm(ModelForm):
     person_nr = PersonNumberField()
@@ -21,7 +22,6 @@ class InterestCheckForm(ModelForm):
                   'status']
 
 class CreateAccountForm(ModelForm):
-
     def clean_password_check(self):
         password = self.cleaned_data.get('password')
         password_check = self.cleaned_data.get('password_check')
@@ -38,7 +38,7 @@ class CreateAccountForm(ModelForm):
     )
 
     class Meta:
-        model = RiverraftingProfile
+        model = get_user_model()
         fields = [
             'name',
             'person_nr',
@@ -61,19 +61,21 @@ class CreateAccountForm(ModelForm):
         }
 
 # todo: change to single user and instead have relational models depending on user type
-class RiverraftingProfileForm(ModelForm):
+class RiverraftingUserForm(ModelForm):
 
     class Meta:
-        model = RiverraftingProfile
+        model = RiverraftingUser
 
         fields = [
             'name',
             'email',
+            'lifevest_size'
         ]
 
         labels = {
             'name': 'Full name',
             'email': 'E-mail address',
+            'lifevest_size': 'Lifevest Size',
         }
 
         widgets = {
@@ -102,6 +104,6 @@ class RiverraftingGroupForm(ModelForm):
 
         widgets = {
             'number': TextInput(attrs={'readonly': 'readonly', 'disabled': 'disabled'}),
-            'environment_raft': CheckboxInput(attrs={'onclick': 'return false'}),
+            'environment_raft': Select(attrs={'readonly': 'readonly'}),
             'presentation': TextInput(attrs={'readonly': 'readonly'}),
         }

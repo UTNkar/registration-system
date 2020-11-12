@@ -6,14 +6,14 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import InterestCheck, User, RiverraftingProfile, get_group_model
+from registrationSystem.models import InterestCheck, RiverraftingGroup, RiverraftingUser
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations
 )
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingProfileForm, RiverraftingGroupForm
 from registrationSystem.utils import send_win_email
+from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingGroupForm
 
 def sign_in(request):
     current_user = request.user
@@ -107,7 +107,7 @@ def status(request):
 
 def overview(request, id=None):
     user_model = get_user_model()
-    group_model = get_group_model()
+    group_model = RiverraftingGroup
     user_id = 2 # temp
 
     user = user_model.objects.get(id=user_id)

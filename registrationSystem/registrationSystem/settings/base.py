@@ -16,8 +16,11 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
+EVENT = os.environ.get('DJANGO_EVENT_USER_MODEL', 'RIVERRAFTING')
 
-AUTH_USER_MODEL = 'registrationSystem.User'
+USER_MODELS = { 'RIVERRAFTING': 'registrationSystem.RiverraftingUser' }
+
+AUTH_USER_MODEL = USER_MODELS.get(EVENT, 'registrationSystem.RiverraftingUser')
 
 SITE_ID = 1
 

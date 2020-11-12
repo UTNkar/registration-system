@@ -3,13 +3,14 @@ from django.db import models
 from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
+from django.conf import settings
 from django.utils import timezone
 
 class CommonUserManager(UserManager):
     def get_by_natural_key(self, person_nr):
         return self.get(person_nr=person_nr)
 
-    def create_user(self, person_nr, name, email, phone_nr, is_utn_member, password = None):
+    def create_user(self, person_nr, name, email, phone_nr, is_utn_member, password):
         """
         Creates a non-superuser identified by person_nr
         """
@@ -24,8 +25,6 @@ class CommonUserManager(UserManager):
             phone_nr=phone_nr,
             password=password,
             is_utn_member=is_utn_member,
-            is_staff=False,
-            is_active=True,
             is_superuser=False,
             last_login=now)
 
@@ -33,7 +32,7 @@ class CommonUserManager(UserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, person_nr, name, email, phone_nr, is_utn_member, password = None):
+    def create_superuser(self, person_nr, name, email, phone_nr, is_utn_member, password):
         """
         Creates a superuser identified by person_nr
         """
@@ -48,8 +47,6 @@ class CommonUserManager(UserManager):
             phone_nr=phone_nr,
             password=password,
             is_utn_member=is_utn_member,
-            is_staff=True,
-            is_active=True,
             is_superuser=True,
             last_login=now)
 
@@ -95,22 +92,13 @@ class InterestCheck(models.Model):
                               default=CHOICES[0][0])
 
 
-class User(AbstractBaseUser, PermissionsMixin):
+class AbstractUser(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=254, verbose_name='Name')
     email = models.EmailField(verbose_name='Email')
     password = models.CharField(max_length=254, verbose_name='Password')
     phone_nr = models.CharField(max_length=20, verbose_name='Phone number')
     person_nr = models.CharField(max_length=13, verbose_name='Person number', unique=True)
     is_utn_member = models.BooleanField(verbose_name='UTN Member')
-    belongs_to_group = models.ForeignKey(
-        "AbstractGroup",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Group'
-    )
-    is_staff = models.BooleanField(verbose_name='Staff')
-    is_active = models.BooleanField(verbose_name='Active')
 
     objects = CommonUserManager()
 
@@ -121,17 +109,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     def __str__(self):
         return '{} ({})'.format(self.name, self.person_nr)
 
+    class Meta():
+        abstract = True
 
-# todo: change to single user and instead have relational models depending on user type
-class RiverraftingProfile(User):
-    user = models.ForeignKey(
-        "User",
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Group'
-    )
 
+class RiverraftingUser(AbstractUser):
     LIFEVEST_SIZES = (
         ('XL', 'XL'),
         ('L', 'L'),
@@ -139,14 +121,23 @@ class RiverraftingProfile(User):
         ('S', 'S'),
         ('XS', 'XS'),
     )
-    lifevest_size = models.CharField(max_length = 2, choices=LIFEVEST_SIZES, verbose_name='Lifevest size')
+    lifevest_size = models.CharField(max_length=2,
+                                     choices=LIFEVEST_SIZES,
+                                     verbose_name='Lifevest size')
+    belongs_to_group = models.ForeignKey(
+        "RiverraftingGroup",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name='Group'
+    )
+
 
 
 class AbstractGroup(models.Model):
-    leader = models.ForeignKey("User",
-                               on_delete=models.SET_NULL,
-                               null=True,
-                               blank=True)
+    leader = models.ForeignKey(get_user_model(),
+                               on_delete=models.CASCADE
+                               )
 
 
     def __str__(self):
@@ -163,21 +154,13 @@ class RiverraftingGroup(AbstractGroup):
     presentation = models.CharField(max_length = 250, verbose_name='Presentation', null=True, blank=True)
 
 
-def get_group_model():
-    return RiverraftingGroup
-
-
-def get_profile_model():
-    return RiverraftingProfile
-
-
-admin.site.register(User)
-admin.site.register(RiverraftingProfile)
-admin.site.register(RiverraftingGroup)
-
-
 class EmailConfirmations(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     interestCheckId = models.ForeignKey(
         "InterestCheck", on_delete=models.CASCADE
         )
+
+
+if settings.EVENT == 'RIVERRAFTING':
+    admin.site.register(RiverraftingUser)
+    admin.site.register(RiverraftingGroup)
