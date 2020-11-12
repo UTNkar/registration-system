@@ -17,8 +17,11 @@ from django.contrib import admin
 from django.urls import path
 from . import views
 
+# TODO: Remove temp/ when there is a landing page after
+#   creating the full account.
+# TODO: Remove set_to_won/ when there is functionality
+#   to change user's status to 'won'.
 urlpatterns = [
-
     path('temp/', views.temp, name='temp'),
     path('', views.start, name='start'),
     path('status/', views.status, name='status'),

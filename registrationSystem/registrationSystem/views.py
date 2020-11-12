@@ -113,14 +113,14 @@ def create_account(request, uid):
                                         password=password,
                                         is_utn_member=True)
 
-        user.status = "confirmed"
-        user.save()
         # Keep the InterestCheck (user) with status 'confirmed'
         # for statistical purposes.
+        user.status = "confirmed"
+        user.save()
 
-        connector.delete()
         # Delete the EmailConfirmations. The randomized token
         # should only be used once!
+        connector.delete()
         return HttpResponseRedirect('/temp/')
 
     context = {
