@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
@@ -11,8 +13,33 @@ from registrationSystem.models import (
     InterestCheck, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingProfileForm, RiverraftingGroupForm
+from registrationSystem.utils import send_win_email
 
-def start(request):
+def sign_in(request):
+    current_user = request.user
+    if current_user.is_authenticated:
+        return redirect(reverse('raft_info'))
+    else:
+        return render(request, "login_page.html")
+
+
+def login_user(request):
+    uname = request.POST.get('username')
+    passw = request.POST.get("pass")
+    user = authenticate(request, username=uname, password=passw)
+    if user is not None:
+        login(request, user)
+        return redirect('/')
+    else:
+        return redirect(reverse('raft_info'))
+
+
+@login_required
+def raft_info(request):
+    return render(request, "raft_info.html")
+
+
+def register(request):
     if request.POST:
         form = InterestCheckForm(request.POST)
 
@@ -20,43 +47,62 @@ def start(request):
             interest_check_obj, _ = InterestCheck.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                person_nr=form.cleaned_data['person_nr'],
-                status=form.cleaned_data['status']
+                person_nr=form.cleaned_data['person_nr']
             )
-            status = form.cleaned_data['status']
-            if not status:
+
+            status = interest_check_obj.status
+
+            if status == "mail unconfirmed":
                 confirmation = EmailConfirmations.objects.create(
                   interestCheckId=interest_check_obj
                 )
-            confirmation.save()
+                confirmation.save()
 
-            message = render_to_string(
-                'email/confirm_email.html',
-                {
-                    'name': interest_check_obj.name,
-                    'domain': 'localhost:8000',
-                    'token': confirmation.id,
-                }
-            )
-            to_email = form.cleaned_data.get('email')
-            email = EmailMessage(
-                'Activate your account', message, to=[to_email]
-            )
+                message = render_to_string(
+                    'email/confirm_email.html',
+                    {
+                        'name': interest_check_obj.name,
+                        'domain': 'localhost:8000',
+                        'token': confirmation.id,
+                    }
+                )
+                to_email = form.cleaned_data.get('email')
+                email = EmailMessage(
+                    'Activate your account', message, to=[to_email]
+                )
 
-            email.send()
+                email.send()
+
             request.session['interest_check_id'] = interest_check_obj.id
+
+            interest_check_obj.status = "won"
+
+            interest_check_obj.save()
             return redirect(reverse('status'))
     else:
-        form = InterestCheckForm(initial={'status': 'Mail-Unconfirmed'})
-
-    return render(request, "start_page.html", {'form': form})
+        form = InterestCheckForm()
+    return render(request, "register_page.html", {'form': form})
 
 
 def status(request):
-    interest_check_id = request.session['interest_check_id']
+    interest_check_id = request.session.get('interest_check_id', None)
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+
+    if interest_check_obj.status == "mail unconfirmed":
+        template = "mail_unconfirmed.html"
+    elif interest_check_obj.status == "waiting":
+        template = "waiting.html"
+    elif interest_check_obj.status == "won":
+        template = "won.html"
+    elif interest_check_obj.status == "lost":
+        template = "lost.html"
+    elif interest_check_obj.status == "accepted":
+        template = "accepted.html"
+    elif interest_check_obj.status == "declined":
+        template = "declined.html"
+
     return render(request,
-                  "status_page.html",
+                  "status/" + template,
                   {"interest_check_obj": interest_check_obj})
 
 def overview(request, id=None):
@@ -87,6 +133,19 @@ def overview(request, id=None):
                       "group": group_formset
                   })
 
+def change_status(request):
+    interest_check_id = request.session.get('interest_check_id', None)
+    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+
+    if interest_check_obj.status == "won":
+        interest_check_obj.status = "accepted"
+    elif interest_check_obj.status == "lost":
+        interest_check_obj.status = "waiting"
+
+    interest_check_obj.save()
+    return redirect(reverse('status'))
+
+
 def activate(request, token):
     try:
         confirmation = EmailConfirmations.objects.get(pk=token)
@@ -99,8 +158,29 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def create_account(request, uid):
+def temp_set_to_won(request, uid):
+    # Temporary dev view. Remove this when there is functionality
+    # to change winner's status to 'won'.
+    # Allows changing of user's status with button press.
+
     user = get_object_or_404(InterestCheck, id=uid)
+
+    if request.method == "POST":
+        user.status = 'won'
+        user.save()
+        send_win_email(user)
+
+    context = {
+        'name': user.name,
+        'status': user.status,
+        'uid': uid
+    }
+    return render(request, 'registrationSystem/temp_set-to-won.html', context)
+
+
+def create_account(request, uid):
+    connector = get_object_or_404(EmailConfirmations, id=uid)
+    user = connector.interestCheckId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -121,8 +201,14 @@ def create_account(request, uid):
                                         password=password,
                                         is_utn_member=True)
 
+        # Keep the InterestCheck (user) with status 'confirmed'
+        # for statistical purposes.
         user.status = "confirmed"
         user.save()
+
+        # Delete the EmailConfirmations. The randomized token
+        # should only be used once!
+        connector.delete()
         return HttpResponseRedirect('/temp/')
 
     context = {

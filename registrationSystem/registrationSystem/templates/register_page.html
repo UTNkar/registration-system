@@ -1,0 +1,39 @@
+{% extends "page_base.html" %} {% load static %} {% block content %}
+
+<div class="info-container">
+    <h1 id="welcome-text">
+        The registration is open!
+    </h1>
+    <h2>
+        Fill in you information below to take part in the raffle.
+    </h2>
+</div>
+<form method="post">
+    {% csrf_token %}
+    {{ form.errors }}
+
+    <div class="input-container">
+        <div class="input-div">
+            {{ form.name }}
+            <label class="form-control-label" for="email">Full name</label>
+        </div>
+
+        <div class="input-div">
+            {{ form.email }}
+            <label class="form-control-label" for="email">Email</label>
+        </div>
+        <div class="input-div">
+            {{ form.person_nr }}
+            <label class="form-control-label" for="email">Social security number (YYYYMMDD-XXX)</label>
+        </div>
+    </div>
+    <div class="raft-redirect">
+        Already have a raft? &nbsp;
+        <a href="{% url 'sign_in' %}">Click here.</a>
+    </div>
+    <div class=" button-container ">
+        <button type="submit" value="Submit">Register</button>
+    </div>
+</form>
+
+{% endblock %}

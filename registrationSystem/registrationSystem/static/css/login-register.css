@@ -1,0 +1,93 @@
+.info-container {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    display: flex;
+    background-color: #E5E5E5;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1em;
+}
+
+form {
+    width: 100%;
+}
+
+.input-div {
+    position: relative;
+}
+
+input {
+    width: 100%;
+    background-color: white !important;
+    border: 2px solid #C4C4C4;
+    border-radius: 0.6em;
+    padding-left: 0.5em;
+    padding-top: 2em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+}
+
+input:focus {
+    outline: none;
+    border: 2px solid black;
+}
+
+label {
+    position: absolute;
+    font-size: 1em;
+    top: 0.5em;
+    left: 0.5em;
+    color: #C4C4C4;
+}
+
+input:focus+label {
+    color: black;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus textarea:-webkit-autofill,
+textarea:-webkit-autofill:hover textarea:-webkit-autofill:focus,
+select:-webkit-autofill,
+select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+}
+
+.raft-redirect {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 2em;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+}
+
+@media only screen and (min-width: 600px) {
+    body {
+        justify-content: center;
+        align-items: center;
+    }
+    main {
+        width: 30%;
+        padding: 1em;
+        background-color: rgb(229, 229, 229, 0.35);
+        backdrop-filter: blur(1em);
+    }
+    input {
+        padding-top: 2em;
+        padding-bottom: 1em;
+    }
+    label {
+        font-size: 1.2em;
+        top: 0.7em;
+        left: 0.7em;
+    }
+}

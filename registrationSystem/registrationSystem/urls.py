@@ -18,13 +18,24 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path(
-        'create_account/<str:uid>', views.create_account, name='create_account'
-    ),
+    path('', views.sign_in, name='sign_in'),
+    path('register/', views.register, name='register'),
     path('temp/', views.temp, name='temp'),
-    path('', views.start, name='start'),
+    # TODO: Remove temp/ when there is a landing page after
+    #   creating the full account.
     path('status/', views.status, name='status'),
+    path('change_status/', views.change_status, name='change_status'),
+    # TODO add template for overview page later
+    path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
+    path(
+        'create_account/<str:uid>', views.create_account, name='create_account'
+    ),
+    path(
+        'set_to_won/<str:uid>', views.temp_set_to_won, name='set-status-won'
+    ),
+    # TODO: Remove set_to_won/ when there is functionality
+    #   to change user's status to 'won'.
 ]
