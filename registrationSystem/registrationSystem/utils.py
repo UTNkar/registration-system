@@ -1,4 +1,45 @@
 from django.core import validators
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from registrationSystem.models import EmailConfirmations
+
+
+def send_win_email(user):
+    """
+    Call this function when a user wins a raft (i.e. the status of
+    the InterestCheck turns 'won')
+    to send an email containing a unique link to create a full account.
+
+    Parameters:
+    user: InterestCheck of the person who won.
+
+    Returns:
+    nothing
+    """
+
+    # The connector binds the randomized token
+    # to the InterestCheck from which the account
+    # information will be retreived.
+    connector = EmailConfirmations.objects.create(interestCheckId=user)
+    connector.save()
+
+    message = render_to_string(
+                'email/create-account_email.html',
+                {
+                    'name': user.name,
+                    'domain': 'localhost:8000',
+                    'token': connector.id,
+                }
+            )
+    to_email = user.email
+    email = EmailMessage(
+        'You have won a raft!',
+        message,
+        to=[to_email]
+    )
+    email.send()
+
+    return
 
 
 # TODO: Change regex to only support YYYYMMDD-XXXX

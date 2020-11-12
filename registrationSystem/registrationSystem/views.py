@@ -9,6 +9,7 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
+from registrationSystem.utils import send_win_email
 
 
 def sign_in(request):
@@ -127,8 +128,29 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def create_account(request, uid):
+def temp_set_to_won(request, uid):
+    # Temporary dev view. Remove this when there is functionality
+    # to change winner's status to 'won'.
+    # Allows changing of user's status with button press.
+
     user = get_object_or_404(InterestCheck, id=uid)
+
+    if request.method == "POST":
+        user.status = 'won'
+        user.save()
+        send_win_email(user)
+
+    context = {
+        'name': user.name,
+        'status': user.status,
+        'uid': uid
+    }
+    return render(request, 'registrationSystem/temp_set-to-won.html', context)
+
+
+def create_account(request, uid):
+    connector = get_object_or_404(EmailConfirmations, id=uid)
+    user = connector.interestCheckId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -149,8 +171,14 @@ def create_account(request, uid):
                                         password=password,
                                         is_utn_member=True)
 
+        # Keep the InterestCheck (user) with status 'confirmed'
+        # for statistical purposes.
         user.status = "confirmed"
         user.save()
+
+        # Delete the EmailConfirmations. The randomized token
+        # should only be used once!
+        connector.delete()
         return HttpResponseRedirect('/temp/')
 
     context = {
