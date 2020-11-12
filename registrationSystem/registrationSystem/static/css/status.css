@@ -1,5 +1,14 @@
-main.status {
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     padding: 0;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
 }
 
 .inactive-button {
@@ -8,18 +17,36 @@ main.status {
 
 h2.status {
     background-color: white;
+    text-align: center;
+    width: 100%;
     padding: 1em;
 }
 
 @media only screen and (min-width: 600px) {
-    body.status {
-        align-items: flex-start;
-    }
     main {
         width: 50%;
         height: 100%;
+        justify-content: flex-start;
         background-color: white;
-        justify-content: center;
+    }
+    header {
+        width: 70%;
+        justify-content: flex-start !important;
+    }
+    h2.status {
+        text-align: start;
+        font-size: 1em;
+        padding: 0;
+    }
+    .box {
+        padding: 6em;
+    }
+    button {
+        padding: 1em 3em !important;
+    }
+    .button-box {
+        display: flex;
         align-items: center;
+        justify-content: center;
     }
 }

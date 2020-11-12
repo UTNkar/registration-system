@@ -17,10 +17,12 @@
 {% endif %}
 <body>
     <main>
-        <header>
-            <img src="{% static 'images/forsränning.png' %}" id="forsranning">
-        </header>
-        {% block content %}{% endblock %}
+        <div class="box">
+            <header>
+                <img src="{% static 'images/forsränning.png' %}" id="forsranning">
+            </header>
+            {% block content %}{% endblock %}
+        </div>
     </main>
     <footer>
         Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
