@@ -45,10 +45,12 @@ def send_win_email(user):
 
 
 def is_utn_member(person_nr):
-    r = requests.get('https://utn.se/member_check_api/')
-    return r
-=======
->>>>>>> development
+    r = requests.post(
+        'https://utn.se/member_check_api/',
+        {'ssn': str(person_nr)}
+    )
+
+    return r.json()['is_member']
 
 
 # TODO: Change regex to only support YYYYMMDD-XXXX
