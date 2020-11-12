@@ -41,13 +41,23 @@ def send_win_email(user):
     email.send()
 
     return
-<<<<<<< HEAD
 
 
 def is_utn_member(person_nr):
+    """
+    Call this function to see if a person is a member of the
+    student union UTN.
+
+    Params:
+    person_nr: The social security number of the person, as a string
+
+    Returns:
+    True if the person is a member, else False.
+    """
+
     r = requests.post(
         'https://utn.se/member_check_api/',
-        {'ssn': str(person_nr)}
+        {'ssn': person_nr}
     )
 
     return r.json()['is_member']
