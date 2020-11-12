@@ -33,5 +33,4 @@ class PersonNumberField(forms.Field):
     def widget_attrs(self, widget):
         attrs = super(PersonNumberField, self).widget_attrs(widget)
         attrs['class'] = attrs.get('class', '') + ' person_number'
-        attrs['placeholder'] = 'YYYYMMDD-XXXX'
         return attrs

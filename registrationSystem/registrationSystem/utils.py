@@ -6,16 +6,23 @@ from registrationSystem.models import EmailConfirmations
 
 
 def send_win_email(user):
-    # Call this function when a user wins a raft
-    # (i.e. InterestCheck's status turns 'won')
-    # to send an email with containing a unique link
-    # to create a full account.
+    """
+    Call this function when a user wins a raft (i.e. the status of
+    the InterestCheck turns 'won')
+    to send an email containing a unique link to create a full account.
 
-    connector = EmailConfirmations.objects.create(interestCheckId=user)
-    connector.save()
+    Parameters:
+    user: InterestCheck of the person who won.
+
+    Returns:
+    nothing
+    """
+
     # The connector binds the randomized token
     # to the InterestCheck from which the account
     # information will be retreived.
+    connector = EmailConfirmations.objects.create(interestCheckId=user)
+    connector.save()
 
     message = render_to_string(
                 'email/create-account_email.html',
@@ -34,11 +41,14 @@ def send_win_email(user):
     email.send()
 
     return
+<<<<<<< HEAD
 
 
 def is_utn_member(person_nr):
     r = requests.get('https://utn.se/member_check_api/')
     return r
+=======
+>>>>>>> development
 
 
 # TODO: Change regex to only support YYYYMMDD-XXXX
