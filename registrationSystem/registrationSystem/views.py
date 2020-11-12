@@ -9,7 +9,7 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
-from registrationSystem.utils import send_win_email
+from registrationSystem.utils import send_win_email, is_utn_member
 
 
 def sign_in(request):
@@ -166,12 +166,14 @@ def create_account(request, uid):
         password = form.cleaned_data['password']
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
-        RiverraftingUser.objects.create(name=user.name,
-                                        email=user.email,
-                                        person_nr=user.person_nr,
-                                        phone_nr=phone_nr,
-                                        password=password,
-                                        is_utn_member=True)
+        RiverraftingUser.objects.create(
+            name=user.name,
+            email=user.email,
+            person_nr=user.person_nr,
+            phone_nr=phone_nr,
+            password=password,
+            is_utn_member=is_utn_member(user.person_nr)
+        )
 
         # Keep the InterestCheck (user) with status 'confirmed'
         # for statistical purposes.
