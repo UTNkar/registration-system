@@ -8,3 +8,5 @@ sentry-sdk==0.19.2
 
 # Phonenumber validation
 phonenumbers==8.12.12
+
+requests==2.25.0
