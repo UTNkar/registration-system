@@ -12,6 +12,26 @@ class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
     # Raffle system
     change_list_template = "admin/riverraftingrafflestate/riverraftingrafflestate_changelist.html"
 
+    def get_urls(self):
+        urls = super().get_urls()
+        new_urls = [
+            path('update/', self.update)
+        ]
+        return new_urls + urls
+
+    def update(self, request):
+        raffle = RiverRaftingRaffleState.load()
+        if "open_button" in request.POST and raffle.state == "closed":
+            raffle.state = "open"
+            raffle.save()
+            return HttpResponseRedirect("../")
+        elif "close_button" in request.POST:
+            raffle.state = "closed"
+            raffle.save()
+            return HttpResponseRedirect("../")
+        
+        return HttpResponseRedirect("../")
+        
 
 @admin.register(InterestCheck)
 class InterestCheckAdmin(admin.ModelAdmin):

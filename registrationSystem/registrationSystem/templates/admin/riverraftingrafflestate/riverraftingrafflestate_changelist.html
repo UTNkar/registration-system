@@ -1,9 +1,26 @@
-{% extends "admin/base.html" %}
-
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls %}
 {% block object-tools %}
 <div>
-  The raffle state is {{ river_rafting_raffle_state.state }}
+  The River Rafting Raffle is currently {{ river_rafting_raffle_state.state }}
+  <br></br>
+  <form action="update/" method="post">
+    <input name="open_button"
+           type="submit"
+           value="open"
+           {% if river_rafting_raffle_state.state == "open" %}
+           disabled
+           {% endif %}
+    >
+    <input name="close_button"
+           type="submit"
+           value="close"
+           {% if river_rafting_raffle_state.state == "closed" %}
+           disabled
+           {% endif %}
+    >
+    {% csrf_token %}
+  </form>
 </div>
-<br />
 
 {% endblock %}
