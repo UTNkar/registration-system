@@ -27,7 +27,7 @@ def sign_in(request):
 
 
 def login_user(request):
-    person_nr = request.POST.get('person_nr') #TODO: we use person nr here
+    person_nr = request.POST.get('person_nr')
     password = request.POST.get("password")
     user = authenticate(request, username=person_nr, password=password)
     if user is not None:
@@ -112,6 +112,8 @@ def overview(request, id=None):
 
     user = user_model.objects.get(id=user_id)
     group = user.belongs_to_group
+
+    is_leader = group.leader == user.id
 
     if not group:
         raise Http404('There is no group associated to this user.')
