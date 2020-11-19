@@ -1,3 +1,4 @@
+import uuid
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth import get_user_model
@@ -79,14 +80,17 @@ class InterestCheck(models.Model):
         ("waiting", "Waiting"),
         ("won", "Won"),
         ("lost", "Lost"),
+        ("declined", "Declined"),
         ("accepted", "Accepted"),
-        ("declined", "Declined")
+        ("confirmed", "Confirmed")
     )
 
     name = models.CharField(max_length=254)
     email = models.EmailField()
     person_nr = models.CharField(max_length=13)
-    status = models.CharField(max_length=20, choices=CHOICES)
+    status = models.CharField(max_length=20,
+                              choices=CHOICES,
+                              default=CHOICES[0][0])
 
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
@@ -170,3 +174,10 @@ def get_group_model():
 
 admin.site.register(RiverraftingUser)
 admin.site.register(RiverraftingGroup)
+
+
+class EmailConfirmations(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    interestCheckId = models.ForeignKey(
+        "InterestCheck", on_delete=models.CASCADE
+        )
