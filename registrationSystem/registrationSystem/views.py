@@ -32,7 +32,7 @@ def login_user(request):
     user = authenticate(request, username=person_nr, password=password)
     if user is not None:
         login(request, user)
-        return redirect('overview')
+        return redirect(reverse('overview'))
     else:
         return redirect(settings.LOGIN_URL)
 
@@ -108,7 +108,7 @@ def status(request):
 def overview(request, id=None):
     user_model = get_user_model()
     group_model = RiverraftingTeam
-    user_id = request.user.id  # temp
+    user_id = request.user.id
 
     user = user_model.objects.get(id=user_id)
     group = user.belongs_to_group
