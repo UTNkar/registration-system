@@ -6,7 +6,7 @@ from django.forms import (
 from registrationSystem.models import (
     InterestCheck, RiverraftingUser, RiverraftingTeam
 )
-from registrationSystem.fields import PersonNumberField
+from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
 
 
@@ -67,9 +67,9 @@ class CreateAccountForm(ModelForm):
         }
 
         field_order = [
-            'name', 'person_nr', 'email', 'phone_nr', 'password', 'password_check'
+            'name', 'person_nr', 'email', 'phone_nr',
+            'password', 'password_check'
         ]
-
 
 
 class RiverraftingUserForm(ModelForm):

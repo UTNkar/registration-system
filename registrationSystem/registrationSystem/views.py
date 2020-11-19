@@ -16,6 +16,7 @@ from registrationSystem.forms import (
     RiverraftingTeamForm
 )
 
+
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
