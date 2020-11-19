@@ -27,3 +27,5 @@ jobs:
         pip install -r dev-requirements.txt
     - name: Lint with flake8
       run: flake8 registrationSystem
+    - name: Run tests
+      run: ./registrationSystem/manage.py test registrationSystem

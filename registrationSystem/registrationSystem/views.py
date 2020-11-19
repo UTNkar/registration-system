@@ -10,7 +10,7 @@ from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations, RiverraftingTeam
 )
-from registrationSystem.utils import send_win_email
+from registrationSystem.utils import send_win_email, is_utn_member
 from registrationSystem.forms import (
     InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
     RiverraftingTeamForm
@@ -211,14 +211,18 @@ def create_account(request, uid):
         })
 
     if form.is_valid():
+        phone_nr = form.cleaned_data['phone_nr']
         password = form.cleaned_data['password']
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
-        get_user_model().objects.create(name=user.name,
-                                        email=user.email,
-                                        person_nr=user.person_nr,
-                                        password=password,
-                                        is_utn_member=True)
+        get_user_model().objects.create(
+            name=user.name,
+            email=user.email,
+            person_nr=user.person_nr,
+            phone_nr=phone_nr,
+            password=password,
+            is_utn_member=is_utn_member(user.person_nr)
+        )
 
         # Keep the InterestCheck (user) with status 'confirmed'
         # for statistical purposes.

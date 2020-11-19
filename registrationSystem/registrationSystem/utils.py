@@ -1,6 +1,7 @@
 from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+import requests
 from registrationSystem.models import EmailConfirmations
 
 
@@ -39,6 +40,26 @@ def send_win_email(user):
     email.send()
 
     return
+
+
+def is_utn_member(person_nr):
+    """
+    Call this function to see if a person is a member of the
+    student union UTN.
+
+    Params:
+    person_nr: The social security number of the person, as a string
+
+    Returns:
+    True if the person is a member, else False.
+    """
+
+    r = requests.post(
+        'https://utn.se/member_check_api/',
+        {'ssn': person_nr}
+    )
+
+    return r.json()['is_member']
 
 
 # TODO: Change regex to only support YYYYMMDD-XXXX
