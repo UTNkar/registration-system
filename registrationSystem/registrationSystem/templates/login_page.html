@@ -7,12 +7,12 @@
         Sign in to your account with email address and password.
     </h2>
 </div>
-<form action="/raft_info/" method="post">
+<form action="{% url 'login' %}" method="post">
     {% csrf_token %}
     <div class="input-container">
         <div class="input-div">
-            <input type="text" id="email" name="email" required />
-            <label class="form-control-label" for="email">E-mail address</label>
+            <input type="text" id="email" name="person_nr" required />
+            <label class="form-control-label" for="person_nr">Person number</label>
         </div>
 
         <div class="input-div">

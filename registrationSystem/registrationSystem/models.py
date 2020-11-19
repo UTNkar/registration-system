@@ -13,14 +13,11 @@ class CommonUserManager(UserManager):
     def get_by_natural_key(self, person_nr):
         return self.get(person_nr=person_nr)
 
-    def create_user(self, person_nr, name, email, phone_nr, is_utn_member,
-                    password):
-        """
-        Creates a non-superuser identified by person_nr
-        """
+    def __create_user(self, person_nr, name, email, phone_nr, is_utn_member,
+                      password, is_superuser):
         now = timezone.now()
         if not person_nr:
-            raise ValueError('The given person_nr must be set')
+            raise ValueError('Person number is required.')
         email = UserManager.normalize_email(email)
         user = self.model(
             person_nr=person_nr,
@@ -29,37 +26,29 @@ class CommonUserManager(UserManager):
             phone_nr=phone_nr,
             password=password,
             is_utn_member=is_utn_member,
-            is_superuser=False,
-            is_staff=False,
+            is_superuser=is_superuser,
+            is_staff=is_superuser,
             last_login=now)
 
         user.set_password(password)
-        user.save(using=self._db)
+        user.save()
         return user
+
+    def create_user(self, person_nr, name, email, phone_nr, is_utn_member,
+                    password):
+        """
+        Creates a non-superuser identified by person_nr
+        """
+        return self.__create_user(person_nr, name, email, phone_nr,
+                                  is_utn_member, password, is_superuser=False)
 
     def create_superuser(self, person_nr, name, email, phone_nr, is_utn_member,
                          password):
         """
         Creates a superuser identified by person_nr
         """
-        now = timezone.now()
-        if not person_nr:
-            raise ValueError('The given person number must be set')
-        email = UserManager.normalize_email(email)
-        user = self.model(
-            person_nr=person_nr,
-            email=email,
-            name=name,
-            phone_nr=phone_nr,
-            password=password,
-            is_utn_member=is_utn_member,
-            is_superuser=True,
-            is_staff=True,
-            last_login=now)
-
-        user.set_password(password)
-        user.save(using=self._db)
-        return user
+        return self.__create_user(person_nr, name, email, phone_nr,
+                                  is_utn_member, password, is_superuser=True)
 
 
 class InterestCheck(models.Model):
@@ -106,7 +95,8 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     password = models.CharField(max_length=254, verbose_name='Password')
     phone_nr = models.CharField(max_length=20, verbose_name='Phone number')
     person_nr = models.CharField(
-        max_length=13, verbose_name='Person number', unique=True)
+        max_length=13, verbose_name='Person number', unique=True
+    )
     is_utn_member = models.BooleanField(verbose_name='UTN Member')
     is_staff = models.BooleanField()
     objects = CommonUserManager()
@@ -130,9 +120,13 @@ class RiverraftingUser(AbstractUser):
         ('S', 'S'),
         ('XS', 'XS'),
     )
-    lifevest_size = models.CharField(max_length=2,
-                                     choices=LIFEVEST_SIZES,
-                                     verbose_name='Lifevest size')
+
+    lifevest_size = models.CharField(
+        max_length=2,
+        choices=LIFEVEST_SIZES,
+        verbose_name='Lifevest size'
+    )
+
     belongs_to_group = models.ForeignKey(
         "RiverraftingTeam",
         on_delete=models.SET_NULL,
@@ -143,9 +137,10 @@ class RiverraftingUser(AbstractUser):
 
 
 class AbstractGroup(models.Model):
-    leader = models.ForeignKey(get_user_model(),
-                               on_delete=models.CASCADE
-                               )
+    leader = models.ForeignKey(
+        get_user_model(),
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return '{}'.format(getattr(self, "name"))
@@ -155,14 +150,28 @@ class AbstractGroup(models.Model):
 
 
 class RiverraftingTeam(AbstractGroup):
-    name = models.CharField(max_length=254, blank=True,
-                            verbose_name='Team name')
+    name = models.CharField(
+        max_length=254,
+        blank=True,
+        verbose_name='Team name'
+    )
+
     number = models.IntegerField(
-        verbose_name='Start Number', null=True, blank=True)
+        verbose_name='Start Number',
+        null=True,
+        blank=True
+    )
+
     environment_raft = models.BooleanField(
-        verbose_name='I want an environmentally friendly raft')
+        verbose_name='I want an environmentally friendly raft'
+    )
+
     presentation = models.CharField(
-        max_length=250, verbose_name='Presentation', null=True, blank=True)
+        max_length=250,
+        verbose_name='Presentation',
+        null=True,
+        blank=True
+    )
 
 
 class EmailConfirmations(models.Model):
@@ -170,6 +179,10 @@ class EmailConfirmations(models.Model):
     interestCheckId = models.ForeignKey(
         "InterestCheck", on_delete=models.CASCADE
     )
+
+
+class ImportantDate(models.Model):
+    date = models.DateField()
 
 
 if settings.EVENT == 'RIVERRAFTING':

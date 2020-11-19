@@ -15,30 +15,26 @@ from registrationSystem.forms import (
     InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
     RiverraftingTeamForm
 )
+from django.conf import settings
 
 
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
-        return redirect(reverse('raft_info'))
+        return redirect(reverse('overview'))
     else:
         return render(request, "login_page.html")
 
 
 def login_user(request):
-    uname = request.POST.get('username')
-    passw = request.POST.get("pass")
-    user = authenticate(request, username=uname, password=passw)
+    person_nr = request.POST.get('person_nr') #TODO: we use person nr here
+    password = request.POST.get("password")
+    user = authenticate(request, username=person_nr, password=password)
     if user is not None:
         login(request, user)
-        return redirect('/')
+        return redirect('overview')
     else:
-        return redirect(reverse('raft_info'))
-
-
-@login_required
-def raft_info(request):
-    return render(request, "raft_info.html")
+        return redirect(settings.LOGIN_URL)
 
 
 def register(request):
@@ -108,10 +104,11 @@ def status(request):
                   {"interest_check_obj": interest_check_obj})
 
 
+@login_required
 def overview(request, id=None):
     user_model = get_user_model()
     group_model = RiverraftingTeam
-    user_id = 2  # temp
+    user_id = request.user.id  # temp
 
     user = user_model.objects.get(id=user_id)
     group = user.belongs_to_group
