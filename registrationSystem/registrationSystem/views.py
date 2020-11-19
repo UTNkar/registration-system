@@ -4,17 +4,17 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.forms import modelformset_factory
-from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import InterestCheck, RiverraftingTeam, RiverraftingUser
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
-    InterestCheck, EmailConfirmations
+    InterestCheck, EmailConfirmations, RiverraftingTeam
 )
 from registrationSystem.utils import send_win_email
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm, RiverraftingUserForm, RiverraftingTeamForm
-
+from registrationSystem.forms import (
+    InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
+    RiverraftingTeamForm
+)
 
 def sign_in(request):
     current_user = request.user
@@ -129,12 +129,16 @@ def overview(request, id=None):
     if request.method == "POST":
         if request.POST['type'] == 'group':
             group_formset = GroupFormSet(
-                request.POST, queryset=group_model.objects.filter(id=user.belongs_to_group.id))
+                request.POST, queryset=group_model.objects.filter(
+                    id=user.belongs_to_group.id
+                ))
             if group_formset.is_valid():
                 group_formset.save()
         else:
-            user_formset = UserFormSet(request.POST, queryset=user_model.objects.filter(
-                belongs_to_group=user.belongs_to_group.id))
+            user_formset = UserFormSet(
+                request.POST,
+                queryset=user_model.objects.filter(
+                    belongs_to_group=user.belongs_to_group.id))
             if user_formset.is_valid():
                 user_formset.save()
 
@@ -210,11 +214,11 @@ def create_account(request, uid):
         password = form.cleaned_data['password']
         # There is no need to encrypt the password here, the user manager
         # handles that in the database.
-        RiverraftingProfile.objects.create(name=user.name,
-                                           email=user.email,
-                                           person_nr=user.person_nr,
-                                           password=password,
-                                           is_utn_member=True)
+        get_user_model().objects.create(name=user.name,
+                                        email=user.email,
+                                        person_nr=user.person_nr,
+                                        password=password,
+                                        is_utn_member=True)
 
         # Keep the InterestCheck (user) with status 'confirmed'
         # for statistical purposes.

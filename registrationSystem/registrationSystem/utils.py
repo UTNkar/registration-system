@@ -16,7 +16,6 @@ def send_win_email(user):
     Returns:
     nothing
     """
-
     # The connector binds the randomized token
     # to the InterestCheck from which the account
     # information will be retreived.

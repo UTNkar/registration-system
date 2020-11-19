@@ -2,7 +2,9 @@ import uuid
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth import get_user_model
-from django.contrib.auth.models import AbstractBaseUser, UserManager, PermissionsMixin
+from django.contrib.auth.models import (
+    AbstractBaseUser, UserManager, PermissionsMixin
+)
 from django.conf import settings
 from django.utils import timezone
 
@@ -11,7 +13,8 @@ class CommonUserManager(UserManager):
     def get_by_natural_key(self, person_nr):
         return self.get(person_nr=person_nr)
 
-    def create_user(self, person_nr, name, email, phone_nr, is_utn_member, password):
+    def create_user(self, person_nr, name, email, phone_nr, is_utn_member,
+                    password):
         """
         Creates a non-superuser identified by person_nr
         """
@@ -34,7 +37,8 @@ class CommonUserManager(UserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, person_nr, name, email, phone_nr, is_utn_member, password):
+    def create_superuser(self, person_nr, name, email, phone_nr, is_utn_member,
+                         password):
         """
         Creates a superuser identified by person_nr
         """
