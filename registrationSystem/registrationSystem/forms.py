@@ -1,13 +1,16 @@
 from django import forms
 from django.forms import (
-    ModelForm, CharField, TextInput, EmailInput, PasswordInput, ValidationError
+    ModelForm, CharField, TextInput, EmailInput,
+    PasswordInput, ValidationError, CheckboxInput
 )
-from registrationSystem.models import InterestCheck, RiverraftingUser
+from registrationSystem.models import (
+    InterestCheck, RiverraftingUser, RiverraftingTeam
+)
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
+from django.contrib.auth import get_user_model
 
 
 class InterestCheckForm(ModelForm):
-
     person_nr = PersonNumberField()
 
     status = forms.CharField(
@@ -24,7 +27,6 @@ class InterestCheckForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
-
     def clean_password_check(self):
         password = self.cleaned_data.get('password')
         password_check = self.cleaned_data.get('password_check')
@@ -42,7 +44,7 @@ class CreateAccountForm(ModelForm):
     )
 
     class Meta:
-        model = RiverraftingUser
+        model = get_user_model()
         fields = [
             'name',
             'person_nr',
@@ -64,6 +66,51 @@ class CreateAccountForm(ModelForm):
             'password': PasswordInput(),
         }
 
-    field_order = [
-        'name', 'person_nr', 'email', 'phone_nr', 'password', 'password_check'
-    ]
+        field_order = [
+            'name', 'person_nr', 'email', 'phone_nr',
+            'password', 'password_check'
+        ]
+
+
+class RiverraftingUserForm(ModelForm):
+    class Meta:
+        model = RiverraftingUser
+
+        fields = [
+            'name',
+            'email',
+            'lifevest_size'
+        ]
+
+        labels = {
+            'name': 'Full name',
+            'email': 'E-mail address',
+            'lifevest_size': 'Lifevest Size',
+        }
+
+        widgets = {
+            'name': TextInput(attrs={'readonly': 'readonly'}),
+            'email': EmailInput(attrs={'readonly': 'readonly'}),
+        }
+
+
+class RiverraftingTeamForm(ModelForm):
+    class Meta:
+        model = RiverraftingTeam
+
+        fields = [
+            'environment_raft',
+            'presentation',
+        ]
+
+        labels = {
+            'evironment_raft': 'I want an environmentally friendly raft',
+            'presentation': 'Group description',
+        }
+
+        widgets = {
+            'environment_raft': CheckboxInput(
+                attrs={'onclick': 'return false'}
+            ),
+            'presentation': TextInput(attrs={'readonly': 'readonly'}),
+        }
