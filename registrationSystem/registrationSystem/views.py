@@ -113,8 +113,6 @@ def overview(request, id=None):
     user = user_model.objects.get(id=user_id)
     group = user.belongs_to_group
 
-    is_leader = group.leader == user.id
-
     if not group:
         raise Http404('There is no group associated to this user.')
 
