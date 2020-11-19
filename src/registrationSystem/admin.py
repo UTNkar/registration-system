@@ -1,5 +1,5 @@
 from django.contrib import admin
-from registrationSystem.models import InterestCheck, RiverRaftingRaffleState
+from registrationSystem.models import RiverraftingUser, InterestCheck, RiverRaftingRaffleState
 from django.utils.html import format_html
 from django.urls import reverse, path
 from django.conf.urls import url
