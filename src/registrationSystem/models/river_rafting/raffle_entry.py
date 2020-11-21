@@ -20,7 +20,7 @@ class RaffleEntry(models.Model):
     join the raffle again by transitioning to the "waiting" state,
     should they choose to.
     """
-    
+
     CHOICES = (
         ("mail unconfirmed", "Mail-Unconfirmed"),
         ("waiting", "Waiting"),
@@ -30,7 +30,7 @@ class RaffleEntry(models.Model):
         ("accepted", "Accepted"),
         ("confirmed", "Confirmed")
     )
-    
+
     name = models.CharField(max_length=254)
     email = models.EmailField()
     person_nr = models.CharField(max_length=13)
