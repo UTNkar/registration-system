@@ -5,12 +5,10 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations, RiverraftingTeam, ImportantDate
 )
-from registrationSystem.utils import send_win_email, is_utn_member
+from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
     InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
     RiverraftingTeamForm
@@ -48,32 +46,15 @@ def register(request):
                 person_nr=form.cleaned_data['person_nr']
             )
 
+            # Send confirmation email, or resend email with new link
+            # in case someone re-registers without ever pressing
+            # original link (i.e. status still 'mail unconfirmed')
             status = interest_check_obj.status
-
             if status == "mail unconfirmed":
-                confirmation = EmailConfirmations.objects.create(
-                    interestCheckId=interest_check_obj
-                )
-                confirmation.save()
+                send_email(interest_check_obj)
 
-                message = render_to_string(
-                    'email/confirm_email.html',
-                    {
-                        'name': interest_check_obj.name,
-                        'domain': 'localhost:8000',
-                        'token': confirmation.id,
-                    }
-                )
-                to_email = form.cleaned_data.get('email')
-                email = EmailMessage(
-                    'Activate your account', message, to=[to_email]
-                )
-
-                email.send()
-
+            # Update cookie. Used when changing accounts or 'logging' back in
             request.session['interest_check_id'] = interest_check_obj.id
-
-            interest_check_obj.status = "won"
 
             interest_check_obj.save()
             return redirect(reverse('status'))
@@ -83,21 +64,24 @@ def register(request):
 
 
 def status(request):
-    interest_check_id = request.session.get('interest_check_id', None)
+    interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+    status = interest_check_obj.status
 
-    if interest_check_obj.status == "mail unconfirmed":
+    if status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
-    elif interest_check_obj.status == "waiting":
+    elif status == "waiting":
         template = "waiting.html"
-    elif interest_check_obj.status == "won":
+    elif status == "won":
         template = "won.html"
-    elif interest_check_obj.status == "lost":
+    elif status == "lost":
         template = "lost.html"
-    elif interest_check_obj.status == "accepted":
+    elif status == "accepted":
         template = "accepted.html"
-    elif interest_check_obj.status == "declined":
+    elif status == "declined":
         template = "declined.html"
+    elif status == "confirmed":
+        template = "confirmed.html"
 
     return render(request,
                   "status/" + template,
@@ -177,11 +161,15 @@ def overview(request, id=None):
                   })
 
 
+# TODO: Remove this view when status can be changed from the admin pages
 def change_status(request):
-    interest_check_id = request.session.get('interest_check_id', None)
+    # If the user loses and wants to re-enter the raffle, of
+    # if the user wins and wants their spot.
+    interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "won":
+        user_has_won(interest_check_obj)
         interest_check_obj.status = "accepted"
     elif interest_check_obj.status == "lost":
         interest_check_obj.status = "waiting"
@@ -200,26 +188,6 @@ def activate(request, token):
         return redirect(reverse('status'))
     except(InterestCheck.DoesNotExist):
         return HttpResponse('Activation link is invalid!')
-
-
-def temp_set_to_won(request, uid):
-    # Temporary dev view. Remove this when there is functionality
-    # to change winner's status to 'won'.
-    # Allows changing of user's status with button press.
-
-    user = get_object_or_404(InterestCheck, id=uid)
-
-    if request.method == "POST":
-        user.status = 'won'
-        user.save()
-        send_win_email(user)
-
-    context = {
-        'name': user.name,
-        'status': user.status,
-        'uid': uid
-    }
-    return render(request, 'registrationSystem/temp_set-to-won.html', context)
 
 
 def create_account(request, uid):
@@ -257,7 +225,8 @@ def create_account(request, uid):
         # Delete the EmailConfirmations. The randomized token
         # should only be used once!
         connector.delete()
-        return HttpResponseRedirect('/temp/')
+        return HttpResponseRedirect(reverse('status')
+
     context = {
         'uid': uid,
         'form': form
