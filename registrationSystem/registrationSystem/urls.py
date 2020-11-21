@@ -20,9 +20,6 @@ from . import views
 urlpatterns = [
     path('', views.sign_in, name='sign_in'),
     path('register/', views.register, name='register'),
-    path('temp/', views.temp, name='temp'),
-    # TODO: Remove temp/ when there is a landing page after
-    #   creating the full account.
     path('status/', views.status, name='status'),
     path('change_status/', views.change_status, name='change_status'),
     # TODO add template for overview page later
