@@ -82,21 +82,24 @@ def register(request):
 
 
 def status(request):
-    interest_check_id = request.session.get('interest_check_id', None)
+    interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+    status = interest_check_obj.status
 
-    if interest_check_obj.status == "mail unconfirmed":
+    if status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
-    elif interest_check_obj.status == "waiting":
+    elif status == "waiting":
         template = "waiting.html"
-    elif interest_check_obj.status == "won":
+    elif status == "won":
         template = "won.html"
-    elif interest_check_obj.status == "lost":
+    elif status == "lost":
         template = "lost.html"
-    elif interest_check_obj.status == "accepted":
+    elif status == "accepted":
         template = "accepted.html"
-    elif interest_check_obj.status == "declined":
+    elif status == "declined":
         template = "declined.html"
+    elif status == "confirmed":
+        template = "confimed.html"
 
     return render(request,
                   "status/" + template,
