@@ -24,7 +24,7 @@ form {
 input {
     width: 100%;
     background-color: white !important;
-    border: 2px solid #C4C4C4;
+    border: 2px solid #797979;
     border-radius: 0.6em;
     padding-left: 0.5em;
     padding-top: 2em;
@@ -42,7 +42,7 @@ label {
     font-size: 1em;
     top: 0.5em;
     left: 0.5em;
-    color: #C4C4C4;
+    color: #797979;
 }
 
 input:focus+label {
