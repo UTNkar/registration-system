@@ -1,6 +1,7 @@
 from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.core.exceptions import FieldError
 import requests
 from registrationSystem.models import EmailConfirmations
 
@@ -20,30 +21,41 @@ def user_has_won(user):
     """
     user.status = 'won'
     user.save()
-    send_win_email(user)
+    send_email(user)
     return
 
 
-def send_win_email(user):
+def send_email(user):
     """
-    Call this function to send an email containing a unique link to create a
-    full account.
+    Call this function to send an email containing a unique link with the
+    user's InterestCheck.
+    Used to confirm registration email or to create a full account.
 
     Parameters:
-    user: InterestCheck of the person to send the win email.
+    user: InterestCheck of the person to send the email.
 
     Returns:
     nothing
     """
 
-    # The connector binds the randomized token
-    # to the InterestCheck from which the account
-    # information will be retreived.
+    # The connector binds the randomized token to the InterestCheck
+    # from which the account information will be retreived.
     connector = EmailConfirmations.objects.create(interestCheckId=user)
     connector.save()
 
+    status = user.status
+    if status == 'mail unconfirmed':
+        emailtitle = 'Activate your account'
+        template = 'email/confirm_email.html'
+    elif status == 'won':
+        emailtitle = 'You have won a raft!'
+        template = 'email/create-account_email.html'
+    else:
+        raise FieldError('Incorrect user status in order to send an email!')
+
+    # TODO: Set domain to the actual domain on production.
     message = render_to_string(
-                'email/create-account_email.html',
+                template,
                 {
                     'name': user.name,
                     'domain': 'localhost:8000',
@@ -52,7 +64,7 @@ def send_win_email(user):
             )
     to_email = user.email
     email = EmailMessage(
-        'You have won a raft!',
+        emailtitle,
         message,
         to=[to_email]
     )
