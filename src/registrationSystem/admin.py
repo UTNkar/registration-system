@@ -1,12 +1,15 @@
 from django.contrib import admin
+from django.conf import settings
 from django.urls import path
 from registrationSystem.models import (
     RaffleEntry,
-    RiverRaftingRaffleState)
+    RiverRaftingRaffleState,
+    RiverRaftingUser,
+    RiverRaftingTeam
+)
 from django.http import HttpResponseRedirect
 
 
-@admin.register(RiverRaftingRaffleState)
 class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
     list_display = ["state"]
     # Raffle system
@@ -26,16 +29,13 @@ class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
         if "open_button" in request.POST and raffle.state == "closed":
             raffle.state = "open"
             raffle.save()
-            return HttpResponseRedirect("../")
         elif "close_button" in request.POST:
             raffle.state = "closed"
             raffle.save()
-            return HttpResponseRedirect("../")
 
         return HttpResponseRedirect("../")
 
 
-@admin.register(RaffleEntry)
 class RaffleEntryAdmin(admin.ModelAdmin):
 
     list_display = ["name", "status", "is_utn_member"]
@@ -79,3 +79,10 @@ class RaffleEntryAdmin(admin.ModelAdmin):
             request,
             extra_context=extra_context
         )
+
+
+if settings.EVENT == 'RIVERRAFTING':
+    admin.site.register(RaffleEntry, RaffleEntryAdmin)
+    admin.site.register(RiverRaftingRaffleState, RiverRaftingRaffleStateAdmin)
+    admin.site.register(RiverRaftingUser)
+    admin.site.register(RiverRaftingTeam)
