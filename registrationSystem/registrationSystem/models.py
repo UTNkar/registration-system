@@ -121,10 +121,43 @@ class RiverraftingUser(AbstractUser):
         ('XS', 'XS'),
     )
 
+    WETSUIT_SIZES = (
+        ('L', 'L'),
+        ('M', 'M'),
+        ('S', 'S'),
+    )
+
+    # Kolla med FORSKÅ
+    HELMET_SIZES = (
+        ('XL', 'XL'),
+        ('L', 'L'),
+        ('M', 'M'),
+        ('S', 'S'),
+        ('XS', 'XS'),
+    )
+
     lifevest_size = models.CharField(
         max_length=2,
         choices=LIFEVEST_SIZES,
-        verbose_name='Lifevest size'
+        verbose_name='Lifevest size',
+        blank=True,
+        null=True
+    )
+
+    wetsuite_size = models.CharField(
+        max_length=2,
+        choices=WETSUIT_SIZES,
+        verbose_name='Wetsuit size',
+        blank=True,
+        null=True
+    )
+
+    helmet_size = models.CharField(
+        max_length=2,
+        choices=HELMET_SIZES,
+        verbose_name='Helmet size',
+        blank=True,
+        null=True
     )
 
     belongs_to_group = models.ForeignKey(
@@ -134,6 +167,29 @@ class RiverraftingUser(AbstractUser):
         blank=True,
         verbose_name='Group'
     )
+
+
+class SingletonModel(models.Model):
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super(SingletonModel, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+
+
+class RiverraftingCost(SingletonModel):
+    lifevest = models.IntegerField()
+    wetsuit = models.IntegerField()
+    helmet = models.IntegerField()
 
 
 class AbstractGroup(models.Model):
@@ -173,6 +229,11 @@ class RiverraftingTeam(AbstractGroup):
         blank=True
     )
 
+    payment_initialized = models.BooleanField(
+        verbose_name="Payment initialized",
+        default=False
+    )
+
 
 class EmailConfirmations(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -188,3 +249,4 @@ class ImportantDate(models.Model):
 if settings.EVENT == 'RIVERRAFTING':
     admin.site.register(RiverraftingUser)
     admin.site.register(RiverraftingTeam)
+    admin.site.register(RiverraftingCost)
