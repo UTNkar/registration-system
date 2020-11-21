@@ -79,7 +79,7 @@ def status(request):
     elif status == "declined":
         template = "declined.html"
     elif status == "confirmed":
-        template = "confimed.html"
+        template = "confirmed.html"
 
     return render(request,
                   "status/" + template,
