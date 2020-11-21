@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from registrationSystem.models import (
-    InterestCheck, EmailConfirmations, RiverraftingTeam
+    InterestCheck, EmailConfirmations, RiverraftingTeam, ImportantDate
 )
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
@@ -100,13 +100,29 @@ def overview(request, id=None):
     if not group:
         raise Http404('There is no group associated to this user.')
 
-    UserFormSet = modelformset_factory(user_model, form=RiverraftingUserForm)
+    is_leader = group.leader.id == user.id
+
+    UserFormSet = modelformset_factory(
+        user_model,
+        form=RiverraftingUserForm,
+        extra=0
+    )
     GroupFormSet = modelformset_factory(
-        group_model, form=RiverraftingTeamForm, max_num=1)
-    user_formset = UserFormSet(queryset=user_model.objects.filter(
-        belongs_to_group=user.belongs_to_group.id))
+        group_model,
+        form=RiverraftingTeamForm,
+        max_num=1
+    )
+
+    # TODO: Don't use the RiverraftingUserForm, but rather choose form
+    # depending on what user model is selected.
+    my_form = RiverraftingUserForm(instance=user)
+    others_formset = UserFormSet(
+        queryset=user_model.objects.filter(
+            belongs_to_group=user.belongs_to_group.id).exclude(id=user_id),
+    )
     group_formset = GroupFormSet(
         queryset=group_model.objects.filter(id=user.belongs_to_group.id))
+    dates = ImportantDate.objects.all()
 
     if request.method == "POST":
         if request.POST['type'] == 'group':
@@ -116,21 +132,32 @@ def overview(request, id=None):
                 ))
             if group_formset.is_valid():
                 group_formset.save()
-        else:
-            user_formset = UserFormSet(
+        elif request.POST['type'] == 'others':
+            others_formset = UserFormSet(
                 request.POST,
                 queryset=user_model.objects.filter(
-                    belongs_to_group=user.belongs_to_group.id))
-            if user_formset.is_valid():
-                user_formset.save()
+                    belongs_to_group=user.belongs_to_group.id).exclude(
+                        id=user_id
+                    ))
+
+            if others_formset.is_valid():
+                others_formset.save()
+        else:
+            my_form = RiverraftingUserForm(request.POST, instance=user)
+
+            if my_form.is_valid():
+                my_form.save()
 
     return render(request,
                   "overview.html",
                   {
+                      "me": my_form,
                       "group_name": group.name,
                       "group_nr": group.number,
-                      "users": user_formset,
-                      "group": group_formset
+                      "others": others_formset,
+                      "group": group_formset,
+                      "is_leader": is_leader,
+                      "dates": dates,
                   })
 
 
