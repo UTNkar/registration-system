@@ -5,10 +5,6 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.sites.models import Site
 from django.contrib.auth import get_user_model
-from registrationSystem.models import (
-    InterestCheck, Group, User, RiverraftingUser, get_group_model
-)
-from registrationSystem.forms import InterestCheckForm
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
@@ -26,7 +22,7 @@ from registrationSystem.forms import (
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
-        return redirect(reverse('raft_info'))
+        return redirect(reverse('overview'))
     else:
         return render(request, "login_page.html")
 
@@ -39,12 +35,7 @@ def login_user(request):
         login(request, user)
         return redirect('/')
     else:
-        return redirect(reverse('raft_info'))
-
-
-@login_required
-def raft_info(request):
-    return render(request, "raft_info.html")
+        return redirect(reverse('overview'))
 
 
 def register(request):
@@ -114,6 +105,7 @@ def status(request):
                   {"interest_check_obj": interest_check_obj})
 
 
+@login_required
 def overview(request, id=None):
     user_model = get_user_model()
     group_model = RiverraftingTeam
