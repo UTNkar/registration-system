@@ -1,7 +1,12 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    Http404,
+    HttpResponseForbidden
+)
 from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
@@ -10,7 +15,6 @@ from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations, RiverraftingTeam
 )
-from registrationSystem.forms import InterestCheckForm, CreateAccountForm
 from registrationSystem.utn_pay import createPaymentLink
 from registrationSystem.utils import send_win_email, is_utn_member
 from registrationSystem.forms import (
@@ -20,12 +24,27 @@ from registrationSystem.forms import (
 from django.conf import settings
 
 
+@login_required
 def test_payment(request):
-    return HttpResponse(createPaymentLink(1))
+    team = request.user.belongs_to_group
+
+    if team.leader != request.user:
+        return HttpResponseForbidden()
+
+    # Only allow one payment
+    if team.payment_initialized:
+        return HttpResponseForbidden()
+
+    payment_link = createPaymentLink(request.user)
+
+    team.payment_initialized = True
+    team.save()
+
+    return redirect(payment_link)
 
 
-def pay_page(requst):
-    return render(requst, 'pay_page.html')
+def pay_page(request):
+    return render(request, 'pay_page.html')
 
 
 def sign_in(request):
