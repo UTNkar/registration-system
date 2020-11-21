@@ -225,7 +225,7 @@ def create_account(request, uid):
         # Delete the EmailConfirmations. The randomized token
         # should only be used once!
         connector.delete()
-        return HttpResponseRedirect(reverse('status')
+        return HttpResponseRedirect(reverse('status'))
 
     context = {
         'uid': uid,
