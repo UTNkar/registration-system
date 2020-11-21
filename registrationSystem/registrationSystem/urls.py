@@ -26,8 +26,6 @@ urlpatterns = [
     #   creating the full account.
     path('status/', views.status, name='status'),
     path('change_status/', views.change_status, name='change_status'),
-    # TODO add template for overview page later
-    path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),

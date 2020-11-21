@@ -1,47 +1,161 @@
-<html lang="en">
-  <body>
-    <main class="flex-container-start-page">
-      <div class="team-information">
+{% extends "base.html" %} {% load static %}
+{% block content %}
+{% include "header_overview.html"%}
+<div class="underline"></div>
+<div class="team-name-box">
+    <h2 id="team-name">{{ group_name }}</h2>
+</div>
+<div class="team-top-info">
+    <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
+    <p class="header">Start number: </p>
+    <p class="content">{{ group_nr | default:"Not set yet" }}</p>
+
+    {% comment %} {{ group.as_p }} {% endcomment %}
+    <form method="post">
+    {{ group.management_form }}
+        {% for field in group %}
+            {% csrf_token %}
+            <button type='button' onclick='toggleForm(this)'>Edit</button>
+            <input name='type' value="group" type='hidden'/>
+            <p class="header">Presentation: </p>
+            <p class="content" id="input"> {{ field.presentation}} </p>
+            <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
+            {% endfor %}
+    </form>
+</div>
+<div class="info-box">
+    <div class="info-header">
+        <h2>Your information</h2>
+        <i class="fas fa-angle-right" onclick="showMyInfo(this)"></i>
+    </div>
+    <div id="my-info">
+        namn <br>
+        email
+        å så där
+        <i class="far fa-edit" onclick='toggleForm(this)'></i>
+    </div>
+</div>
+
+<div class="info-box">
+    <div class="info-header">
+        <h2>Team information</h2>
+        <i class="fas fa-angle-right" onclick="showTeamInfo()"></i>
+    </div>
+    <div id="team-info">
         <form method="post">
-          <button type='button' onclick='toggleForm(this)'>Edit</button>
-          {% csrf_token %}
-          <h3>{{ group_name }}</h3>
-          <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
-          <input name='type' value="group" type='hidden'/>
-          {{ group.as_p }}
-        </form>
-
-      </div>
-
-      <form method="post">
-        <button type='button' onclick='toggleForm(this)'>Edit</button>
+        <i class="far fa-edit" onclick='toggleForm(this)'></i>
         {% csrf_token %}
         {{ users.management_form }}
         <input name='type' value="user" type="hidden"/>
         {% for user in users %}
         <div>
-          {{ user }}
+            {{ user }}
         </div>
         {% endfor %}
-      </form>
-    </main>
-  </body>
+        </form>
+    </div>
+</div>
+<div class="info-box">
+    <div class="info-header">
+        <h2>Payment</h2>
+         <i class="fas fa-angle-right" onclick="showPayment()"></i>
+    </div>
+    <div class="payment">
+    </div>
+</div>
 
-  <script type="text/javascript">
-    const toggleForm = button => {
-        form = event.target.parentElement
-        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
+<div class="dates-box">
+    <div class="calendar-box">
+        <h2>Important dates</h2>
+        <img src="{% static 'images/calendar.png' %}" id="calendar-image">
+    </div>
+    <div class="underline" id="calendar"></div>
+    <div class="box-info">
+        <div class="dates">
+            February 25th <br>
+            February 26th <br>
+            March 6th <br>
+            March 7th <br>
+            March 13th <br>
+            April 4th <br>
+        </div>
+        <div class="event">
+            Rafting Pub at Uthgård<br>
+            Team info opens<br>
+            Team info closes<br>
+            Payment opens<br>
+            Payment closes<br>
+            Rafters education<br>
+        </div>
+    </div>
+</div>
 
-        for (const element of formElements) {
-            if (element.onclick) element.toggleAttribute('onclick')
-            else element.toggleAttribute('readonly')
-        }
+<div class="equipment-box">
+    <div class="calendar-box">
+        <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+        <h2>Equipment information</h2>
+    </div>
+    <div class="underline" id="lifebuoy"></div>
+    <div class="box-info" id="equipment">
+        Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+    </div>
+    <div class="equipment-prices">
+        <b>Life jacket</b> 100 SEK <br>
+        Available sizes: 50-70, 70-90, 90-110 <br>
+        <b>Helmet</b> 50 SEK<br>
+        Available sizes: S, M, L <br>
+        <b>Wetsuit</b> 265 SEK<br>
+        Available sizes: XS, S, M, L, XL   <br>
+    </div>
+</div>
+</div>
 
-        if (formElements[0] && formElements[0].readOnly) {
-            form.submit();
-        } else {
-            event.target.innerHTML = 'Save';
-        }
+<script type="text/javascript">
+const toggleForm = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
+
+    for (const element of formElements) {
+        if (element.onclick) element.toggleAttribute('onclick')
+        else element.toggleAttribute('readonly')
     }
-  </script>
-</html>
+
+    if (formElements[0] && formElements[0].readOnly) {
+        form.submit();
+    } else {
+        event.target.innerHTML = 'Save';
+    }
+}
+
+function showMyInfo() {
+  var info = document.getElementById("my-info");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+  } else {
+    info.style.display = "flex";
+  }
+}
+
+function showTeamInfo() {
+  var info = document.getElementById("team-info");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+  } else {
+    info.style.display = "flex";
+  }
+}
+
+function showPayment(arrow) {
+  var info = document.getElementById("payment");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+  } else {
+    info.style.display = "flex";
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/overview.css' %}">
+{% endblock %}
