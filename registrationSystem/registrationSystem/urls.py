@@ -1,4 +1,5 @@
-"""registrationSystem URL Configuration
+"""
+registrationSystem URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.0/topics/http/urls/
@@ -23,8 +24,9 @@ urlpatterns = [
     path('status/', views.status, name='status'),
     path('change_status/', views.change_status, name='change_status'),
     # TODO add template for overview page later
-    path('raft_info/', views.raft_info, name='raft_info'),
     path('admin/', admin.site.urls),
+    path('overview/', views.overview, name='overview'),
+    path('login/', views.login_user, name='login'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path(
         'create_account/<str:uid>', views.create_account, name='create_account'
