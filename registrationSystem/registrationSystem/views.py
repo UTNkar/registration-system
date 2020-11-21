@@ -14,6 +14,10 @@ def test_payment(request):
     return HttpResponse(createPaymentLink(1))
 
 
+def pay_page(requst):
+    return render(requst, 'pay_page.html')
+
+
 def start(request):
     if request.POST:
         form = InterestCheckForm(request.POST)
@@ -109,3 +113,5 @@ def create_account(request, uid):
 
 def temp(request):
     return render(request, 'registrationSystem/temp.html')
+
+

@@ -6,6 +6,10 @@ from registrationSystem.models import RiverraftingUser
 from django.contrib.auth.models import User
 
 
+def getItemsToBuy():
+
+    return
+
 # Kommer krävas massa dokumentation!
 # Försöker djangofiera ett kall på det gamla pay Api:et som finns.
 # Vad är det som händer här? Vad är det för olika items och vart får man tag på

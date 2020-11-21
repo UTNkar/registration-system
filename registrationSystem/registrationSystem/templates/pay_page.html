@@ -1,0 +1,68 @@
+{% if msg %}
+<script>
+    alert('{{msg}}')
+</script>
+{% endif %} {% load static %}
+
+<html lang="en">
+<html>
+{% include "head.html" %}
+
+<body>
+    <main class="flex-container-status">
+        <div class="form-container">
+            <!-- {{ interest_check_obj.name }}! -->
+            <div>
+                <!-- !!{{ interest_check_obj.status }}!! Vi har skickat ett mail till {{ interest_check_obj.email}} -->
+            </div>
+        </div>
+        <div>
+
+            <!--  För att testa att skicka med olika saker till pay.utn.se 
+            Bör hämta vad man valt att köpa via django och sedan skicka till pay.utn.se
+            Efter click bör status ändras någon stans så att man inte kan skicka fler betalningar-->
+
+            <form method="post">
+                <fieldset>
+                    <legend>Items att köpa TEST Vet att de inte ska vara såhär</legend>
+                    <input type="checkbox" name="flotte" value="Flotte">Flotte<br>
+                    <input type="checkbox" name="boat" value="Boat">Boat<br>
+                    <input type="checkbox" name="submarine" value="Submarine">Submarine<br>
+                    <br>
+                    <!-- <input type="submit" value="Submit now" /> -->
+                </fieldset>
+            </form>
+        
+        
+        </div>
+        <!-- <div>
+            Det är dags att betala. Jag förstår inte ett piss 
+            <input type="checkbox" id="confirm_payment"> Accept
+        </div> -->
+        <div>
+            När ni är nöjda med vad ni fyllt i vänligen slutför
+            er betalning via denna länken
+            <a href="www.google.se" id="send_payment"  disabled>Click Me!</a>
+            <script>
+                // document.getElementById("confirm_payment").addEventListener("change",function(){
+                //     document.getElementById("send_payment").disabled = !document.getElementById("send_payment").disabled;
+                // } )
+
+                document.getElementById("send_payment").addEventListener("click",
+                 function(event){
+                    event.preventDefault();
+                    if(confirm("Are you sure? HEJ DANIEL U LIKE MY WINDOW?")) {
+                        window.location = this.href;
+                    }
+                },
+                false);
+            
+            </script>
+
+        </div>
+
+
+    </main>
+</body>
+
+</html>

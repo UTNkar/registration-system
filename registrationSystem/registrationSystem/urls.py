@@ -24,6 +24,7 @@ urlpatterns = [
     path('temp/', views.temp, name='temp'),
     path('', views.start, name='start'),
     path('status/', views.status, name='status'),
+    path('pay/', views.pay_page, name='pay_page'),
     path('admin/', admin.site.urls),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path('payment/', views.test_payment),
