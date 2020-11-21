@@ -7,7 +7,7 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
-from registrationSystem.utils import send_email, is_utn_member
+from registrationSystem.utils import user_has_won, send_email, is_utn_member
 
 
 def sign_in(request):
@@ -88,10 +88,13 @@ def status(request):
 
 
 def change_status(request):
+    # If the user loses and wants to re-enter the raffle, of
+    # if the user wins and wants their spot.
     interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "won":
+        user_has_won(interest_check_obj)
         interest_check_obj.status = "accepted"
     elif interest_check_obj.status == "lost":
         interest_check_obj.status = "waiting"
