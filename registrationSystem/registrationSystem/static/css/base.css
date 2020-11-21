@@ -31,7 +31,7 @@ h1 {
 }
 
 h2 {
-    font-size: 1em;
+    font-size: 1.2em;
     font-weight: normal;
     line-height: 1.3em;
     align-self: center;
@@ -59,13 +59,62 @@ button {
 }
 
 footer {
+    background-color: #343434;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    color: #797979;
+    color: white;
     width: 100%;
     margin-top: auto;
     align-items: center;
-    padding: .5em 0;
+    padding: 0;
+    padding-bottom: 0.5em;
+}
+
+.socmed {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#insta,
+#fb,
+#youtube {
+    width: 7%;
+    margin: 0.5em;
+}
+
+.contact {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.footer-image {
+    width: 100%;
+}
+
+.footer-contact {
+    display: flex;
+    padding: 0.5em;
+}
+
+.footer-titles {
+    text-align: end;
+    padding-right: 0.5em;
+}
+
+.footer-emails {
+    text-align: start;
+    padding-left: 0.5em;
+}
+
+.powered-by {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 #dk {
