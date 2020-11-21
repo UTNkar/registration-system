@@ -8,11 +8,11 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
-    InterestCheck, EmailConfirmation, RiverRaftingTeam
+    RaffleEntry, EmailConfirmation, RiverRaftingTeam
 )
 from registrationSystem.utils import send_win_email, is_utn_member
 from registrationSystem.forms import (
-    InterestCheckForm, CreateAccountForm, RiverRaftingUserForm,
+    RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
 )
 from django.conf import settings
@@ -39,10 +39,10 @@ def login_user(request):
 
 def register(request):
     if request.POST:
-        form = InterestCheckForm(request.POST)
+        form = RaffleEntryForm(request.POST)
 
         if form.is_valid():
-            interest_check_obj, _ = InterestCheck.objects.get_or_create(
+            interest_check_obj, _ = RaffleEntry.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
                 person_nr=form.cleaned_data['person_nr']
@@ -52,7 +52,7 @@ def register(request):
 
             if status == "mail unconfirmed":
                 confirmation = EmailConfirmation.objects.create(
-                    interestCheckId=interest_check_obj
+                    raffleEntryId=interest_check_obj
                 )
                 confirmation.save()
 
@@ -78,13 +78,13 @@ def register(request):
             interest_check_obj.save()
             return redirect(reverse('status'))
     else:
-        form = InterestCheckForm()
+        form = RaffleEntryForm()
     return render(request, "register_page.html", {'form': form})
 
 
 def status(request):
     interest_check_id = request.session.get('interest_check_id', None)
-    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+    interest_check_obj = RaffleEntry.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
@@ -152,7 +152,7 @@ def overview(request, id=None):
 
 def change_status(request):
     interest_check_id = request.session.get('interest_check_id', None)
-    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+    interest_check_obj = RaffleEntry.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "won":
         interest_check_obj.status = "accepted"
@@ -166,12 +166,12 @@ def change_status(request):
 def activate(request, token):
     try:
         confirmation = EmailConfirmation.objects.get(pk=token)
-        user = confirmation.interestCheckId
+        user = confirmation.raffleEntryId
         user.status = 'waiting'
         confirmation.delete()
         user.save()
         return redirect(reverse('status'))
-    except(InterestCheck.DoesNotExist):
+    except(RaffleEntry.DoesNotExist):
         return HttpResponse('Activation link is invalid!')
 
 
@@ -180,7 +180,7 @@ def temp_set_to_won(request, uid):
     # to change winner's status to 'won'.
     # Allows changing of user's status with button press.
 
-    user = get_object_or_404(InterestCheck, id=uid)
+    user = get_object_or_404(RaffleEntry, id=uid)
 
     if request.method == "POST":
         user.status = 'won'
@@ -197,7 +197,7 @@ def temp_set_to_won(request, uid):
 
 def create_account(request, uid):
     connector = get_object_or_404(EmailConfirmation, id=uid)
-    user = connector.interestCheckId
+    user = connector.raffleEntryId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -222,7 +222,7 @@ def create_account(request, uid):
             is_utn_member=is_utn_member(user.person_nr)
         )
 
-        # Keep the InterestCheck (user) with status 'confirmed'
+        # Keep the RaffleEntry (user) with status 'confirmed'
         # for statistical purposes.
         user.status = "confirmed"
         user.save()

@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class InterestCheck(models.Model):
+class RaffleEntry(models.Model):
     """Interest checks start out as unconfirmed, and once the mail has
     been confirmed, the Interest check is considered active and
     "waiting" to receive a spot.

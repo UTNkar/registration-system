@@ -8,19 +8,19 @@ from registrationSystem.models import EmailConfirmation
 def send_win_email(user):
     """
     Call this function when a user wins a raft (i.e. the status of
-    the InterestCheck turns 'won')
+    the RaffleEntry turns 'won')
     to send an email containing a unique link to create a full account.
 
     Parameters:
-    user: InterestCheck of the person who won.
+    user: RaffleEntry of the person who won.
 
     Returns:
     nothing
     """
     # The connector binds the randomized token
-    # to the InterestCheck from which the account
+    # to the RaffleEntry from which the account
     # information will be retreived.
-    connector = EmailConfirmation.objects.create(interestCheckId=user)
+    connector = EmailConfirmation.objects.create(raffleEntryId=user)
     connector.save()
 
     message = render_to_string(

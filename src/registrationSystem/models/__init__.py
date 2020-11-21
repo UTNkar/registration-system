@@ -4,7 +4,7 @@ from .river_rafting import (
     RiverRaftingUser,
     RiverRaftingTeam,
     RiverRaftingRaffleState,
-    InterestCheck,
+    RaffleEntry,
     EmailConfirmation,
 )
 

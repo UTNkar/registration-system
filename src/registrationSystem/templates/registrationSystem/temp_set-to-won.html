@@ -5,7 +5,7 @@
 </head>
 <body>
     <p>This is the temp screen. Press the button to set the status as won!</p>
-    <p>The current InterestCheck: {{name}}, Status: {{status}}</p>
+    <p>The current RaffleEntry: {{name}}, Status: {{status}}</p>
     <form method="POST">
         {% csrf_token %}
         <input type="submit" value="Set status to won"/>

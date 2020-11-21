@@ -4,13 +4,13 @@ from django.forms import (
     PasswordInput, ValidationError, CheckboxInput
 )
 from registrationSystem.models import (
-    InterestCheck, RiverRaftingUser, RiverRaftingTeam
+    RaffleEntry, RiverRaftingUser, RiverRaftingTeam
 )
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
 
 
-class InterestCheckForm(ModelForm):
+class RaffleEntryForm(ModelForm):
     person_nr = PersonNumberField()
 
     status = forms.CharField(
@@ -19,7 +19,7 @@ class InterestCheckForm(ModelForm):
     )
 
     class Meta:
-        model = InterestCheck
+        model = RaffleEntry
         fields = ['name',
                   'email',
                   'person_nr',
