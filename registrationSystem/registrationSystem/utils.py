@@ -5,14 +5,32 @@ import requests
 from registrationSystem.models import EmailConfirmations
 
 
-def send_win_email(user):
+def user_has_won(user):
     """
-    Call this function when a user wins a raft (i.e. the status of
-    the InterestCheck turns 'won')
-    to send an email containing a unique link to create a full account.
+    Call this function when a user wins a raft.
+    The function sets the status of the InterestCheck to 'won'
+    and calls the function send_win_email() to send an email
+    containing a unique link to create a full account.
 
     Parameters:
     user: InterestCheck of the person who won.
+
+    Returns:
+    nothing
+    """
+    user.status = 'won'
+    user.save()
+    send_win_email(user)
+    return
+
+
+def send_win_email(user):
+    """
+    Call this function to send an email containing a unique link to create a
+    full account.
+
+    Parameters:
+    user: InterestCheck of the person to send the win email.
 
     Returns:
     nothing
