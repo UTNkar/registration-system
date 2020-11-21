@@ -21,6 +21,13 @@ PAY_RECEIVER_ID = os.environ.get('PAY_RECEIVER_ID', '')
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Application definition
+EVENT = os.environ.get('DJANGO_EVENT_USER_MODEL', 'RIVERRAFTING')
+
+USER_MODELS = {'RIVERRAFTING': 'registrationSystem.RiverraftingUser'}
+
+AUTH_USER_MODEL = USER_MODELS.get(EVENT, 'registrationSystem.RiverraftingUser')
+
+SITE_ID = 1
 
 INSTALLED_APPS = [
     'registrationSystem',
@@ -65,7 +72,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'registrationSystem.wsgi.application'
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
 
@@ -102,13 +108,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
-LOGIN_URL='/'
+LOGIN_URL = '/'
 
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 STATICFILES_DIRS = (
-  os.path.join(PROJECT_DIR, 'static'),
+    os.path.join(PROJECT_DIR, 'static'),
 )
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
