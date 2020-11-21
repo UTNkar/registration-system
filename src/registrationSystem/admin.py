@@ -35,6 +35,7 @@ class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
 
 @admin.register(RaffleEntry)
 class RaffleEntryAdmin(admin.ModelAdmin):
+    
     list_display = ["name", "status", "is_utn_member"]
     ordering = ["name"]
     actions = ["set_raffle_status_won", "set_raffle_status_lost"]
@@ -69,8 +70,9 @@ class RaffleEntryAdmin(admin.ModelAdmin):
 
     # Add useful stats to admin view
     def changelist_view(self, request, extra_context=None):
+        utn_count = self.model.objects.filter(is_utn_member=True).count()
+        all_count = self.model.objects.all().count()
+        percentage = (utn_count / all_count) * 100 if all_count != 0 else 0
         extra_context = extra_context or {}
-        extra_context['utn_percentage'] = "{:.0f}".format(
-            self.model.objects.filter(is_utn_member=True).count() / self.model.objects.all().count() * 100
-        )
+        extra_context['utn_percentage'] = "{:.0f}".format(percentage)
         return super(RaffleEntryAdmin, self).changelist_view(request, extra_context=extra_context)
