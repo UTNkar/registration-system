@@ -7,7 +7,7 @@ from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
-from registrationSystem.utils import user_has_won, send_email, is_utn_member
+from registrationSystem.utils import send_email, is_utn_member
 
 
 def sign_in(request):
@@ -52,6 +52,7 @@ def register(request):
             if status == "mail unconfirmed":
                 send_email(interest_check_obj)
 
+            # Update cookie. Used when changing accounts or 'logging' back in
             request.session['interest_check_id'] = interest_check_obj.id
 
             interest_check_obj.save()
