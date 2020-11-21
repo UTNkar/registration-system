@@ -1,10 +1,10 @@
 from django.db import models
+from ..common import CommonUserManager
 from django.contrib.auth.models import (
     AbstractBaseUser,
     PermissionsMixin,
 )
 
-from .common.user_manager import CommonUserManager
 
 class AbstractUser(AbstractBaseUser, PermissionsMixin):
     name = models.CharField(max_length=254, verbose_name='Name')

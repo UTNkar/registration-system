@@ -1,12 +1,14 @@
 # flake8: noqa
 
 from .river_rafting import (
-    RiverraftingUser,
-    RiverraftingTeam,
+    RiverRaftingUser,
+    RiverRaftingTeam,
     RiverRaftingRaffleState,
-    InterestCheck
+    InterestCheck,
+    EmailConfirmation,
 )
 
 from .common import (
-    CommonUserManager
+    CommonUserManager,
+    ImportantDate
 )

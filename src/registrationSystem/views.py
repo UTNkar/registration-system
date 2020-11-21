@@ -8,12 +8,12 @@ from django.contrib.auth import get_user_model
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from registrationSystem.models import (
-    InterestCheck, EmailConfirmations, RiverraftingTeam
+    InterestCheck, EmailConfirmation, RiverRaftingTeam
 )
 from registrationSystem.utils import send_win_email, is_utn_member
 from registrationSystem.forms import (
-    InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
-    RiverraftingTeamForm
+    InterestCheckForm, CreateAccountForm, RiverRaftingUserForm,
+    RiverRaftingTeamForm
 )
 from django.conf import settings
 
@@ -51,7 +51,7 @@ def register(request):
             status = interest_check_obj.status
 
             if status == "mail unconfirmed":
-                confirmation = EmailConfirmations.objects.create(
+                confirmation = EmailConfirmation.objects.create(
                     interestCheckId=interest_check_obj
                 )
                 confirmation.save()
@@ -107,7 +107,7 @@ def status(request):
 @login_required
 def overview(request, id=None):
     user_model = get_user_model()
-    group_model = RiverraftingTeam
+    group_model = RiverRaftingTeam
     user_id = request.user.id
 
     user = user_model.objects.get(id=user_id)
@@ -116,9 +116,9 @@ def overview(request, id=None):
     if not group:
         raise Http404('There is no group associated to this user.')
 
-    UserFormSet = modelformset_factory(user_model, form=RiverraftingUserForm)
+    UserFormSet = modelformset_factory(user_model, form=RiverRaftingUserForm)
     GroupFormSet = modelformset_factory(
-        group_model, form=RiverraftingTeamForm, max_num=1)
+        group_model, form=RiverRaftingTeamForm, max_num=1)
     user_formset = UserFormSet(queryset=user_model.objects.filter(
         belongs_to_group=user.belongs_to_group.id))
     group_formset = GroupFormSet(
@@ -165,7 +165,7 @@ def change_status(request):
 
 def activate(request, token):
     try:
-        confirmation = EmailConfirmations.objects.get(pk=token)
+        confirmation = EmailConfirmation.objects.get(pk=token)
         user = confirmation.interestCheckId
         user.status = 'waiting'
         confirmation.delete()
@@ -196,7 +196,7 @@ def temp_set_to_won(request, uid):
 
 
 def create_account(request, uid):
-    connector = get_object_or_404(EmailConfirmations, id=uid)
+    connector = get_object_or_404(EmailConfirmation, id=uid)
     user = connector.interestCheckId
 
     if request.method == "POST":
@@ -227,7 +227,7 @@ def create_account(request, uid):
         user.status = "confirmed"
         user.save()
 
-        # Delete the EmailConfirmations. The randomized token
+        # Delete the EmailConfirmation. The randomized token
         # should only be used once!
         connector.delete()
         return HttpResponseRedirect('/temp/')

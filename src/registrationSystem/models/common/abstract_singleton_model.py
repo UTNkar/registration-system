@@ -1,3 +1,5 @@
+from django.db import models
+
 
 class AbstractSingletonModel(models.Model):
     """
@@ -17,7 +19,7 @@ class AbstractSingletonModel(models.Model):
 
     def delete(self, *args, **kwargs):
         pass
-    
+
     @classmethod
     def load(cls):
         """

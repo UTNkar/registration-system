@@ -4,7 +4,7 @@ from django.forms import (
     PasswordInput, ValidationError, CheckboxInput
 )
 from registrationSystem.models import (
-    InterestCheck, RiverraftingUser, RiverraftingTeam
+    InterestCheck, RiverRaftingUser, RiverRaftingTeam
 )
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
@@ -72,9 +72,9 @@ class CreateAccountForm(ModelForm):
         ]
 
 
-class RiverraftingUserForm(ModelForm):
+class RiverRaftingUserForm(ModelForm):
     class Meta:
-        model = RiverraftingUser
+        model = RiverRaftingUser
 
         fields = [
             'name',
@@ -94,9 +94,9 @@ class RiverraftingUserForm(ModelForm):
         }
 
 
-class RiverraftingTeamForm(ModelForm):
+class RiverRaftingTeamForm(ModelForm):
     class Meta:
-        model = RiverraftingTeam
+        model = RiverRaftingTeam
 
         fields = [
             'environment_raft',

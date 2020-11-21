@@ -2,7 +2,7 @@ from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 import requests
-from registrationSystem.models import EmailConfirmations
+from registrationSystem.models import EmailConfirmation
 
 
 def send_win_email(user):
@@ -20,7 +20,7 @@ def send_win_email(user):
     # The connector binds the randomized token
     # to the InterestCheck from which the account
     # information will be retreived.
-    connector = EmailConfirmations.objects.create(interestCheckId=user)
+    connector = EmailConfirmation.objects.create(interestCheckId=user)
     connector.save()
 
     message = render_to_string(
