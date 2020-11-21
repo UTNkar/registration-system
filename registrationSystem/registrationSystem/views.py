@@ -5,8 +5,6 @@ from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations, RiverraftingTeam
 )
@@ -136,6 +134,7 @@ def overview(request, id=None):
                   })
 
 
+# TODO: Remove this view when status can be changed from the admin pages
 def change_status(request):
     # If the user loses and wants to re-enter the raffle, of
     # if the user wins and wants their spot.
