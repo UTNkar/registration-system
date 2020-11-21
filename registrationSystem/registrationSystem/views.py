@@ -3,13 +3,11 @@ from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, RiverraftingUser, EmailConfirmations
 )
 from registrationSystem.forms import InterestCheckForm, CreateAccountForm
-from registrationSystem.utils import send_win_email, is_utn_member
+from registrationSystem.utils import user_has_won, send_email, is_utn_member
 
 
 def sign_in(request):
@@ -47,32 +45,14 @@ def register(request):
                 person_nr=form.cleaned_data['person_nr']
             )
 
+            # Send confirmation email, or resend email with new link
+            # in case someone re-registers without ever pressing
+            # original link (i.e. status still 'mail unconfirmed')
             status = interest_check_obj.status
-
             if status == "mail unconfirmed":
-                confirmation = EmailConfirmations.objects.create(
-                  interestCheckId=interest_check_obj
-                )
-                confirmation.save()
-
-                message = render_to_string(
-                    'email/confirm_email.html',
-                    {
-                        'name': interest_check_obj.name,
-                        'domain': 'localhost:8000',
-                        'token': confirmation.id,
-                    }
-                )
-                to_email = form.cleaned_data.get('email')
-                email = EmailMessage(
-                    'Activate your account', message, to=[to_email]
-                )
-
-                email.send()
+                send_email(interest_check_obj)
 
             request.session['interest_check_id'] = interest_check_obj.id
-
-            interest_check_obj.status = "won"
 
             interest_check_obj.save()
             return redirect(reverse('status'))
