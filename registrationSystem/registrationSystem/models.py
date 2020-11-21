@@ -182,9 +182,15 @@ class EmailConfirmations(models.Model):
 
 
 class ImportantDate(models.Model):
-    date = models.DateField()
+    date = models.DateField(verbose_name="Date")
+    desc = models.CharField(max_length=254, verbose_name="Description")
+
+    def __str__(self):
+        return '{} - {}'.format(getattr(self, "date"), getattr(self, "desc"))
 
 
 if settings.EVENT == 'RIVERRAFTING':
     admin.site.register(RiverraftingUser)
     admin.site.register(RiverraftingTeam)
+
+admin.site.register(ImportantDate)
