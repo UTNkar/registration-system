@@ -1,10 +1,11 @@
 import os
 import sys
-sys.path.append(os.path.abspath(os.path.join('..', 'registrationSystem', 'registrationSystem')))
-from settings.base import DATABASES
 import getopt
 import names
 import psycopg2
+sys.path.append(os.path.abspath(os.path.join('..', 'registrationSystem', 'registrationSystem')))
+from settings.base import DATABASES
+
 
 def usage():
     print((
@@ -12,11 +13,13 @@ def usage():
         "\t-h, --help\tDisplay this usage message\n"
         "\t-n, --non=\tSet number of non-UTN members to generate (default 0)\n"
         "\t-u, --utn=\tSet number of UTN members to generate (default 0)\n"
-        "\t-s, --status=\tSet status of generated interest checks (default \"waiting\")"
+        "\t-s, --status=\tSet status of generated raffle entries (default \"waiting\")"
     ))
 
+
 def create_users(status, is_utn_member, number):
-     return  ["{}".format(create_user(status, is_utn_member)) for x in range(number)]
+    return  ["{}".format(create_user(status, is_utn_member)) for x in range(number)]
+
 
 def create_user(status, is_utn_member):
     name = names.get_full_name()
@@ -41,40 +44,40 @@ def main():
             sys.exit()
         elif k in ("-n", "--non"):
             non_members = v
-        elif u in ("-u", "--utn"):
+        elif k in ("-u", "--utn"):
             utn_members = v
         elif k in ("-s", "--status"):
             if v in ("waiting", "mail unconfirmed", "won", "lost", "accepted", "declined"):
                 status = v
             else:
-                assert False, "Error: invalid interest check status"
-        
+                assert False, "Error: invalid raffle entry status"
+
         else:
             assert False, "Error: unhandled option"
 
     confirm = input((
         "This will create:\n"
-        "\t{} non-UTN member interest checks\n"
-        "\t{} UTN member interest checks\n"
+        "\t{} non-UTN member raffle entries\n"
+        "\t{} UTN member raffle entries\n"
         "With status \"{}\"\n"
         "Is this ok? [y/n]\n")
         .format(non_members, utn_members, status)
     )
-    
+
     if(confirm.lower() == "y"):
         # This will take the DB credentials from the django settings files
         connection = psycopg2.connect(
-            user = DATABASES["default"]["USER"],
-            password = DATABASES["default"]["PASSWORD"],
-            host = DATABASES["default"]["HOST"],
-            port = DATABASES["default"]["PORT"],
-            database = DATABASES["default"]["NAME"]
+            user=DATABASES["default"]["USER"],
+            password=DATABASES["default"]["PASSWORD"],
+            host=DATABASES["default"]["HOST"],
+            port=DATABASES["default"]["PORT"],
+            database=DATABASES["default"]["NAME"]
         )
 
         cursor = connection.cursor()
 
-        insert_query = 'insert into \"registrationSystem_interestcheck\" (name, email, person_nr, status, is_utn_member) values '
-            
+        insert_query = 'insert into \"registrationSystem_raffleentry\" (name, email, person_nr, status, is_utn_member) values '
+
         if non_members != 0:
             non_members_data = ", ".join(create_users(status, False, int(non_members)))
             cursor.execute(insert_query + non_members_data)
@@ -87,9 +90,9 @@ def main():
             print("Inserted UTN members")
 
         connection.commit()
-        print("Successefully created new interestchecks")
+        print("Successefully created new raffle entries")
         cursor.close()
         connection.close()
-            
+
 if __name__ == "__main__":
     main()
