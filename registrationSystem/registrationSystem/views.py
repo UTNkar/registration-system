@@ -87,7 +87,7 @@ def status(request):
 
 
 def change_status(request):
-    interest_check_id = request.session.get('interest_check_id', None)
+    interest_check_id = request.session['interest_check_id']
     interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
 
     if interest_check_obj.status == "won":
@@ -111,17 +111,15 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def temp_set_to_won(request, uid):
+def temp_set_to_won(request):
     # Temporary dev view. Remove this when there is functionality
     # to change winner's status to 'won'.
     # Allows changing of user's status with button press.
-
+    uid = request.session['interest_check_id']
     user = get_object_or_404(InterestCheck, id=uid)
 
     if request.method == "POST":
-        user.status = 'won'
-        user.save()
-        send_win_email(user)
+        user_has_won(user)
 
     context = {
         'name': user.name,
