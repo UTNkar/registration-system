@@ -18,7 +18,7 @@
             <button type='button' onclick='toggleForm(this)'>Edit</button>
             <input name='type' value="group" type='hidden'/>
             <p class="header">Presentation: </p>
-            <p class="content" id="input"> {{ field.presentation}} </p>
+            <p class="content" id="presentation"> {{ field.presentation}} </p>
             <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
             {% endfor %}
     </form>
@@ -43,13 +43,21 @@
     </div>
     <div id="team-info">
         <form method="post">
-        <i class="far fa-edit" onclick='toggleForm(this)'></i>
         {% csrf_token %}
-        {{ users.management_form }}
         <input name='type' value="user" type="hidden"/>
+        {{ users.management_form }}
         {% for user in users %}
-        <div>
-            {{ user }}
+        <i class="far fa-edit" onclick='toggleForm(this)'></i>
+
+        <div class="team-member-info">
+            <p class="header">Full name: </p>
+            <p class="content" id="input"> {{ user.name }} </p>
+            <p class="header">Email: </p>
+            <p class="content" id="input"> {{ user.email }} </p>
+            <p class="header">Phone number: </p>
+            <p class="content" id="input"> {{ user.phone_nr }} </p>
+            <p class="header">Lifejacket: </p>
+            <p class="content" id="input"> {{ user.lifevest_size }} </p>
         </div>
         {% endfor %}
         </form>

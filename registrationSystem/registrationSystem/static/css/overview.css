@@ -62,6 +62,12 @@ p.content {
     margin: 0;
 }
 
+input#id_form-0-presentation {
+    background-color: #E5E5E5;
+    border: 0;
+    padding: 0;
+}
+
 .team-img {
     border-radius: 50%;
     height: 8em;
@@ -75,6 +81,18 @@ p.content {
     padding: 0.5em;
 }
 
+.info-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1em;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
 #my-info {
     display: none;
 }
@@ -83,16 +101,15 @@ p.content {
     display: none;
 }
 
-.info-box {
-    display: flex;
-    background-color: white;
-    flex-direction: column;
-    margin-top: 1em;
+form {
+    width: 100%;
 }
 
-.info-header {
-    display: flex;
-    align-items: center;
+.team-member-info {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: white;
+    width: 100%;
 }
 
 .dates-box,
@@ -112,7 +129,7 @@ p.content {
 #calendar-image,
 #lifebuoy-image {
     display: flex;
-    width: 15%;
+    width: 25%;
 }
 
 .underline#calendar {
@@ -149,8 +166,10 @@ p.content {
     text-align: end;
 }
 
-input[type=text] {
-    background-color: #E5E5E5;
+input[type=text],
+input[type=email],
+select {
+    background-color: white;
     border: 0;
     padding: 0;
 }
