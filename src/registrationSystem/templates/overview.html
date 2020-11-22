@@ -1,0 +1,83 @@
+<html lang="en">
+  <body>
+    <main class="flex-container-start-page">
+      <div class="team-information">
+        {% if is_leader %}
+        <form method="post">
+          <button type='button' onclick='toggleForm(this)'>Edit</button>
+          {% csrf_token %}
+        {% else %}
+        <div>
+        {% endif %}
+
+
+          <h3>{{ group_name }}</h3>
+          <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
+          <input name='type' value="group" type='hidden'/>
+          {{ group.as_p }}
+
+
+        {% if is_leader %}
+        </form>
+        {% else %}
+        </div>
+        {% endif %}
+      </div>
+
+      <form method="post">
+        <button type='button' onclick='toggleForm(this)'>Edit</button>
+        <input name='type' value="me" type="hidden"/>
+        {% csrf_token %}
+        {{ me }}
+      </form>
+
+      {% if is_leader %}
+      <form method="post">
+        <button type='button' onclick='toggleForm(this)'>Edit</button>
+        {% csrf_token %}
+        <input name='type' value="others" type="hidden"/>
+
+      {% else %}
+      <div>
+      {% endif %}
+
+        {{ others.as_p }}
+
+      {% if is_leader %}
+      </form>
+      {% else %}
+      </div>
+      {% endif %}
+
+      <!--
+       !-- Dates
+        -->
+      <div>
+        {% for date in dates %}
+        <p>
+          {{ date }}
+          </p>
+        {% endfor %}
+      </div>
+    </main>
+  </body>
+
+  <script type="text/javascript">
+    const toggleForm = button => {
+        form = event.target.parentElement
+        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+        for (const element of formElements) {
+            console.log(element);
+            if (element.disabled) element.toggleAttribute('disabled')
+            else element.toggleAttribute('readonly')
+        }
+
+        if (formElements[0] && formElements[0].readOnly) {
+            form.submit();
+        } else {
+            event.target.innerHTML = 'Save';
+        }
+    }
+  </script>
+</html>
