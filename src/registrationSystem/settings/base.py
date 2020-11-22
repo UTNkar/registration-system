@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 
 # Environment variables
-PAY_API_KEY = os.environ.get('PAY_API_KEY', '')
 PAY_RECEIVER_ID = os.environ.get('PAY_RECEIVER_ID', '')
 
 
