@@ -65,6 +65,10 @@ select:-webkit-autofill:focus {
     margin-bottom: 2em;
 }
 
+.information-correction-redirect {
+    font-style: italic;
+}
+
 .button-container {
     display: flex;
     justify-content: center;
