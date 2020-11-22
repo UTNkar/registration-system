@@ -16,6 +16,24 @@ from registrationSystem.forms import (
 from django.conf import settings
 
 
+def temp_set_to_won(request):
+    # Temporary dev view. Remove this when there is functionality
+    # to change winner's status to 'won'.
+    # Allows changing of user's status with button press.
+    uid = request.session['raffle_entry_id']
+    user = get_object_or_404(RaffleEntry, id=uid)
+
+    if request.method == "POST":
+        user_has_won(user)
+
+    context = {
+        'name': user.name,
+        'status': user.status,
+        'uid': uid
+    }
+    return render(request, 'temp_set-to-won.html', context)
+
+
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:

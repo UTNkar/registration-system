@@ -31,4 +31,7 @@ urlpatterns = [
     path(
         'create_account/<str:uid>', views.create_account, name='create_account'
     ),
+    path(
+        'set_to_won/', views.temp_set_to_won, name='set-status-won'
+    ),
 ]
