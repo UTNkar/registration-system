@@ -41,10 +41,6 @@ def make_payment(request):
     return redirect(payment_link)
 
 
-def pay_page(request):
-    return render(request, 'pay_page.html')
-
-
 def sign_in(request):
     current_user = request.user
     if current_user.is_authenticated:
