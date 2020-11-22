@@ -1,7 +1,7 @@
 import requests
 from phpserialize import dumps
 from django.conf import settings
-from registrationSystem.models import RiverraftingCost
+from registrationSystem.models import RiverRaftingCost
 from .forska_fields import forska_order_rows
 from abc import ABC, abstractmethod
 
@@ -72,7 +72,7 @@ class ForskaPayment(AbstractPayment):
         number_of_wetsuits = team.get_number_of_wetsuits()
         number_of_helmets = team.get_number_of_helmets()
 
-        costs = RiverraftingCost.load()
+        costs = RiverRaftingCost.load()
 
         # The costs must be in ören, required by pay.utn.se
         lifevest_cost = number_of_lifevests * costs.lifevest * 100
