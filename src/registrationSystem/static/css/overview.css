@@ -81,6 +81,17 @@ input#id_form-0-presentation {
     padding: 0.5em;
 }
 
+#my-info-down,
+#team-info-down,
+#pay-info-down {
+    display: none;
+}
+
+#done,
+#done-team {
+    display: none;
+}
+
 .info-box {
     display: flex;
     flex-direction: column;
@@ -101,15 +112,40 @@ input#id_form-0-presentation {
     display: none;
 }
 
+#payment {
+    display: none;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+.payment-info {
+    color: white;
+    background-color: #C4C4C4;
+    padding: 1em;
+}
+
+.payment-button {
+    display: flex;
+    flex-direction: column;
+    justify-content: baseline;
+    align-items: center;
+    padding: 1em;
+}
+
+.info {
+    padding: 1em;
+}
+
 form {
     width: 100%;
 }
 
-.team-member-info {
+.team-member-info,
+#my-info,
+#payment {
     margin-bottom: 1em;
     padding: 1em;
     background-color: white;
-    width: 100%;
 }
 
 .dates-box,
@@ -132,13 +168,18 @@ form {
     width: 25%;
 }
 
+#calendar-image {
+    justify-self: flex-end;
+    align-self: flex-end;
+}
+
 .underline#calendar {
-    width: 80%;
+    width: 85%;
     align-self: flex-start;
 }
 
 .underline#lifebuoy {
-    width: 80%;
+    width: 85%;
     align-self: flex-end;
 }
 

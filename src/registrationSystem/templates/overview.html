@@ -1,83 +1,254 @@
-<html lang="en">
-  <body>
-    <main class="flex-container-start-page">
-      <div class="team-information">
-        {% if is_leader %}
+{% extends "base.html" %} {% load static %}
+{% block content %}
+{% include "header_overview.html"%}
+<div class="underline"></div>
+<div class="team-name-box">
+    <h2 id="team-name">{{ group_name }}</h2>
+</div>
+<div class="team-top-info">
+    <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
+    <p class="header">Start number: </p>
+    <p class="content">{{ group_nr | default:"Not set yet" }}</p>
+
+
+
+        {% for field in group %}
+
+            {% if is_leader %}
+            <form method="post">
+            {{ group.management_form }}
+            <button type='button' onclick='toggleForm(this)'>Edit</button>
+            {% csrf_token %}
+            {% else %}
+                <div>
+            {% endif %}
+            <input name='type' value="group" type='hidden'/>
+            <p class="header">Presentation: </p>
+            <p class="content" id="presentation"> {{ field.presentation}} </p>
+            <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
+            {% endfor %}
+    {% if is_leader %}
+    </form>
+    {% else %}
+    </div>
+    {% endif %}
+    </div>
+</div>
+
+<div class="info-box">
+    <div class="info-header">
+        <h2>Your information</h2>
+        <i id="my-info-right" class="fas fa-angle-right" onclick="showMyInfo()"></i>
+        <i id="my-info-down" class="fas fa-angle-down" onclick="showMyInfo()"></i>
+    </div>
+    <div id="my-info">
         <form method="post">
-          <button type='button' onclick='toggleForm(this)'>Edit</button>
-          {% csrf_token %}
-        {% else %}
-        <div>
-        {% endif %}
-
-
-          <h3>{{ group_name }}</h3>
-          <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
-          <input name='type' value="group" type='hidden'/>
-          {{ group.as_p }}
-
-
-        {% if is_leader %}
-        </form>
-        {% else %}
-        </div>
-        {% endif %}
-      </div>
-
-      <form method="post">
-        <button type='button' onclick='toggleForm(this)'>Edit</button>
+        <i id="edit-me" class="far fa-edit" onclick='toggleForm(this)'></i>
+        <i id="done-me" class="fas fa-check" onclick='toggleForm(this)'></i>
         <input name='type' value="me" type="hidden"/>
         {% csrf_token %}
-        {{ me }}
-      </form>
+        <p class="header">Full name: </p>
+        <p class="content" id="input"> {{ me.name }} </p>
+        <p class="header">Email: </p>
+        <p class="content" id="input"> {{ me.email }} </p>
+        <p class="header">Phone number: </p>
+        <p class="content" id="input"> {{ me.phone_nr }} </p>
+        <p class="header">Lifejacket: </p>
+        <p class="content" id="input"> {{ me.lifevest_size }} </p>
+        </form>
+    </div>
+</div>
 
-      {% if is_leader %}
-      <form method="post">
-        <button type='button' onclick='toggleForm(this)'>Edit</button>
-        {% csrf_token %}
-        <input name='type' value="others" type="hidden"/>
+<div class="info-box">
+    <div class="info-header">
+        <h2>Team information</h2>
+        <i id="team-info-right" class="fas fa-angle-right" onclick="showTeamInfo()"></i>
+        <i id="team-info-down" class="fas fa-angle-down" onclick="showTeamInfo()"></i>
+    </div>
+    <div id="team-info">
+            {% if is_leader %}
+                <form method="post">
+                {% csrf_token %}
+                <input name='type' value="others" type="hidden"/>
+                {{ others.management_form }}
+            {% else %}
 
-      {% else %}
-      <div>
-      {% endif %}
+                <div>
+            {% endif %}
+            {% for user in others %}
+            {% if is_leader %}
+                <i id="edit" class="far fa-edit" onclick='toggleForm(this)'></i>
+                <i id="done" class="fas fa-check"></i>
+            {% endif %}
+            <div class="team-member-info">
+                <p class="header">Full name: </p>
+                <p class="content" id="input"> {{ user.name }} </p>
+                <p class="header">Email: </p>
+                <p class="content" id="input"> {{ user.email }} </p>
+                <p class="header">Phone number: </p>
+                <p class="content" id="input"> {{ user.phone_nr }} </p>
+                <p class="header">Lifejacket: </p>
+                <p class="content" id="input"> {{ user.lifevest_size }} </p>
+            </div>
+            {% endfor %}
+            {% if is_leader %}
+                </form>
+            {% else %}
+                </div>
+            {% endif %}
+    </div>
+</div>
+<div class="info-box" id="info-box-payment">
+    <div class="info-header">
+        <h2>Payment</h2>
+         <i id="pay-info-right" class="fas fa-angle-right" onclick="showPayment()"></i>
+         <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
+    </div>
+    <div id="payment">
+        <div class="payment-info">
+            The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
+            <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
+        </div>
+        <div class="payment-button">
+            <div>
+                <button type='button' onclick='toggleForm(this)'>Go to UTN Pay</button>
+            </div>
+            <div class="info">
+                Payment is open March 7th – March 13th.
+            </div>
+        </div>
+        <div>
+    </div>
+</div>
+{% comment %} TODO läs in dates istället för att hårdkoda dem  {% endcomment %}
+<div class="dates-box">
+    <div class="calendar-box">
+        <h2>Important dates</h2>
+        <img src="{% static 'images/calendar.png' %}" id="calendar-image">
+    </div>
+    <div class="underline" id="calendar"></div>
+    <div class="box-info">
+        <div class="dates">
+            February 25th <br>
+            February 26th <br>
+            March 6th <br>
+            March 7th <br>
+            March 13th <br>
+            April 4th <br>
+        </div>
+        <div class="event">
+            Rafting Pub at Uthgård<br>
+            Team info opens<br>
+            Team info closes<br>
+            Payment opens<br>
+            Payment closes<br>
+            Rafters education<br>
+        </div>
+    </div>
+</div>
 
-        {{ others.as_p }}
+<!--
+!-- Dates
+-->
+<div>
+{% for date in dates %}
+<p>
+    {{ date }}
+    </p>
+{% endfor %}
+</div>
 
-      {% if is_leader %}
-      </form>
-      {% else %}
-      </div>
-      {% endif %}
+<div class="equipment-box">
+    <div class="calendar-box">
+        <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+        <h2>Equipment information</h2>
+    </div>
+    <div class="underline" id="lifebuoy"></div>
+    <div class="box-info" id="equipment">
+        Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+    </div>
+    <div class="equipment-prices">
+        <b>Life jacket</b> 100 SEK <br>
+        Available sizes: 50-70, 70-90, 90-110 <br>
+        <b>Helmet</b> 50 SEK<br>
+        Available sizes: S, M, L <br>
+        <b>Wetsuit</b> 265 SEK<br>
+        Available sizes: XS, S, M, L, XL   <br>
+    </div>
+</div>
+</div>
 
-      <!--
-       !-- Dates
-        -->
-      <div>
-        {% for date in dates %}
-        <p>
-          {{ date }}
-          </p>
-        {% endfor %}
-      </div>
-    </main>
-  </body>
+<script type="text/javascript">
+const toggleForm = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
 
-  <script type="text/javascript">
-    const toggleForm = button => {
-        form = event.target.parentElement
-        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+    var edit = document.getElementById("edit");
+    var done = document.getElementById("done");
 
-        for (const element of formElements) {
-            console.log(element);
-            if (element.disabled) element.toggleAttribute('disabled')
-            else element.toggleAttribute('readonly')
-        }
-
-        if (formElements[0] && formElements[0].readOnly) {
-            form.submit();
-        } else {
-            event.target.innerHTML = 'Save';
-        }
+    for (const element of formElements) {
+        if (element.onclick) element.toggleAttribute('onclick')
+        else element.toggleAttribute('readonly')
     }
-  </script>
-</html>
+
+    if (formElements[0] && formElements[0].readOnly) {
+        edit.style.display = "block";
+        done.style.display = "none";
+        form.submit();
+    } else {
+        {% comment %} event.target.innerHTML = 'Save'; {% endcomment %}
+        done.style.display = "block";
+        edit.style.display = "none";
+    }
+}
+
+function showMyInfo() {
+  var info = document.getElementById("my-info");
+  var right = document.getElementById("my-info-right");
+  var down = document.getElementById("my-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+
+function showTeamInfo() {
+  var info = document.getElementById("team-info");
+  var right = document.getElementById("team-info-right");
+  var down = document.getElementById("team-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+
+function showPayment() {
+  var info = document.getElementById("payment");
+  var right = document.getElementById("pay-info-right");
+  var down = document.getElementById("pay-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/overview.css' %}">
+{% endblock %}
