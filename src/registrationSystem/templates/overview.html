@@ -2,38 +2,74 @@
   <body>
     <main class="flex-container-start-page">
       <div class="team-information">
+        {% if is_leader %}
         <form method="post">
           <button type='button' onclick='toggleForm(this)'>Edit</button>
           {% csrf_token %}
+        {% else %}
+        <div>
+        {% endif %}
+
+
           <h3>{{ group_name }}</h3>
           <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
           <input name='type' value="group" type='hidden'/>
           {{ group.as_p }}
-        </form>
 
+
+        {% if is_leader %}
+        </form>
+        {% else %}
+        </div>
+        {% endif %}
       </div>
 
       <form method="post">
         <button type='button' onclick='toggleForm(this)'>Edit</button>
+        <input name='type' value="me" type="hidden"/>
         {% csrf_token %}
-        {{ users.management_form }}
-        <input name='type' value="user" type="hidden"/>
-        {% for user in users %}
-        <div>
-          {{ user }}
-        </div>
-        {% endfor %}
+        {{ me }}
       </form>
+
+      {% if is_leader %}
+      <form method="post">
+        <button type='button' onclick='toggleForm(this)'>Edit</button>
+        {% csrf_token %}
+        <input name='type' value="others" type="hidden"/>
+
+      {% else %}
+      <div>
+      {% endif %}
+
+        {{ others.as_p }}
+
+      {% if is_leader %}
+      </form>
+      {% else %}
+      </div>
+      {% endif %}
+
+      <!--
+       !-- Dates
+        -->
+      <div>
+        {% for date in dates %}
+        <p>
+          {{ date }}
+          </p>
+        {% endfor %}
+      </div>
     </main>
   </body>
 
   <script type="text/javascript">
     const toggleForm = button => {
         form = event.target.parentElement
-        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
+        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
 
         for (const element of formElements) {
-            if (element.onclick) element.toggleAttribute('onclick')
+            console.log(element);
+            if (element.disabled) element.toggleAttribute('disabled')
             else element.toggleAttribute('readonly')
         }
 

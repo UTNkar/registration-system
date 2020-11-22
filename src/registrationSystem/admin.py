@@ -5,8 +5,10 @@ from registrationSystem.models import (
     RaffleEntry,
     RiverRaftingRaffleState,
     RiverRaftingUser,
-    RiverRaftingTeam
+    RiverRaftingTeam,
+    ImportantDate,
 )
+
 from django.http import HttpResponseRedirect
 
 
@@ -86,3 +88,5 @@ if settings.EVENT == 'RIVERRAFTING':
     admin.site.register(RiverRaftingRaffleState, RiverRaftingRaffleStateAdmin)
     admin.site.register(RiverRaftingUser)
     admin.site.register(RiverRaftingTeam)
+
+admin.site.register(ImportantDate)

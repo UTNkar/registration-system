@@ -1,39 +1,71 @@
 from django.core import validators
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.core.exceptions import FieldError
 import requests
 from registrationSystem.models import EmailConfirmation
 
 
-def send_win_email(user):
+def user_has_won(user):
     """
-    Call this function when a user wins a raft (i.e. the status of
-    the RaffleEntry turns 'won')
-    to send an email containing a unique link to create a full account.
+    Call this function when a user wins a raft.  The function sets the
+    status of the raffle entry to 'won' and calls the function
+    send_win_email() containing a unique link to create a full
+    account.
 
     Parameters:
     user: RaffleEntry of the person who won.
 
     Returns:
     nothing
+
     """
-    # The connector binds the randomized token
-    # to the RaffleEntry from which the account
-    # information will be retreived.
+    user.status = 'won'
+    user.save()
+    send_email(user)
+    return
+
+
+def send_email(user):
+    """
+    Call this function to send an email containing a unique link with the
+    user's raffle entry.
+    Used to confirm registration email or to create a full account.
+
+    Parameters:
+    user: RaffleEntry of the person to send the email.
+
+    Returns:
+    nothing
+    """
+
+    # The connector binds the randomized token to the RaffleEntry
+    # from which the account information will be retreived.
     connector = EmailConfirmation.objects.create(raffleEntryId=user)
     connector.save()
 
+    status = user.status
+    if status == 'mail unconfirmed':
+        emailtitle = 'Activate your account'
+        template = 'email/confirm_email.html'
+    elif status == 'won':
+        emailtitle = 'You have won a raft!'
+        template = 'email/create-account_email.html'
+    else:
+        raise FieldError('Incorrect user status in order to send an email!')
+
+    # TODO: Set domain to the actual domain on production.
     message = render_to_string(
-        'email/create-account_email.html',
-        {
-            'name': user.name,
-            'domain': 'localhost:8000',
-            'token': connector.id,
-        }
-    )
+                template,
+                {
+                    'name': user.name,
+                    'domain': 'localhost:8000',
+                    'token': connector.id,
+                }
+            )
     to_email = user.email
     email = EmailMessage(
-        'You have won a raft!',
+        emailtitle,
         message,
         to=[to_email]
     )

@@ -1,7 +1,7 @@
 {% extends "status_base.html" %}
 {% load static %}
 {% block content %}
-<h2 class="status" >Du har fått plats!!! Och du har tackat ja!! Vi har skickat ett mail till {{ interest_check_obj.email }}
+<h2 class="status" >Du har fått plats!!! Och du har tackat ja!! Vi har skickat ett mail till {{ raffle_entry_obj.email }}
     för att skapa ett konto där du kan se dina uppgifter. Inte fått något mail?
     {% comment %} TODO! skriv riktig länk {% endcomment %}
     <a href="{% url 'sign_in' %}">Klicka här.</a></h2>

@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import (
     ModelForm, CharField, TextInput, EmailInput,
-    PasswordInput, ValidationError, CheckboxInput
+    PasswordInput, ValidationError, CheckboxInput,
+    Select
 )
 from registrationSystem.models import (
     RaffleEntry, RiverRaftingUser, RiverRaftingTeam
@@ -91,6 +92,7 @@ class RiverRaftingUserForm(ModelForm):
         widgets = {
             'name': TextInput(attrs={'readonly': 'readonly'}),
             'email': EmailInput(attrs={'readonly': 'readonly'}),
+            'lifevest_size': Select(attrs={'disabled': True})
         }
 
 
@@ -110,7 +112,7 @@ class RiverRaftingTeamForm(ModelForm):
 
         widgets = {
             'environment_raft': CheckboxInput(
-                attrs={'onclick': 'return false'}
+                attrs={'disabled': True}
             ),
             'presentation': TextInput(attrs={'readonly': 'readonly'}),
         }
