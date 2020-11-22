@@ -4,7 +4,7 @@ from django.db import models
 class ImportantDate(models.Model):
     """
     Important event dates.
-    
+
     An important date is dates on which events or deadlines happen.
 
     'On the 14th of february there will be a raffle pub.'
@@ -16,4 +16,3 @@ class ImportantDate(models.Model):
 
     def __str__(self):
         return '{} - {}'.format(getattr(self, "date"), getattr(self, "desc"))
-
