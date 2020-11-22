@@ -29,7 +29,8 @@ class OrderRow():
         for. This should be the total cost for for all the items your buying
         of this type.
 
-        e.g. if an item costs 50kr and you buy 3, the amount should be set to 150
+        e.g. if an item costs 50kr and you buy 3, the amount should be set to
+        150 kr
         """
         self.amount = amount
 
