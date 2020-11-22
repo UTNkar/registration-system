@@ -29,7 +29,9 @@ class RiverRaftingUser(AbstractUser):
     lifevest_size = models.CharField(
         max_length=2,
         choices=LIFEVEST_SIZES,
-        verbose_name='Lifevest size'
+        verbose_name='Lifevest size',
+        blank=True,
+        null=True
     )
 
     wetsuite_size = models.CharField(
