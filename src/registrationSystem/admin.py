@@ -12,6 +12,7 @@ from registrationSystem.models import (
 from django.http import HttpResponseRedirect
 from registrationSystem.utils import send_email
 
+
 class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
     list_display = ["state"]
     # Raffle system

@@ -13,7 +13,6 @@ from registrationSystem.forms import (
     RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
 )
-from django.conf import settings
 
 
 def sign_in(request):
