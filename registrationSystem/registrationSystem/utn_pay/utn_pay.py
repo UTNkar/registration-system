@@ -78,10 +78,10 @@ class ForskaPayment(AbstractPayment):
         lifevest_cost = number_of_lifevests * costs.lifevest * 100
         wetsuit_cost = number_of_wetsuits * costs.wetsuit * 100
         helmet_cost = number_of_helmets * costs.helmet * 100
-        raft_fee = costs.raft_fee * 100
+        raft_fee_cost = costs.raft_fee * 100
 
         raft_fee = OrderRow(forska_fields['raft_fee'])
-        raft_fee.set_amount(raft_fee)
+        raft_fee.set_amount(raft_fee_cost)
 
         lifevest = OrderRow(forska_fields['lifevest'])
         lifevest.set_quantity(number_of_lifevests)
@@ -103,6 +103,7 @@ class ForskaPayment(AbstractPayment):
         for row in [raft_fee, lifevest, wetsuit, helmet]:
             if row.get_quantity() > 0:
                 items_to_buy.append(row.to_dict())
+                print(row.get_amount())
                 total_cost += row.get_amount()
 
         return items_to_buy, total_cost
