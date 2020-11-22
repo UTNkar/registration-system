@@ -265,5 +265,3 @@ def create_account(request, uid):
 
 def temp(request):
     return render(request, 'registrationSystem/temp.html')
-
-
