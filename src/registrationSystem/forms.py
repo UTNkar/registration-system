@@ -1,16 +1,17 @@
 from django import forms
 from django.forms import (
     ModelForm, CharField, TextInput, EmailInput,
-    PasswordInput, ValidationError, CheckboxInput
+    PasswordInput, ValidationError, CheckboxInput,
+    Select
 )
 from registrationSystem.models import (
-    InterestCheck, RiverraftingUser, RiverraftingTeam
+    RaffleEntry, RiverRaftingUser, RiverRaftingTeam
 )
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
 
 
-class InterestCheckForm(ModelForm):
+class RaffleEntryForm(ModelForm):
     person_nr = PersonNumberField()
 
     status = forms.CharField(
@@ -19,7 +20,7 @@ class InterestCheckForm(ModelForm):
     )
 
     class Meta:
-        model = InterestCheck
+        model = RaffleEntry
         fields = ['name',
                   'email',
                   'person_nr',
@@ -72,9 +73,9 @@ class CreateAccountForm(ModelForm):
         ]
 
 
-class RiverraftingUserForm(ModelForm):
+class RiverRaftingUserForm(ModelForm):
     class Meta:
-        model = RiverraftingUser
+        model = RiverRaftingUser
 
         fields = [
             'name',
@@ -91,26 +92,27 @@ class RiverraftingUserForm(ModelForm):
         widgets = {
             'name': TextInput(attrs={'readonly': 'readonly'}),
             'email': EmailInput(attrs={'readonly': 'readonly'}),
+            'lifevest_size': Select(attrs={'disabled': True})
         }
 
 
-class RiverraftingTeamForm(ModelForm):
+class RiverRaftingTeamForm(ModelForm):
     class Meta:
-        model = RiverraftingTeam
+        model = RiverRaftingTeam
 
         fields = [
-            'presentation',
             'environment_raft',
+            'presentation',
         ]
 
         labels = {
-            'presentation': 'Presentation',
             'evironment_raft': 'I want an environmentally friendly raft',
+            'presentation': 'Group description',
         }
 
         widgets = {
-            'presentation': TextInput(attrs={'readonly': 'readonly'}),
             'environment_raft': CheckboxInput(
-                attrs={'onclick': 'return false'}
+                attrs={'disabled': True}
             ),
+            'presentation': TextInput(attrs={'readonly': 'readonly'}),
         }
