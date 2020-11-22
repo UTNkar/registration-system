@@ -201,6 +201,24 @@ class AbstractGroup(models.Model):
     def __str__(self):
         return '{}'.format(getattr(self, "name"))
 
+    def get_group_members(self):
+        group_members = get_user_model().objects.filter(
+            belongs_to_group=self.leader.belongs_to_group
+        )
+
+        return group_members
+
+    def get_non_none_fields(self, attribute):
+        """
+
+        """
+        group_members = self.get_group_members()
+        non_none_fields = group_members.exclude(
+            **{attribute: None}
+        )
+
+        return non_none_fields
+
     class Meta():
         abstract = True
 
@@ -233,6 +251,18 @@ class RiverraftingTeam(AbstractGroup):
         verbose_name="Payment initialized",
         default=False
     )
+
+    def get_number_of_lifevests(self):
+        members_with_lifevests = super().get_non_none_fields("lifevest_size")
+        return len(members_with_lifevests)
+
+    def get_number_of_wetsuits(self):
+        members_with_wetsuits = super().get_non_none_fields("wetsuite_size")
+        return len(members_with_wetsuits)
+
+    def get_number_of_helmets(self):
+        members_with_helmets = super().get_non_none_fields("helmet_size")
+        return len(members_with_helmets)
 
 
 class EmailConfirmations(models.Model):
