@@ -190,6 +190,7 @@ class RiverraftingCost(SingletonModel):
     lifevest = models.IntegerField()
     wetsuit = models.IntegerField()
     helmet = models.IntegerField()
+    raft_fee = models.IntegerField()
 
 
 class AbstractGroup(models.Model):
