@@ -11,8 +11,6 @@ class OrderRow():
         self.name = fields['name']
         self.description = fields['description']
         self.unit = fields['unit']
-        if 'amount' in fields:
-            self.amount = fields['amount']
         if 'quantity' in fields:
             self.quantity = fields['quantity']
 
@@ -80,8 +78,10 @@ class ForskaPayment(AbstractPayment):
         lifevest_cost = number_of_lifevests * costs.lifevest * 100
         wetsuit_cost = number_of_wetsuits * costs.wetsuit * 100
         helmet_cost = number_of_helmets * costs.helmet * 100
+        raft_fee = costs.raft_fee * 100
 
         raft_fee = OrderRow(forska_fields['raft_fee'])
+        raft_fee.set_amount(raft_fee)
 
         lifevest = OrderRow(forska_fields['lifevest'])
         lifevest.set_quantity(number_of_lifevests)

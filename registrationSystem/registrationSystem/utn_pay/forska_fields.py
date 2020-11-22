@@ -4,7 +4,6 @@ forska_fields = {
         'description': "The base fee for a raft in the River Rafting",
         'quantity': 1,
         'unit': 'st',
-        'amount': 10000,  # Must be in ören
     },
     'lifevest': {
         'name': "Life vests",
