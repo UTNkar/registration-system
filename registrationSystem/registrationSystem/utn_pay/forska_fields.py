@@ -1,4 +1,4 @@
-forska_fields = {
+forska_order_rows = {
     'raft_fee': {
         'name': "Raft fee",
         'description': "The base fee for a raft in the River Rafting",

@@ -2,7 +2,7 @@ import requests
 from phpserialize import dumps
 from django.conf import settings
 from registrationSystem.models import RiverraftingCost
-from .forska_fields import forska_fields
+from .forska_fields import forska_order_rows
 from abc import ABC, abstractmethod
 
 
@@ -80,18 +80,18 @@ class ForskaPayment(AbstractPayment):
         helmet_cost = number_of_helmets * costs.helmet * 100
         raft_fee_cost = costs.raft_fee * 100
 
-        raft_fee = OrderRow(forska_fields['raft_fee'])
+        raft_fee = OrderRow(forska_order_rows['raft_fee'])
         raft_fee.set_amount(raft_fee_cost)
 
-        lifevest = OrderRow(forska_fields['lifevest'])
+        lifevest = OrderRow(forska_order_rows['lifevest'])
         lifevest.set_quantity(number_of_lifevests)
         lifevest.set_amount(lifevest_cost)
 
-        wetsuit = OrderRow(forska_fields['wetsuit'])
+        wetsuit = OrderRow(forska_order_rows['wetsuit'])
         wetsuit.set_quantity(number_of_wetsuits)
         wetsuit.set_amount(wetsuit_cost)
 
-        helmet = OrderRow(forska_fields['helmet'])
+        helmet = OrderRow(forska_order_rows['helmet'])
         helmet.set_quantity(number_of_helmets)
         helmet.set_amount(helmet_cost)
 
