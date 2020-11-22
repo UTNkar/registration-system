@@ -9,7 +9,7 @@ def get_order_rows_model():
         return ForskaPayment()
 
 
-def createPaymentLink(team_leader):
+def get_payment_link(team_leader):
     rows, total_cost = get_order_rows_model().get_items_and_cost(team_leader)
 
     # Pay.utn.se wants first and last name while we store the first and last

@@ -13,7 +13,7 @@ from django.contrib.auth import get_user_model
 from registrationSystem.models import (
     RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate
 )
-from registrationSystem.utn_pay.utn_pay import createPaymentLink
+from registrationSystem.utn_pay import get_payment_link
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
     RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
@@ -23,7 +23,7 @@ from django.conf import settings
 
 
 @login_required
-def test_payment(request):
+def make_payment(request):
     team = request.user.belongs_to_group
 
     if team.leader != request.user:
@@ -33,7 +33,7 @@ def test_payment(request):
     if team.payment_initialized:
         return HttpResponseForbidden()
 
-    payment_link = createPaymentLink(request.user)
+    payment_link = get_payment_link(request.user)
 
     team.payment_initialized = True
     team.save()
