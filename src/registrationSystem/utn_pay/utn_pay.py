@@ -1,7 +1,7 @@
 import requests
 from phpserialize import dumps
 from django.conf import settings
-from .payment_models.forska_payment import ForskaPayment
+from .payment_classes.forska_payment import ForskaPayment
 
 
 def get_order_rows_model():
