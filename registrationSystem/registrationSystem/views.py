@@ -15,7 +15,7 @@ from django.template.loader import render_to_string
 from registrationSystem.models import (
     InterestCheck, EmailConfirmations, RiverraftingTeam
 )
-from registrationSystem.utn_pay import createPaymentLink
+from registrationSystem.utn_pay.utn_pay import createPaymentLink
 from registrationSystem.utils import send_win_email, is_utn_member
 from registrationSystem.forms import (
     InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
