@@ -1,5 +1,19 @@
 class OrderRow():
+    """
+    Represents an order row in pay.utn.se. Some fields can be added directly
+    when creating the class while others must be added manualy.
+    """
     def __init__(self, fields):
+        """
+        fields must include the following fields:
+        name: string - The name of the thing you're paying for
+        description: string - Describes what the thing you're paying for is
+        unit: string - the unit the describes the amount eg 'st'
+
+        fields can optionally include
+        quantity: int - The number of items to buy of the thing you're paying
+        for
+        """
         self.name = fields['name']
         self.description = fields['description']
         self.unit = fields['unit']
@@ -10,6 +24,13 @@ class OrderRow():
         self.quantity = quantity
 
     def set_amount(self, amount):
+        """
+        Sets the amount of money it costs to purchase the thing you're paying
+        for. This should be the total cost for for all the items your buying
+        of this type.
+
+        e.g. if an item costs 50kr and you buy 3, the amount should be set to 150
+        """
         self.amount = amount
 
     def get_amount(self):
@@ -35,11 +56,13 @@ class OrderRow():
         return {
             'name': self.name,
             'description': self.description,
-            # 'category' Ugly old solution sets it to 'participation_fee'
+            # 'category' Ugly old solution by pay.utn.se sets
+            # it to 'participation_fee' for all fields
             'category': 'participation_fee',
             'quantity': self.quantity,
             'unit': self.unit,
             'amount': self.amount,
+            # Is required by pay but is rarely used
             'vat': 0
         }
 

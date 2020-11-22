@@ -6,6 +6,18 @@ from .order_rows.order_row_model import OrderRow
 
 class ForskaPayment(AbstractPayment):
     def get_order_rows_and_cost(self, team_leader):
+        """
+        Creates the order rows for a payment in the river rafting.
+
+        Params:
+
+        team_leader: A user that is the team leader for a given team
+
+        Returns:
+
+        A tuple with the order rows for the payment and the total cost
+        for the payment
+        """
         team = team_leader.belongs_to_group
 
         number_of_lifevests = team.get_number_of_lifevests()
