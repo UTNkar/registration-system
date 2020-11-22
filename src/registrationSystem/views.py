@@ -26,7 +26,7 @@ from django.conf import settings
 def make_payment(request):
     team = request.user.belongs_to_group
 
-    if team.leader != request.user:
+    if not request.user.is_team_leader():
         return HttpResponseForbidden()
 
     # Only allow one payment

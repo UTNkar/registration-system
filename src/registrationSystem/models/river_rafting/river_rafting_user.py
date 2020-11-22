@@ -57,3 +57,6 @@ class RiverRaftingUser(AbstractUser):
         blank=True,
         verbose_name='Group'
     )
+
+    def is_team_leader(self):
+        return self.belongs_to_group.leader == self
