@@ -5,13 +5,13 @@ from django.forms import (
     Select
 )
 from registrationSystem.models import (
-    InterestCheck, RiverraftingUser, RiverraftingTeam
+    RaffleEntry, RiverRaftingUser, RiverRaftingTeam
 )
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
 
 
-class InterestCheckForm(ModelForm):
+class RaffleEntryForm(ModelForm):
     person_nr = PersonNumberField()
 
     status = forms.CharField(
@@ -20,7 +20,7 @@ class InterestCheckForm(ModelForm):
     )
 
     class Meta:
-        model = InterestCheck
+        model = RaffleEntry
         fields = ['name',
                   'email',
                   'person_nr',
@@ -73,9 +73,9 @@ class CreateAccountForm(ModelForm):
         ]
 
 
-class RiverraftingUserForm(ModelForm):
+class RiverRaftingUserForm(ModelForm):
     class Meta:
-        model = RiverraftingUser
+        model = RiverRaftingUser
 
         fields = [
             'name',
@@ -96,9 +96,9 @@ class RiverraftingUserForm(ModelForm):
         }
 
 
-class RiverraftingTeamForm(ModelForm):
+class RiverRaftingTeamForm(ModelForm):
     class Meta:
-        model = RiverraftingTeam
+        model = RiverRaftingTeam
 
         fields = [
             'environment_raft',

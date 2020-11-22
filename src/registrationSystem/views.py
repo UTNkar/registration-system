@@ -6,12 +6,12 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from registrationSystem.models import (
-    InterestCheck, EmailConfirmations, RiverraftingTeam, ImportantDate
+    RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate
 )
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
-    InterestCheckForm, CreateAccountForm, RiverraftingUserForm,
-    RiverraftingTeamForm
+    RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
+    RiverRaftingTeamForm
 )
 from django.conf import settings
 
@@ -37,10 +37,10 @@ def login_user(request):
 
 def register(request):
     if request.POST:
-        form = InterestCheckForm(request.POST)
+        form = RaffleEntryForm(request.POST)
 
         if form.is_valid():
-            interest_check_obj, _ = InterestCheck.objects.get_or_create(
+            raffle_entry_obj, _ = RaffleEntry.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
                 person_nr=form.cleaned_data['person_nr']
@@ -49,24 +49,24 @@ def register(request):
             # Send confirmation email, or resend email with new link
             # in case someone re-registers without ever pressing
             # original link (i.e. status still 'mail unconfirmed')
-            status = interest_check_obj.status
+            status = raffle_entry_obj.status
             if status == "mail unconfirmed":
-                send_email(interest_check_obj)
+                send_email(raffle_entry_obj)
 
             # Update cookie. Used when changing accounts or 'logging' back in
-            request.session['interest_check_id'] = interest_check_obj.id
+            request.session['raffle_entry_id'] = raffle_entry_obj.id
 
-            interest_check_obj.save()
+            raffle_entry_obj.save()
             return redirect(reverse('status'))
     else:
-        form = InterestCheckForm()
+        form = RaffleEntryForm()
     return render(request, "register_page.html", {'form': form})
 
 
 def status(request):
-    interest_check_id = request.session['interest_check_id']
-    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
-    status = interest_check_obj.status
+    raffle_entry_id = request.session['raffle_entry_id']
+    raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
+    status = raffle_entry_obj.status
 
     if status == "mail unconfirmed":
         template = "mail_unconfirmed.html"
@@ -85,13 +85,13 @@ def status(request):
 
     return render(request,
                   "status/" + template,
-                  {"interest_check_obj": interest_check_obj})
+                  {"raffle_entry_obj": raffle_entry_obj})
 
 
 @login_required
 def overview(request, id=None):
     user_model = get_user_model()
-    group_model = RiverraftingTeam
+    group_model = RiverRaftingTeam
     user_id = request.user.id
 
     user = user_model.objects.get(id=user_id)
@@ -101,25 +101,25 @@ def overview(request, id=None):
         raise Http404('There is no group associated to this user.')
 
     is_leader = group.leader.id == user.id
-
     UserFormSet = modelformset_factory(
         user_model,
-        form=RiverraftingUserForm,
+        form=RiverRaftingUserForm,
         extra=0
     )
     GroupFormSet = modelformset_factory(
         group_model,
-        form=RiverraftingTeamForm,
+        form=RiverRaftingTeamForm,
         max_num=1
     )
 
     # TODO: Don't use the RiverraftingUserForm, but rather choose form
     # depending on what user model is selected.
-    my_form = RiverraftingUserForm(instance=user)
+    my_form = RiverRaftingUserForm(instance=user)
     others_formset = UserFormSet(
         queryset=user_model.objects.filter(
             belongs_to_group=user.belongs_to_group.id).exclude(id=user_id),
     )
+
     group_formset = GroupFormSet(
         queryset=group_model.objects.filter(id=user.belongs_to_group.id))
     dates = ImportantDate.objects.all()
@@ -143,7 +143,7 @@ def overview(request, id=None):
             if others_formset.is_valid():
                 others_formset.save()
         else:
-            my_form = RiverraftingUserForm(request.POST, instance=user)
+            my_form = RiverRaftingUserForm(request.POST, instance=user)
 
             if my_form.is_valid():
                 my_form.save()
@@ -165,34 +165,34 @@ def overview(request, id=None):
 def change_status(request):
     # If the user loses and wants to re-enter the raffle, of
     # if the user wins and wants their spot.
-    interest_check_id = request.session['interest_check_id']
-    interest_check_obj = InterestCheck.objects.get(id=interest_check_id)
+    raffle_entry_id = request.session['raffle_entry_id']
+    raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
 
-    if interest_check_obj.status == "won":
-        user_has_won(interest_check_obj)
-        interest_check_obj.status = "accepted"
-    elif interest_check_obj.status == "lost":
-        interest_check_obj.status = "waiting"
+    if raffle_entry_obj.status == "won":
+        user_has_won(raffle_entry_obj)
+        raffle_entry_obj.status = "accepted"
+    elif raffle_entry_obj.status == "lost":
+        raffle_entry_obj.status = "waiting"
 
-    interest_check_obj.save()
+    raffle_entry_obj.save()
     return redirect(reverse('status'))
 
 
 def activate(request, token):
     try:
-        confirmation = EmailConfirmations.objects.get(pk=token)
-        user = confirmation.interestCheckId
+        confirmation = EmailConfirmation.objects.get(pk=token)
+        user = confirmation.raffleEntryId
         user.status = 'waiting'
         confirmation.delete()
         user.save()
         return redirect(reverse('status'))
-    except(InterestCheck.DoesNotExist):
+    except(RaffleEntry.DoesNotExist):
         return HttpResponse('Activation link is invalid!')
 
 
 def create_account(request, uid):
-    connector = get_object_or_404(EmailConfirmations, id=uid)
-    user = connector.interestCheckId
+    connector = get_object_or_404(EmailConfirmation, id=uid)
+    user = connector.raffleEntryId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -217,12 +217,12 @@ def create_account(request, uid):
             is_utn_member=is_utn_member(user.person_nr)
         )
 
-        # Keep the InterestCheck (user) with status 'confirmed'
+        # Keep the RaffleEntry (user) with status 'confirmed'
         # for statistical purposes.
         user.status = "confirmed"
         user.save()
 
-        # Delete the EmailConfirmations. The randomized token
+        # Delete the EmailConfirmation. The randomized token
         # should only be used once!
         connector.delete()
         return HttpResponseRedirect(reverse('status'))

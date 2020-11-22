@@ -3,21 +3,22 @@ from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.core.exceptions import FieldError
 import requests
-from registrationSystem.models import EmailConfirmations
+from registrationSystem.models import EmailConfirmation
 
 
 def user_has_won(user):
     """
-    Call this function when a user wins a raft.
-    The function sets the status of the InterestCheck to 'won'
-    and calls the function send_win_email() to send an email
-    containing a unique link to create a full account.
+    Call this function when a user wins a raft.  The function sets the
+    status of the raffle entry to 'won' and calls the function
+    send_win_email() containing a unique link to create a full
+    account.
 
     Parameters:
-    user: InterestCheck of the person who won.
+    user: RaffleEntry of the person who won.
 
     Returns:
     nothing
+
     """
     user.status = 'won'
     user.save()
@@ -28,19 +29,19 @@ def user_has_won(user):
 def send_email(user):
     """
     Call this function to send an email containing a unique link with the
-    user's InterestCheck.
+    user's raffle entry.
     Used to confirm registration email or to create a full account.
 
     Parameters:
-    user: InterestCheck of the person to send the email.
+    user: RaffleEntry of the person to send the email.
 
     Returns:
     nothing
     """
 
-    # The connector binds the randomized token to the InterestCheck
+    # The connector binds the randomized token to the RaffleEntry
     # from which the account information will be retreived.
-    connector = EmailConfirmations.objects.create(interestCheckId=user)
+    connector = EmailConfirmation.objects.create(raffleEntryId=user)
     connector.save()
 
     status = user.status
