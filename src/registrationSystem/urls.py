@@ -29,6 +29,13 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path(
-        'create_account/<str:uid>', views.create_account, name='create_account'
+        'create_account/<str:uid>',
+        views.create_account,
+        name='create_account'
+    ),
+    path(
+        'join_team/<str:uid>',
+        views.join_team,
+        name='join_team'
     ),
 ]

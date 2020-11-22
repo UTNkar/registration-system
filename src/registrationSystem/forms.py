@@ -28,6 +28,14 @@ class RaffleEntryForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
+    def __init__(self, *args, is_leader=False, **kwargs):
+        super(CreateAccountForm, self).__init__(*args, **kwargs)
+
+        if(is_leader):
+            self.fields["name"].widget.attrs['readonly'] = 'readonly',
+            self.fields["person_nr"].widget.attrs['readonly'] = 'readonly',
+            self.fields["email"].widget.attrs['readonly'] = 'readonly'
+
     def clean_password_check(self):
         password = self.cleaned_data.get('password')
         password_check = self.cleaned_data.get('password_check')
@@ -61,9 +69,9 @@ class CreateAccountForm(ModelForm):
         }
 
         widgets = {
-            'name': TextInput(attrs={'readonly': 'readonly'}),
-            'person_nr': TextInput(attrs={'readonly': 'readonly'}),
-            'email': EmailInput(attrs={'readonly': 'readonly'}),
+            'name': TextInput(),
+            'person_nr': TextInput(),
+            'email': EmailInput(),
             'password': PasswordInput(),
         }
 

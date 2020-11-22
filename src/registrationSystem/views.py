@@ -32,7 +32,8 @@ def login_user(request):
         login(request, user)
         return redirect(reverse('overview'))
     else:
-        return redirect(settings.LOGIN_URL)
+        # TODO: Send show nice failed to login page
+        return HttpResponse('Unauthorized', status=401)
 
 
 def register(request):
@@ -148,17 +149,19 @@ def overview(request, id=None):
             if my_form.is_valid():
                 my_form.save()
 
-    return render(request,
-                  "overview.html",
-                  {
-                      "me": my_form,
-                      "group_name": group.name,
-                      "group_nr": group.number,
-                      "others": others_formset,
-                      "group": group_formset,
-                      "is_leader": is_leader,
-                      "dates": dates,
-                  })
+    context = {
+        "me": my_form,
+        "group_name": group.name,
+        "group_nr": group.number,
+        "others": others_formset,
+        "group": group_formset,
+        "is_leader": is_leader,
+        "dates": dates,
+    }
+    if is_leader:
+        context["join_id"] = group.join_id
+
+    return render(request, "overview.html", context)
 
 
 # TODO: Remove this view when status can be changed from the admin pages
@@ -191,48 +194,89 @@ def activate(request, token):
 
 
 def create_account(request, uid):
-    connector = get_object_or_404(EmailConfirmation, id=uid)
+    connector = get_object_or_404(
+        EmailConfirmation,
+        id=uid
+    )
     user = connector.raffleEntryId
 
-    if request.method == "POST":
-        form = CreateAccountForm(request.POST)
+    if(request.method == "POST"):
+        form = CreateAccountForm(request.POST, is_leader=True)
+        if form.is_valid():
+            # There is no need to encrypt the password here, the user manager
+            # handles that in the database. Just make sure to use create_user()
+            leader = get_user_model().objects.create_user(
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                person_nr=form.cleaned_data["person_nr"],
+                phone_nr=form.cleaned_data["phone_nr"],
+                password=form.cleaned_data["password"],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
+            ).save()
+
+            # Create a new team and assign it to the user
+            team = RiverRaftingTeam.objects.create(leader=leader)
+            leader.belongs_to_group = team
+            leader.save()
+
+            # Keep the RaffleEntry (user) with status 'confirmed'
+            # for statistical purposes.
+            user.status = "confirmed"
+            user.save()
+
+            # Delete the EmailConfirmation. The randomized token
+            # should only be used once!
+            connector.delete()
+            return HttpResponseRedirect(reverse('status'))
     else:
         form = CreateAccountForm(initial={
             'name': user.name,
             'person_nr': user.person_nr,
             'email': user.email
-        })
-
-    if form.is_valid():
-        phone_nr = form.cleaned_data['phone_nr']
-        password = form.cleaned_data['password']
-        # There is no need to encrypt the password here, the user manager
-        # handles that in the database.
-        get_user_model().objects.create(
-            name=user.name,
-            email=user.email,
-            person_nr=user.person_nr,
-            phone_nr=phone_nr,
-            password=password,
-            is_utn_member=is_utn_member(user.person_nr)
-        )
-
-        # Keep the RaffleEntry (user) with status 'confirmed'
-        # for statistical purposes.
-        user.status = "confirmed"
-        user.save()
-
-        # Delete the EmailConfirmation. The randomized token
-        # should only be used once!
-        connector.delete()
-        return HttpResponseRedirect(reverse('status'))
+        }, is_leader=True)
 
     context = {
-        'uid': uid,
-        'form': form
+        'form': form,
+        'is_leader': True,
     }
     return render(request, 'registrationSystem/create_account.html', context)
 
 
-def temp(request):
-    return render(request, 'registrationSystem/temp.html')
+# TODO: Prevent joining a full team
+def join_team(request, uid):
+    # Create a new account (without a previously existing
+    # raffle entry) and join an already existing team.
+    team = get_object_or_404(RiverRaftingTeam, join_id=uid)
+    team_leader_name = team.leader.name,
+
+    if request.method == "POST":
+        form = CreateAccountForm(request.POST)
+        if form.is_valid():
+            # There is no need to encrypt the password here, the user manager
+            # handles that in the database.
+            user = get_user_model().objects.create_user(
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                person_nr=form.cleaned_data["person_nr"],
+                phone_nr=form.cleaned_data["phone_nr"],
+                password=form.cleaned_data["password"],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
+            )
+
+            user.belongs_to_group = team
+            user.save()
+
+            return HttpResponseRedirect(reverse('overview'))
+        else:
+            print("ErrorS:")
+            print(form.errors.items())
+
+    else:
+        form = CreateAccountForm()
+
+    context = {
+        'form': form,
+        'team_leader_name': team_leader_name,
+        'is_leader': False
+    }
+    return render(request, 'registrationSystem/create_account.html', context)
