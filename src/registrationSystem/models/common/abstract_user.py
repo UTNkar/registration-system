@@ -15,7 +15,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
         max_length=13, verbose_name='Person number', unique=True
     )
     is_utn_member = models.BooleanField(verbose_name='UTN Member')
-    is_staff = models.BooleanField()
+    is_staff = models.BooleanField(default=False)
     objects = CommonUserManager()
 
     USERNAME_FIELD = "person_nr"

@@ -16,7 +16,8 @@ class RiverRaftingTeam(AbstractGroup):
     )
 
     environment_raft = models.BooleanField(
-        verbose_name='I want an environmentally friendly raft'
+        verbose_name='I want an environmentally friendly raft',
+        default=False
     )
 
     presentation = models.CharField(
