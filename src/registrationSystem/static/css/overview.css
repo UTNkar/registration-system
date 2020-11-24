@@ -6,11 +6,25 @@
 }
 
 header {
-    justify-content: space-between;
-    display: flex;
+    position: relative;
     margin: 0;
     padding-top: 0.5em;
     padding-bottom: 1em;
+    height: 2.5em;
+}
+
+#utn {
+    position: absolute;
+    left: 0;
+}
+
+#forsranning {
+    position: absolute;
+}
+
+.logout {
+    position: absolute;
+    right: 0;
 }
 
 #utn,
@@ -34,16 +48,12 @@ header {
 }
 
 .team-name-box {
-    display: flex;
-    flex-direction: column;
     background-color: white;
     margin-top: 3em;
     margin-right: 2em;
 }
 
-#team-name {
-    padding-left: 0.5em;
-    justify-items: flex-start;
+#team-name input {
     align-self: start;
     font-weight: bold;
     font-size: 1.2em;
@@ -77,7 +87,6 @@ input#id_form-0-presentation {
     border-radius: 50%;
     height: 8em;
     position: absolute;
-    top: 4em;
     right: 1em;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
 }
@@ -91,6 +100,15 @@ input#id_form-0-presentation {
     position: absolute;
     top: 8em;
     right: 10em;
+}
+
+.edit-team,
+.done-team,
+#edit-me,
+#done-me {
+    position: absolute;
+    top: 2em;
+    right: 1em;
 }
 
 #my-info-down,
@@ -141,9 +159,9 @@ input#id_form-0-presentation {
 .payment-button {
     display: flex;
     flex-direction: column;
-    justify-content: baseline;
+    justify-content: center;
     align-items: center;
-    padding: 1em;
+    padding-top: 1em;
 }
 
 .info {
@@ -151,6 +169,12 @@ input#id_form-0-presentation {
 }
 
 form {
+    width: 100%;
+}
+
+.team-member-info,
+#my-info {
+    position: relative;
     width: 100%;
 }
 
@@ -178,23 +202,26 @@ form {
 }
 
 .calendar-box {
-    display: flex;
-    flex-direction: row;
-}
-
-#calendar-image,
-#lifebuoy-image {
-    display: flex;
-    width: 25%;
+    position: relative;
+    width: 100%;
+    text-align: center;
 }
 
 #calendar-image {
-    justify-self: flex-end;
-    align-self: flex-end;
+    position: absolute;
+    top: 0.3em;
+    right: 0em;
+    width: 15%;
+}
+
+#lifebuoy-image {
+    position: absolute;
+    left: 0.3em;
+    width: 15%;
 }
 
 .underline#calendar {
-    width: 85%;
+    width: 84%;
     align-self: flex-start;
 }
 
@@ -209,7 +236,12 @@ form {
 }
 
 #equipment {
+    margin-top: 0.5em;
     text-align: center;
+}
+
+#dates {
+    margin-top: 0.5em;
 }
 
 .dates {
