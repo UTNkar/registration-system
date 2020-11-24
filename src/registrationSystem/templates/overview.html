@@ -49,12 +49,12 @@
     <div id="my-info">
         <form method="post">
         {{ me.management_form }}
-        <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
-        <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
         <input name='type' value="me" type="hidden"/>
         {% csrf_token %}
         {% for field in me %}
         <p class="header">{{ field.label_tag }}</p>
+        <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
+        <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
         <p class="content"> {{ field }} </p>
         <div class="underline-content-me"></div>
         {% endfor %}
@@ -91,12 +91,11 @@
             {% for user in others %}
             {% for hidden in user.hidden_fields %}{{ hidden }}{% endfor %}
 
+            <div class="team-member-info">
             {% if is_leader %}
                 <img class="edit-team" src="{% static 'images/edit.png' %} " onclick='toggleFormTeam(this)'>
                 <img class="done-team" src="{% static 'images/done.png' %}" onclick='toggleFormTeam(this)'>
             {% endif %}
-
-            <div class="team-member-info">
                 {% for field in user.visible_fields %}
                     <p class="header">{{ field.label_tag}}</p>
                     <p class="content" id="input"> {{ field }}</p>
@@ -119,70 +118,49 @@
          <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
     </div>
     <div id="payment">
-        {% if is_leader %}
-                <b>You can only pay once!</b>
-                <br>
-                <form action="{% url 'make_payment' %}" method="get" id="send_payment" >
-                    <input
-                        type="Submit"
-                        value="Go to UTN pay"
-                        {% if request.user.belongs_to_group.payment_initialized %}
-                            disabled
-                        {% endif %}
-                    >
-                </form>
-        {% endif %}
         <div class="payment-info">
             The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
             <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
         </div>
         <div class="payment-button">
-            <div>
-                <button type='button' onclick='toggleForm(this)'>Go to UTN Pay</button>
-            </div>
-            <div class="info">
-                Payment is open March 7th – March 13th.
-            </div>
+            {% if is_leader %}
+                    <b>You can only pay once!</b>
+                    <br>
+                    <form class="payment-button" action="{% url 'make_payment' %}" method="get" id="send_payment" >
+                        <input class="base-button"
+                            type="Submit"
+                            value="Go to UTN Pay"
+                            {% if request.user.belongs_to_group.payment_initialized %}
+                                disabled
+                            {% endif %}
+                        >
+                    </form>
+            {% endif %}
         </div>
         <div>
     </div>
 </div>
-{% comment %} TODO läs in dates istället för att hårdkoda dem  {% endcomment %}
+
 <div class="dates-box">
     <div class="calendar-box">
         <h2>Important dates</h2>
         <img src="{% static 'images/calendar.png' %}" id="calendar-image">
     </div>
     <div class="underline" id="calendar"></div>
-    <div class="box-info">
+    <div class="box-info" id="dates" >
+
         <div class="dates">
-            February 25th <br>
-            February 26th <br>
-            March 6th <br>
-            March 7th <br>
-            March 13th <br>
-            April 4th <br>
+        {% for date in dates %}
+            {{ date.date }} <br>
+        {% endfor %}
         </div>
         <div class="event">
-            Rafting Pub at Uthgård<br>
-            Team info opens<br>
-            Team info closes<br>
-            Payment opens<br>
-            Payment closes<br>
-            Rafters education<br>
+        {% for date in dates %}
+            {{ date.desc }} <br>
+        {% endfor %}
         </div>
-    </div>
-</div>
 
-<!--
-!-- Dates
--->
-<div>
-{% for date in dates %}
-<p>
-    {{ date }}
-    </p>
-{% endfor %}
+    </div>
 </div>
 
 <div class="equipment-box">
@@ -281,10 +259,11 @@ const toggleFormMe = button => {
     }
 
     if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "none";
+            }
         edit.style.display = "block";
         done.style.display = "none";
-        {% comment %} document.querySelectorAll(".box :not(#my-info)")
-        .forEach(element => element.style.filter = "blur(0px)"); {% endcomment %}
         form.submit();
     } else {
         for (var i=0;i<content.length;i+=1){
@@ -292,15 +271,12 @@ const toggleFormMe = button => {
             }
         done.style.display = "block";
         edit.style.display = "none";
-        {% comment %} document.querySelectorAll(".box :not(#my-info)")
-        .forEach(element => element.style.filter = "blur(2px)"); {% endcomment %}
         event.target.innerHTML = 'Save';
-
     }
 }
 
 const toggleFormTeam = button => {
-    form = event.target.parentElement
+    form = event.target.parentElement.parentElement;
     formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
 
     var content = document.getElementsByClassName("underline-content-team");
