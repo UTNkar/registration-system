@@ -52,7 +52,7 @@ def sign_in(request):
 
 def logout_user(request):
     logout(request)
-    return redirect(settings.LOGOUT_URL)
+    return redirect(settings.LOGIN_URL)
 
 
 def login_user(request):
