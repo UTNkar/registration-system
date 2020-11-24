@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
+from django.contrib.auth import logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.urls import reverse
@@ -22,6 +23,11 @@ def sign_in(request):
         return redirect(reverse('overview'))
     else:
         return render(request, "login_page.html")
+
+
+def logout_user(request):
+    logout(request)
+    return redirect(settings.LOGOUT_URL)
 
 
 def login_user(request):

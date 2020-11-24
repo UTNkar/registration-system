@@ -27,6 +27,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview'),
     path('login/', views.login_user, name='login'),
+    path('logout', views.logout_user, name='logout'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path(
         'create_account/<str:uid>', views.create_account, name='create_account'
