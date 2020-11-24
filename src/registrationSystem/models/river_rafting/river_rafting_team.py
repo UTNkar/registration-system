@@ -32,13 +32,19 @@ class RiverRaftingTeam(AbstractGroup):
     )
 
     def get_number_of_lifevests(self):
-        members_with_lifevests = super().get_non_none_fields("lifevest_size")
+        members_with_lifevests = \
+            super().get_group_members_where_nonempty("lifevest_size")
+
         return len(members_with_lifevests)
 
     def get_number_of_wetsuits(self):
-        members_with_wetsuits = super().get_non_none_fields("wetsuite_size")
+        members_with_wetsuits = \
+            super().get_group_members_where_nonempty("wetsuite_size")
+
         return len(members_with_wetsuits)
 
     def get_number_of_helmets(self):
-        members_with_helmets = super().get_non_none_fields("helmet_size")
+        members_with_helmets = \
+            super().get_group_members_where_nonempty("helmet_size")
+
         return len(members_with_helmets)

@@ -15,9 +15,17 @@ class AbstractGroup(models.Model):
 
         return group_members
 
-    def get_non_none_fields(self, attribute):
+    def get_group_members_where_nonempty(self, attribute):
         """
+        Gets all group members where the specified attribute is not empty
 
+        Params:
+
+        The attribute that should not be empty
+
+        Returns:
+
+        A Queryset of group members that have a value for the attribute
         """
         group_members = self.get_group_members()
         non_none_fields = group_members.exclude(
