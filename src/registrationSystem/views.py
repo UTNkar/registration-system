@@ -191,8 +191,10 @@ def activate(request, token):
 
 
 def create_account(request, uid):
-    connector = get_object_or_404(EmailConfirmation, id=uid)
-    user = connector.raffleEntryId
+    # TODO: Remove temporary user when design dev done.
+    user = get_object_or_404(RaffleEntry, id=1)
+    # connector = get_object_or_404(EmailConfirmation, id=uid)
+    # user = connector.raffleEntryId
 
     if request.method == "POST":
         form = CreateAccountForm(request.POST)
@@ -224,7 +226,9 @@ def create_account(request, uid):
 
         # Delete the EmailConfirmation. The randomized token
         # should only be used once!
-        connector.delete()
+
+        # TODO: Remove comment below.
+        # connector.delete()
         return HttpResponseRedirect(reverse('status'))
 
     context = {
