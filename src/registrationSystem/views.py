@@ -1,19 +1,44 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect, Http404
+from django.http import (
+    HttpResponse,
+    HttpResponseRedirect,
+    Http404,
+    HttpResponseForbidden
+)
 from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from registrationSystem.models import (
     RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate
 )
+from registrationSystem.utn_pay import get_payment_link
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
     RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
 )
 from django.conf import settings
+
+
+@login_required
+def make_payment(request):
+    team = request.user.belongs_to_group
+
+    if not request.user.is_team_leader():
+        return HttpResponseForbidden()
+
+    # Only allow one payment
+    if team.payment_initialized:
+        return HttpResponseForbidden()
+
+    payment_link = get_payment_link(request.user)
+
+    team.payment_initialized = True
+    team.save()
+
+    return redirect(payment_link)
 
 
 def sign_in(request):

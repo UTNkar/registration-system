@@ -59,6 +59,26 @@
           </p>
         {% endfor %}
       </div>
+      {% if is_leader %}
+            <b>You can only pay once!</b>
+            <br>
+            <form action="{% url 'make_payment' %}" method="get" id="send_payment" >
+                <input
+                    type="Submit"
+                    value="Go to UTN pay"
+                    {% if request.user.belongs_to_group.payment_initialized %}
+                        disabled
+                    {% endif %}
+                >
+            </form>
+            <script>
+                document.getElementById("send_payment").addEventListener("click", function(event){
+                    if(!confirm("Are you sure?")) {
+                        event.preventDefault();
+                    }
+                });
+            </script>
+        {% endif %}
     </main>
   </body>
 
