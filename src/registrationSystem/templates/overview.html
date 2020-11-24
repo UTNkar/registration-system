@@ -119,6 +119,19 @@
          <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
     </div>
     <div id="payment">
+        {% if is_leader %}
+                <b>You can only pay once!</b>
+                <br>
+                <form action="{% url 'make_payment' %}" method="get" id="send_payment" >
+                    <input
+                        type="Submit"
+                        value="Go to UTN pay"
+                        {% if request.user.belongs_to_group.payment_initialized %}
+                            disabled
+                        {% endif %}
+                    >
+                </form>
+        {% endif %}
         <div class="payment-info">
             The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
             <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
@@ -193,6 +206,13 @@
 </div>
 
 <script type="text/javascript">
+
+
+document.getElementById("send_payment").addEventListener("click", function(event){
+    if(!confirm("Are you sure?")) {
+        event.preventDefault();
+    }
+});
 
 const link = document.getElementById("link");
 
@@ -275,6 +295,7 @@ const toggleFormMe = button => {
         {% comment %} document.querySelectorAll(".box :not(#my-info)")
         .forEach(element => element.style.filter = "blur(2px)"); {% endcomment %}
         event.target.innerHTML = 'Save';
+
     }
 }
 
@@ -313,8 +334,8 @@ const toggleFormTeam = button => {
             }
         event.target.innerHTML = 'Save';
     }
-}
 
+}
 
 function showMyInfo() {
   var info = document.getElementById("my-info");
