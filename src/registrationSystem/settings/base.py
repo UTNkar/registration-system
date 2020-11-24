@@ -111,8 +111,6 @@ USE_TZ = True
 
 LOGIN_URL = '/'
 
-LOGOUT_URL = '/'
-
 PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = os.path.dirname(PROJECT_DIR)
 
