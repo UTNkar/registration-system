@@ -2,29 +2,34 @@
 {% block content %}
 {% include "header_overview.html"%}
 <div class="underline"></div>
-<div class="team-name-box">
-    <h2 id="team-name">{{ group_name }}</h2>
-</div>
+
 <div class="team-top-info">
     <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
-    <p class="header">Start number: </p>
-    <p class="content">{{ group_nr | default:"Not set yet" }}</p>
-
-
 
         {% for field in group %}
 
             {% if is_leader %}
             <form method="post">
             {{ group.management_form }}
-            <button type='button' onclick='toggleForm(this)'>Edit</button>
+            <img id="edit" src="{% static 'images/edit.png' %} " onclick='toggleForm(this)'>
+            <img id="done" src="{% static 'images/done.png' %}" onclick='toggleForm(this)'>
+
             {% csrf_token %}
             {% else %}
-                <div>
+            <div>
             {% endif %}
+
             <input name='type' value="group" type='hidden'/>
+            {% for hidden in field.hidden_fields %}{{ hidden }}{% endfor %}
+            <div class="team-name-box">
+                <h2 id="team-name">{{ field.name | default:group_name }}</h2>
+                <div class="underline-content-top-info"></div>
+            </div>
+            <p class="header">Start number: </p>
+            <p class="content">{{ group_nr | default:"Not set yet" }}</p>
             <p class="header">Presentation: </p>
             <p class="content" id="presentation"> {{ field.presentation}} </p>
+            <div class="underline-content-top-info"></div>
             <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
             {% endfor %}
     {% if is_leader %}
@@ -43,18 +48,16 @@
     </div>
     <div id="my-info">
         <form method="post">
-        <i id="edit-me" class="far fa-edit" onclick='toggleForm(this)'></i>
-        <i id="done-me" class="fas fa-check" onclick='toggleForm(this)'></i>
+        {{ me.management_form }}
+        <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
+        <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
         <input name='type' value="me" type="hidden"/>
         {% csrf_token %}
-        <p class="header">Full name: </p>
-        <p class="content" id="input"> {{ me.name }} </p>
-        <p class="header">Email: </p>
-        <p class="content" id="input"> {{ me.email }} </p>
-        <p class="header">Phone number: </p>
-        <p class="content" id="input"> {{ me.phone_nr }} </p>
-        <p class="header">Lifejacket: </p>
-        <p class="content" id="input"> {{ me.lifevest_size }} </p>
+        {% for field in me %}
+        <p class="header">{{ field.label_tag }}</p>
+        <p class="content"> {{ field }} </p>
+        <div class="underline-content-me"></div>
+        {% endfor %}
         </form>
     </div>
 </div>
@@ -66,31 +69,42 @@
         <i id="team-info-down" class="fas fa-angle-down" onclick="showTeamInfo()"></i>
     </div>
     <div id="team-info">
+            <div class="link-info">
+                <p class="header">Use the invitation link to add team members.</p>
+                <div class="tooltip">
+                    <div class="tooltiptext" id="myTooltip">Link copied</div>
+                    <div id="link" onclick="myFunction()" onmouseout="outFunc()">
+                        hgfdfgjklhghlink
+                        <img id="link-image" src="{% static 'images/link.png' %}">
+                    </div>
+                </div>
+            </div>
             {% if is_leader %}
                 <form method="post">
                 {% csrf_token %}
                 <input name='type' value="others" type="hidden"/>
                 {{ others.management_form }}
             {% else %}
-
                 <div>
             {% endif %}
+
             {% for user in others %}
+            {% for hidden in user.hidden_fields %}{{ hidden }}{% endfor %}
+
             {% if is_leader %}
-                <i id="edit" class="far fa-edit" onclick='toggleForm(this)'></i>
-                <i id="done" class="fas fa-check"></i>
+                <img class="edit-team" src="{% static 'images/edit.png' %} " onclick='toggleFormTeam(this)'>
+                <img class="done-team" src="{% static 'images/done.png' %}" onclick='toggleFormTeam(this)'>
             {% endif %}
+
             <div class="team-member-info">
-                <p class="header">Full name: </p>
-                <p class="content" id="input"> {{ user.name }} </p>
-                <p class="header">Email: </p>
-                <p class="content" id="input"> {{ user.email }} </p>
-                <p class="header">Phone number: </p>
-                <p class="content" id="input"> {{ user.phone_nr }} </p>
-                <p class="header">Lifejacket: </p>
-                <p class="content" id="input"> {{ user.lifevest_size }} </p>
+                {% for field in user.visible_fields %}
+                    <p class="header">{{ field.label_tag}}</p>
+                    <p class="content" id="input"> {{ field }}</p>
+                    <div class="underline-content-team"></div>
+                {% endfor %}
             </div>
             {% endfor %}
+
             {% if is_leader %}
                 </form>
             {% else %}
@@ -179,28 +193,128 @@
 </div>
 
 <script type="text/javascript">
+
+const link = document.getElementById("link");
+
+link.onclick = function() {
+  document.execCommand("copy");
+}
+
+link.addEventListener("copy", function(event) {
+  event.preventDefault();
+  if (event.clipboardData) {
+    event.clipboardData.setData("text/plain", link.textContent);
+    console.log(event.clipboardData.getData("text"))
+  }
+});
+
+function outFunc() {
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "Copy to clipboard";
+}
+
 const toggleForm = button => {
     form = event.target.parentElement
-    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"])');
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-top-info");
 
     var edit = document.getElementById("edit");
     var done = document.getElementById("done");
 
     for (const element of formElements) {
-        if (element.onclick) element.toggleAttribute('onclick')
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
+        else element.toggleAttribute('readonly')
+    }
+
+    if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "none";
+            }
+        edit.style.display = "block";
+        done.style.display = "none";
+        form.submit();
+    } else {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
+        done.style.display = "block";
+        edit.style.display = "none";
+        event.target.innerHTML = 'Save';
+    }
+}
+
+const toggleFormMe = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-me");
+
+    var edit = document.getElementById("edit-me");
+    var done = document.getElementById("done-me");
+
+    for (const element of formElements) {
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
         else element.toggleAttribute('readonly')
     }
 
     if (formElements[0] && formElements[0].readOnly) {
         edit.style.display = "block";
         done.style.display = "none";
+        {% comment %} document.querySelectorAll(".box :not(#my-info)")
+        .forEach(element => element.style.filter = "blur(0px)"); {% endcomment %}
         form.submit();
     } else {
-        {% comment %} event.target.innerHTML = 'Save'; {% endcomment %}
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
         done.style.display = "block";
         edit.style.display = "none";
+        {% comment %} document.querySelectorAll(".box :not(#my-info)")
+        .forEach(element => element.style.filter = "blur(2px)"); {% endcomment %}
+        event.target.innerHTML = 'Save';
     }
 }
+
+const toggleFormTeam = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-team");
+
+    var edit = document.getElementsByClassName("edit-team");
+    var done = document.getElementsByClassName("done-team");
+
+    for (const element of formElements) {
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
+        else element.toggleAttribute('readonly')
+    }
+
+    if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<done.length;i+=1){
+            done[i].style.display = "none";
+            }
+        for (var i=0;i<edit.length;i+=1){
+            edit[i].style.display = "block";
+            }
+        form.submit();
+    } else {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
+        for (var i=0;i<done.length;i+=1){
+            done[i].style.display = "block";
+            }
+        for (var i=0;i<edit.length;i+=1){
+            edit[i].style.display = "none";
+            }
+        event.target.innerHTML = 'Save';
+    }
+}
+
 
 function showMyInfo() {
   var info = document.getElementById("my-info");
