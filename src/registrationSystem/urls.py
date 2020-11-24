@@ -29,13 +29,13 @@ urlpatterns = [
     path('login/', views.login_user, name='login'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path(
-        'create_account/<str:uid>',
-        views.create_account,
-        name='create_account'
+        'create_group/<str:email_confirm_id>',
+        views.create_group,
+        name='create_group'
     ),
     path(
-        'join_team/<str:uid>',
-        views.join_team,
-        name='join_team'
+        'join_group/<str:group_join_id>',
+        views.join_group,
+        name='join_group'
     ),
 ]

@@ -4,6 +4,9 @@ from django.db import models
 
 
 class AbstractGroup(models.Model):
+
+    max_team_members = 1
+
     leader = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE

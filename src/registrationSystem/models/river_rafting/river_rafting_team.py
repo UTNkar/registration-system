@@ -1,12 +1,16 @@
 from django.db import models
 from ..common.abstract_group import AbstractGroup
+from coolname import generate
 
 
 class RiverRaftingTeam(AbstractGroup):
+
+    max_team_members = 4
+
     name = models.CharField(
         max_length=254,
-        blank=True,
-        verbose_name='Team name'
+        verbose_name='Team name',
+        default=(" ".join(x.capitalize() for x in generate(2)) + "s")
     )
 
     number = models.IntegerField(

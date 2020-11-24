@@ -28,13 +28,6 @@ class RaffleEntryForm(ModelForm):
 
 
 class CreateAccountForm(ModelForm):
-    def __init__(self, *args, is_leader=False, **kwargs):
-        super(CreateAccountForm, self).__init__(*args, **kwargs)
-
-        if(is_leader):
-            self.fields["name"].widget.attrs['readonly'] = 'readonly',
-            self.fields["person_nr"].widget.attrs['readonly'] = 'readonly',
-            self.fields["email"].widget.attrs['readonly'] = 'readonly'
 
     def clean_password_check(self):
         password = self.cleaned_data.get('password')
@@ -79,6 +72,31 @@ class CreateAccountForm(ModelForm):
             'name', 'person_nr', 'email', 'phone_nr',
             'password', 'password_check'
         ]
+
+
+class CreateGroupForm(CreateAccountForm):
+    def __init__(self, *args, **kwargs):
+        super(CreateGroupForm, self).__init__(*args, **kwargs)
+
+
+class JoinGroupForm(CreateAccountForm):
+    def __init__(self, *args, group, **kwargs):
+        super(CreateGroupForm, self).__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs['readonly'] = 'readonly',
+        self.fields["person_nr"].widget.attrs['readonly'] = 'readonly',
+        self.fields["email"].widget.attrs['readonly'] = 'readonly'
+        self.group = group
+
+    def clean(self):
+        group_count = get_user_model().objects.filter(
+            belongs_to_group=self.group
+        ).count()
+
+        if group_count >= RiverRaftingTeam.max_team_members:
+            raise ValidationError(
+                "The team you are trying to join is already full!",
+                code='team_full'
+            )
 
 
 class RiverRaftingUserForm(ModelForm):

@@ -10,3 +10,4 @@ sentry-sdk==0.19.4
 phonenumbers==8.12.13
 
 requests==2.25.0
+coolname==1.1.0

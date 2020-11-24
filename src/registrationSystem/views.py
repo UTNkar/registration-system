@@ -10,7 +10,7 @@ from registrationSystem.models import (
 )
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
-    RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
+    RaffleEntryForm, CreateGroupForm, JoinGroupForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
 )
 
@@ -192,15 +192,15 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def create_account(request, uid):
+def create_group(request, email_confirm_id):
     connector = get_object_or_404(
         EmailConfirmation,
-        id=uid
+        id=email_confirm_id
     )
     user = connector.raffleEntryId
 
     if(request.method == "POST"):
-        form = CreateAccountForm(request.POST, is_leader=True)
+        form = CreateGroupForm(request.POST)
         if form.is_valid():
             # There is no need to encrypt the password here, the user manager
             # handles that in the database. Just make sure to use create_user()
@@ -213,9 +213,9 @@ def create_account(request, uid):
                 is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
             ).save()
 
-            # Create a new team and assign it to the user
-            team = RiverRaftingTeam.objects.create(leader=leader)
-            leader.belongs_to_group = team
+            # Create a new group and assign it to the user
+            group = RiverRaftingTeam.objects.create(leader=leader)
+            leader.belongs_to_group = group
             leader.save()
 
             # Keep the RaffleEntry (user) with status 'confirmed'
@@ -228,54 +228,44 @@ def create_account(request, uid):
             connector.delete()
             return HttpResponseRedirect(reverse('status'))
     else:
-        form = CreateAccountForm(initial={
+        form = CreateGroupForm(initial={
             'name': user.name,
             'person_nr': user.person_nr,
             'email': user.email
-        }, is_leader=True)
+        })
 
     context = {
         'form': form,
-        'is_leader': True,
     }
-    return render(request, 'registrationSystem/create_account.html', context)
+    return render(request, 'registrationSystem/create_group.html', context)
 
 
-# TODO: Prevent joining a full team
-def join_team(request, uid):
+def join_group(request, group_join_id):
     # Create a new account (without a previously existing
-    # raffle entry) and join an already existing team.
-    team = get_object_or_404(RiverRaftingTeam, join_id=uid)
-    team_leader_name = team.leader.name,
+    # raffle entry) and join an already existing group.
+    group = get_object_or_404(RiverRaftingTeam, join_id=group_join_id)
 
     if request.method == "POST":
-        form = CreateAccountForm(request.POST)
+        form = JoinGroupForm(request.POST, group=group)
         if form.is_valid():
             # There is no need to encrypt the password here, the user manager
             # handles that in the database.
-            user = get_user_model().objects.create_user(
+            get_user_model().objects.create_user(
                 name=form.cleaned_data["name"],
                 email=form.cleaned_data["email"],
                 person_nr=form.cleaned_data["person_nr"],
                 phone_nr=form.cleaned_data["phone_nr"],
                 password=form.cleaned_data["password"],
                 is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
+                belongs_to_group=group
             )
 
-            user.belongs_to_group = team
-            user.save()
-
             return HttpResponseRedirect(reverse('overview'))
-        else:
-            print("ErrorS:")
-            print(form.errors.items())
-
     else:
-        form = CreateAccountForm()
+        form = JoinGroupForm()
 
     context = {
         'form': form,
-        'team_leader_name': team_leader_name,
-        'is_leader': False
+        'group': group,
     }
-    return render(request, 'registrationSystem/create_account.html', context)
+    return render(request, 'registrationSystem/join_group.html', context)
