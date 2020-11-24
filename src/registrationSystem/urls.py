@@ -26,7 +26,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview'),
     path('login/', views.login_user, name='login'),
-    path('logout', views.logout_user, name='logout'),
+    path('logout/', views.logout_user, name='logout'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path('make_payment/', views.make_payment, name="make_payment"),
     path(
