@@ -41,7 +41,8 @@ div {
     font-size: 1em;
 }
 
-button {
+button,
+.base-button {
     background-color: #C82D30;
     color: white;
     padding: 1em 5em;
