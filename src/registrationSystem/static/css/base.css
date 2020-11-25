@@ -79,10 +79,13 @@ footer {
     justify-content: center;
 }
 
+.socmed-imgs {
+    display: flex;
+}
+
 #insta,
-#fb,
-#youtube {
-    width: 80%;
+#fb {
+    width: 70%;
     margin: 0.5em;
 }
 
@@ -118,6 +121,11 @@ footer {
     align-items: center;
 }
 
+.footer-websites,
+.powered-by-2020 {
+    display: none;
+}
+
 #dk {
     width: 7%;
 }
@@ -134,6 +142,7 @@ footer {
     }
     #forsranning {
         width: 70%;
+        height: 30%;
     }
     h2 {
         font-size: 1.1em;
@@ -146,10 +155,60 @@ footer {
         width: 1em;
     }
     footer {
-        position: absolute;
-        bottom: 0;
-        background-color: rgb(163, 37, 40, 0.7);
-        color: white;
+        margin-top: 0;
         padding: 1em 0;
+    }
+    .footer-image {
+        display: none;
+    }
+    .contact {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        padding: 1em;
+        padding-top: 0;
+    }
+    .footer-contact {
+        display: flex;
+        justify-content: flex-end;
+        width: 50%;
+        padding: 0;
+        padding-top: 1em;
+        padding-right: 1em;
+    }
+    h2.contact {
+        display: none;
+    }
+    .socmed {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 50%;
+    }
+    #insta,
+    #fb {
+        width: 50%;
+    }
+    .footer-websites {
+        display: flex;
+        flex-direction: column;
+        font-weight: bold;
+    }
+    .footer-titles {
+        font-weight: bold;
+    }
+    .footer-content {
+        font-size: 1em;
+        padding: 0.3em;
+    }
+    .footer-content a {
+        text-decoration: none;
+        color: white;
+    }
+    .powered-by {
+        font-size: 0.6em;
+    }
+    .powered-by-2020 {
+        font-size: 1em;
+        display: flex;
     }
 }
