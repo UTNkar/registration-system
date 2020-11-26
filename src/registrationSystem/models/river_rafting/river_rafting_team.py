@@ -3,6 +3,10 @@ from ..common.abstract_group import AbstractGroup
 from coolname import generate
 
 
+def get_cool_team_name():
+    return " ".join(x.capitalize() for x in generate(2)) + "s"
+
+
 class RiverRaftingTeam(AbstractGroup):
 
     max_team_members = 4
@@ -10,7 +14,7 @@ class RiverRaftingTeam(AbstractGroup):
     name = models.CharField(
         max_length=254,
         verbose_name='Team name',
-        default=(" ".join(x.capitalize() for x in generate(2)) + "s")
+        default=get_cool_team_name,
     )
 
     number = models.IntegerField(
