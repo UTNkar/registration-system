@@ -24,6 +24,10 @@ EVENT = os.environ.get('DJANGO_EVENT_USER_MODEL', 'RIVERRAFTING')
 
 USER_MODELS = {'RIVERRAFTING': 'registrationSystem.RiverraftingUser'}
 
+FROM_EMAILS = {'RIVERRAFTING': 'webb@forsranningen.utn.se'}
+
+DEFAULT_FROM_EMAIL = FROM_EMAILS.get(EVENT, 'info@utn.se')
+
 AUTH_USER_MODEL = USER_MODELS.get(EVENT, 'registrationSystem.RiverraftingUser')
 
 SITE_ID = 1
