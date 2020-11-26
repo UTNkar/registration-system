@@ -1,6 +1,17 @@
 <html lang="en">
   <body>
     <main class="flex-container-start-page">
+      {%if is_leader %}
+      <div>
+        <h3>Team invite link</h3>
+        <br>
+        <input
+          type="text"
+          value="http://{{ request.get_host }}{% url 'join_group' group_join_id=join_id %}"
+          disabled
+        >
+      </div>
+      {% endif %}
       <div class="team-information">
         {% if is_leader %}
         <form method="post">

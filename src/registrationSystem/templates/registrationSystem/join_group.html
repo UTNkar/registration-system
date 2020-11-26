@@ -1,0 +1,45 @@
+{% load static %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'registrationSystem/style.css' %}">
+
+<!DOCTYPE html>
+<html>
+  <head>
+
+  </head>
+  <body>
+    <div class="wrapper">
+      <h3>You are joining: {{ group.leader.name }}'s group</h1>
+        <h1>The {{ group.name }}</h1>
+        <h2>Make sure your information is correct and choose a password.</h2>
+
+        <form action="{{request.path}}" method="POST">
+          {% csrf_token %}
+          {% for field in form.visible_fields %}
+          <div class=input-container>
+            <p class=label>{{ field.label }}</p>
+            {{ field }}
+          </div>
+          {% endfor %}
+          <input type="submit" value="Registrera">
+        </form>
+        
+        {% if form.errors %}
+        <div>
+          {% for field in form %}
+          {% for error in field.errors %}
+          <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+          {% endfor %}
+          {% for error in form.non_field_errors %}
+          <div class="alert alert-danger">
+            <strong>{{ error|escape }}</strong>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+  </body>
+</html>

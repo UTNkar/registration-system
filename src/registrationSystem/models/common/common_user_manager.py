@@ -7,7 +7,7 @@ class CommonUserManager(UserManager):
         return self.get(person_nr=person_nr)
 
     def __create_user(self, person_nr, name, email, phone_nr, is_utn_member,
-                      password, is_superuser):
+                      password, is_superuser, is_staff):
         now = timezone.now()
         if not person_nr:
             raise ValueError('Person number is required.')

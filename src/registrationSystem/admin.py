@@ -10,7 +10,8 @@ from registrationSystem.models import (
     ImportantDate,
 )
 
-from registrationSystem.forms import RiverRaftingUserForm
+from django.http import HttpResponseRedirect
+from registrationSystem.utils import send_email
 
 from django.http import HttpResponseRedirect
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
@@ -69,7 +70,12 @@ class RaffleEntryAdmin(admin.ModelAdmin):
         # TODO: Implement actual raffle logic.
         # params = request.POST
         # desired_utn_member_percentage = params["utn-member-percentage"]
+        # TODO: Also send mail to non-winners?
         self.model.objects.all().update(status="won")
+        winners = self.model.objects.filter(status="won")
+        for winner in winners:
+            send_email(winner, request.get_host())
+
         self.message_user(request, "Randomized winners!")
         return HttpResponseRedirect("../")
 
