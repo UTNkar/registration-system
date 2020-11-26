@@ -7,7 +7,7 @@ import registrationSystem.models.river_rafting.river_rafting_team
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('registrationSystem', '0010_auto_20201126_2001'),
+        ('registrationSystem', '0009_merge_20201126_1807'),
     ]
 
     operations = [
