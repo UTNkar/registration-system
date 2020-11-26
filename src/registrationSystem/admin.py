@@ -6,6 +6,7 @@ from registrationSystem.models import (
     RiverRaftingRaffleState,
     RiverRaftingUser,
     RiverRaftingTeam,
+    RiverRaftingCost,
     ImportantDate,
 )
 
@@ -94,5 +95,6 @@ if settings.EVENT == 'RIVERRAFTING':
     admin.site.register(RiverRaftingRaffleState, RiverRaftingRaffleStateAdmin)
     admin.site.register(RiverRaftingUser)
     admin.site.register(RiverRaftingTeam)
+    admin.site.register(RiverRaftingCost)
 
 admin.site.register(ImportantDate)

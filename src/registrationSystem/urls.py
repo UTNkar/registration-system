@@ -23,11 +23,11 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('status/', views.status, name='status'),
     path('change_status/', views.change_status, name='change_status'),
-    # TODO add template for overview page later
     path('admin/', admin.site.urls),
     path('overview/', views.overview, name='overview'),
     path('login/', views.login_user, name='login'),
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
+    path('make_payment/', views.make_payment, name="make_payment"),
     path(
         'create_group/<str:email_confirm_id>',
         views.create_group,

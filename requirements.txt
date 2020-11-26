@@ -6,6 +6,9 @@ psycopg2==2.8.6
 # Logging to sentry
 sentry-sdk==0.19.4
 
+# Pay uses php serialize wich differs from pythons
+phpserialize==1.3
+
 # Phonenumber validation
 phonenumbers==8.12.13
 
