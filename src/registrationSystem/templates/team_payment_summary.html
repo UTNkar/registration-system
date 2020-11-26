@@ -1,0 +1,26 @@
+{% load static %}
+<div id="container">
+  <table class="user-payment-summary">
+    <thead>
+      <tr>
+        {% for name in cost_names %}
+        <th id="header-cell-{{forloop.counter0}}">{{ name }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in user_payment_summaries %}
+      <tr id="body-row-{{forloop.counter0}}">
+        {% for property in user %}
+        <td>{{ property }}</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <p id="subtotal">SUB.TOT: <span>{{ total }} SEK</span></p>
+</div>
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/user_payment_summary.css' %}">
+{% endblock %}

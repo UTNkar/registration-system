@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% load static %}
 {% block content %}
 {% include "header_overview.html"%}
+
 <div class="underline"></div>
 
 <div class="desktop-box">
@@ -171,6 +172,7 @@
                         The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
                         <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
                     </div>
+                    {% include "team_payment_summary.html" %}
                     <div class="payment-button">
                         {% if is_leader %}
                                 <b>You can only pay once!</b>

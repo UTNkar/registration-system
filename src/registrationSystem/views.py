@@ -12,7 +12,7 @@ from django.urls import reverse
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from registrationSystem.models import (
-    RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate
+    RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate, RiverRaftingCost
 )
 from registrationSystem.utn_pay import get_payment_link
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
@@ -179,6 +179,28 @@ def overview(request, id=None):
             if my_form.is_valid():
                 my_form.save()
 
+    costs = RiverRaftingCost.load()
+    # TODO: Clean this up.
+    # This is a bit of a hack, as _meta.fields gives back ID as its first field.
+    # A cleaner method would probably be to define this as a form of a group.
+    # The first one is empty because the users name is placed there.
+    cost_names = ["Team member"] + [ prop.verbose_name for prop in costs._meta.fields[1:] ] + ["Total"]
+    user_costs = [
+        (user.name,
+         costs.lifevest if user.lifevest_size else 0,
+         costs.wetsuit  if user.wetsuite_size else 0,
+         costs.helmet   if user.helmet_size   else 0,
+         costs.raft_fee)
+        for user in group.get_group_members()
+    ]
+    user_payment_summaries = [
+        user_cost + (sum(user_cost[1:]), )
+        for user_cost in user_costs
+    ]
+
+    # This works because the totals are last
+    total = sum([ costs[-1] for costs in user_payment_summaries ])
+
     return render(request,
                   "overview.html",
                   {
@@ -189,6 +211,9 @@ def overview(request, id=None):
                       "group": group_formset,
                       "is_leader": is_leader,
                       "dates": dates,
+                      "user_payment_summaries": user_payment_summaries,
+                      "cost_names": cost_names,
+                      "total": total
                   })
 
 
