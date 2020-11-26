@@ -1,28 +1,26 @@
-{% load static %}
+{% extends "page_base.html" %} {% load static %} {% block content %}
 
-<link rel="stylesheet" type="text/css" href="{% static 'registrationSystem/style.css' %}">
-
-<!DOCTYPE html>
-<html>
-<head>
-
-</head>
-<body>
-    <div class="wrapper">
+<div class="info-container">
     <h1>Register your account</h1>
     <h2>Make sure your information is correct and choose a password.</h2>
-    <p>If any of your information is incorrect, click <a href="">here</a></p>
+    <p class="information-correction-redirect">If any of your information is incorrect, click <a href="">here</a></p>
+    {% comment %} TODO: Replace with working link {% endcomment %}
+</div>
 
-    <form action="{% url 'create_account' uid %}" method="POST">
-        {% csrf_token %}
+<form action="{% url 'create_account' uid %}" method="POST">
+    {% csrf_token %}
+    <div class="input-container">
         {% for field in form.visible_fields %}
-            <div class=input-container>
-                <p class=label>{{ field.label }}</p>
-                {{ field }}
-            </div>
+        <div class="input-div">
+            {{ field }}
+            <label class="form-control-label">{{ field.label }}</p>
+        </div>
         {% endfor %}
-        <input type="submit" value="Registrera">
-    </form>
     </div>
-</body>
-</html>
+    <div class="button-container">
+        <input type="submit" value="Registrera">
+    </div>
+</form>
+
+{% endblock %}
+

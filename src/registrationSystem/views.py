@@ -256,6 +256,7 @@ def create_account(request, uid):
         'uid': uid,
         'form': form
     }
+    # TODO: Replace link in html template with actual working link
     return render(request, 'registrationSystem/create_account.html', context)
 
 
