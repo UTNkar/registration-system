@@ -262,6 +262,7 @@ def create_group(request, email_confirm_id):
     context = {
         'form': form,
     }
+    # TODO: Replace with working link
     return render(request, 'registrationSystem/create_group.html', context)
 
 
