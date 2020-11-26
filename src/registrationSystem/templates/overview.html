@@ -7,7 +7,7 @@
         <br>
         <input
           type="text"
-          value="http://{{ request.get_host }}{% url 'join_team' uid=join_id %}"
+          value="http://{{ request.get_host }}{% url 'join_group' group_join_id=join_id %}"
           disabled
         >
       </div>
