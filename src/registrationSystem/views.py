@@ -68,7 +68,8 @@ def register(request):
             raffle_entry_obj, _ = RaffleEntry.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                person_nr=form.cleaned_data['person_nr']
+                person_nr=form.cleaned_data['person_nr'],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"])
             )
 
             # Send confirmation email, or resend email with new link
@@ -236,10 +237,11 @@ def create_group(request, email_confirm_id):
                 phone_nr=form.cleaned_data["phone_nr"],
                 password=form.cleaned_data["password"],
                 is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
-            ).save()
+            )
 
             # Create a new group and assign it to the user
             group = RiverRaftingTeam.objects.create(leader=leader)
+
             leader.belongs_to_group = group
             leader.save()
 
@@ -288,7 +290,7 @@ def join_group(request, group_join_id):
 
             return HttpResponseRedirect(reverse('overview'))
     else:
-        form = JoinGroupForm()
+        form = JoinGroupForm(group=group)
 
     context = {
         'form': form,
