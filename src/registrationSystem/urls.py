@@ -29,6 +29,13 @@ urlpatterns = [
     path('confirm_email/<token>/', views.activate,  name='confirm_email'),
     path('make_payment/', views.make_payment, name="make_payment"),
     path(
-        'create_account/<str:uid>', views.create_account, name='create_account'
+        'create_group/<str:email_confirm_id>',
+        views.create_group,
+        name='create_group'
+    ),
+    path(
+        'join_group/<str:group_join_id>',
+        views.join_group,
+        name='join_group'
     ),
 ]
