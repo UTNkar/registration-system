@@ -8,8 +8,8 @@ body {
     flex-direction: column;
     background-color: #E5E5E5;
     font-family: Arial, Helvetica, sans-serif;
-    height: 100%;
-    width: 100%;
+    min-height: 100%;
+    min-width: 100%;
     margin: 0;
 }
 
