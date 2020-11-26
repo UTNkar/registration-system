@@ -8,6 +8,7 @@ class CommonUserManager(UserManager):
 
     def __create_user(self, person_nr, name, email, phone_nr, is_utn_member,
                       password, is_superuser, is_staff, belongs_to_group):
+
         now = timezone.now()
         if not person_nr:
             raise ValueError('Person number is required.')
