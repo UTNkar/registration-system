@@ -20,6 +20,7 @@ from registrationSystem.forms import (
     RiverRaftingTeamForm
 )
 
+
 @login_required
 def make_payment(request):
     team = request.user.belongs_to_group
