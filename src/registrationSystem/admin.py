@@ -49,7 +49,7 @@ class RaffleEntryAdmin(admin.ModelAdmin):
     def set_raffle_status_won(modeladmin, request, queryset):
         queryset.update(status="won")
         for winner in queryset:
-            send_email(winner)
+            send_email(winner, request.get_host())
 
     set_raffle_status_won.short_description = "Set selected status to 'won'"
 
