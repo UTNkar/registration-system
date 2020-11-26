@@ -1,26 +1,26 @@
 {% extends "page_base.html" %} {% load static %} {% block content %}
 
-<div class="wrapper">
-<h1>Register your account</h1>
-<h2>Make sure your information is correct and choose a password.</h2>
-<p class="information-correction-redirect">If any of your information is incorrect, click <a href="">here</a></p>
+<div class="info-container">
+    <h1>Register your account</h1>
+    <h2>Make sure your information is correct and choose a password.</h2>
+    <p class="information-correction-redirect">If any of your information is incorrect, click <a href="">here</a></p>
     {% comment %} TODO: Replace with working link {% endcomment %}
+</div>
 
 <form action="{% url 'create_account' uid %}" method="POST">
     {% csrf_token %}
     <div class="input-container">
-    {% for field in form.visible_fields %}
+        {% for field in form.visible_fields %}
         <div class="input-div">
-            <label class="form-control-label">{{ field.label }}</p>
             {{ field }}
+            <label class="form-control-label">{{ field.label }}</p>
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
     <div class="button-container">
         <input type="submit" value="Registrera">
     </div>
 </form>
-</div>
 
 {% endblock %}
 
