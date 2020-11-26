@@ -13,6 +13,10 @@ header {
     height: 2.5em;
 }
 
+header.desktop {
+    display: none;
+}
+
 #utn {
     position: absolute;
     left: 0;
@@ -38,6 +42,10 @@ header {
     width: 100%;
     display: flex;
     align-self: center;
+}
+
+.underline-info {
+    display: none;
 }
 
 .logout {
@@ -77,7 +85,7 @@ p.content {
     margin: 0;
 }
 
-input#id_form-0-presentation {
+p.content#presentation input {
     background-color: #E5E5E5;
     border: 0;
     padding: 0;
@@ -330,7 +338,121 @@ select {
     opacity: 1;
 }
 
+.side-info-desktop {
+    display: none;
+}
 
-/* body :not(:target) {
-    filter: blur(2px);
-} */
+@media only screen and (min-width: 600px) {
+    body {
+        background-color: #E5E5E5;
+        background-image: none;
+        background-size: cover;
+        align-items: center;
+        margin: 0;
+    }
+    main {
+        width: 80%;
+    }
+    .desktop-box {
+        display: flex;
+        align-self: center;
+        width: 80%;
+    }
+    header.mobile {
+        display: none;
+    }
+    header.desktop {
+        display: flex;
+        flex-direction: row;
+        color: #797979;
+    }
+    header.desktop a {
+        text-decoration: none;
+        color: #797979;
+    }
+    .contact-header-box,
+    .link-imgs-header {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    #insta-header,
+    #fb-header {
+        width: 70%;
+        margin: 0;
+    }
+    .logout-box {
+        position: absolute;
+        left: 0;
+    }
+    .contact-header-box {
+        position: absolute;
+        right: 0;
+    }
+    .underline {
+        display: none;
+    }
+    .all-team-info {
+        width: 80%;
+    }
+    .side-info {
+        margin: 1em;
+        margin-top: 0;
+    }
+    #my-info,
+    #team-info,
+    #payment {
+        display: flex;
+    }
+    #my-info-right,
+    #my-info-down {
+        display: none;
+    }
+    #team-info-right,
+    #pay-info-right {
+        display: none;
+    }
+    #team-info-down,
+    #pay-info-down {
+        display: flex;
+    }
+    .underline-info {
+        justify-self: center;
+        align-self: center;
+        content: " ";
+        border-bottom: 1px solid #c4c4c4;
+        width: 95%;
+        display: block;
+    }
+    #my-info {
+        flex-direction: column;
+    }
+    .side-info-desktop {
+        display: flex;
+        flex-direction: column;
+    }
+    .bottom-info-mobile {
+        display: none;
+    }
+    .dates {
+        color: #C82D30;
+    }
+    .equipment-prices {
+        align-self: flex-start;
+    }
+    #equipment {
+        text-align: start;
+    }
+    .team-top-info {
+        background-color: white;
+    }
+    p.content#presentation input {
+        background-color: white;
+    }
+    .info-box#top {
+        margin-top: 0;
+    }
+    .link-info {
+        display: flex;
+    }
+}

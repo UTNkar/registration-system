@@ -3,188 +3,239 @@
 {% include "header_overview.html"%}
 <div class="underline"></div>
 
-<div class="team-top-info">
-    <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
+<div class="desktop-box">
+    <div class="side-info">
+        <div class="team-top-info">
+            <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
 
-        {% for field in group %}
+            {% for field in group %}
 
-            {% if is_leader %}
-            <form method="post">
-            {{ group.management_form }}
-            <img id="edit" src="{% static 'images/edit.png' %} " onclick='toggleForm(this)'>
-            <img id="done" src="{% static 'images/done.png' %}" onclick='toggleForm(this)'>
+                {% if is_leader %}
+                <form method="post">
+                {{ group.management_form }}
+                <img id="edit" src="{% static 'images/edit.png' %} " onclick='toggleForm(this)'>
+                <img id="done" src="{% static 'images/done.png' %}" onclick='toggleForm(this)'>
 
-            {% csrf_token %}
-            {% else %}
-            <div>
-            {% endif %}
+                {% csrf_token %}
+                {% else %}
+                <div>
+                {% endif %}
 
-            <input name='type' value="group" type='hidden'/>
-            {% for hidden in field.hidden_fields %}{{ hidden }}{% endfor %}
-            <div class="team-name-box">
-                <h2 id="team-name">{{ field.name | default:group_name }}</h2>
+                <input name='type' value="group" type='hidden'/>
+                {% for hidden in field.hidden_fields %}{{ hidden }}{% endfor %}
+                <div class="team-name-box">
+                    <h2 id="team-name">{{ field.name | default:group_name }}</h2>
+                    <div class="underline-content-top-info"></div>
+                </div>
+                <p class="header">Start number: </p>
+                <p class="content">{{ group_nr | default:"Not set yet" }}</p>
+                <p class="header">Presentation: </p>
+                <p class="content" id="presentation"> {{ field.presentation}} </p>
                 <div class="underline-content-top-info"></div>
-            </div>
-            <p class="header">Start number: </p>
-            <p class="content">{{ group_nr | default:"Not set yet" }}</p>
-            <p class="header">Presentation: </p>
-            <p class="content" id="presentation"> {{ field.presentation}} </p>
-            <div class="underline-content-top-info"></div>
-            <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
+                <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
+
             {% endfor %}
-    {% if is_leader %}
-    </form>
-    {% else %}
-    </div>
-    {% endif %}
-    </div>
-</div>
-
-<div class="info-box">
-    <div class="info-header">
-        <h2>Your information</h2>
-        <i id="my-info-right" class="fas fa-angle-right" onclick="showMyInfo()"></i>
-        <i id="my-info-down" class="fas fa-angle-down" onclick="showMyInfo()"></i>
-    </div>
-    <div id="my-info">
-        <form method="post">
-        {{ me.management_form }}
-        <input name='type' value="me" type="hidden"/>
-        {% csrf_token %}
-        {% for field in me %}
-        <p class="header">{{ field.label_tag }}</p>
-        <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
-        <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
-        <p class="content"> {{ field }} </p>
-        <div class="underline-content-me"></div>
-        {% endfor %}
+        {% if is_leader %}
         </form>
-    </div>
-</div>
+        </div>
+        {% else %}
+        </div>
+        {% endif %}
 
-<div class="info-box">
-    <div class="info-header">
-        <h2>Team information</h2>
-        <i id="team-info-right" class="fas fa-angle-right" onclick="showTeamInfo()"></i>
-        <i id="team-info-down" class="fas fa-angle-down" onclick="showTeamInfo()"></i>
+        <div class="side-info-desktop">
+            <div class="equipment-box">
+                <div class="calendar-box">
+                    <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+                    <h2>Equipment information</h2>
+                </div>
+                <div class="underline" id="lifebuoy"></div>
+                <div class="box-info" id="equipment">
+                    Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+                </div>
+                <div class="equipment-prices">
+                    <b>Life jacket</b> 100 SEK <br>
+                    Available sizes: 50-70, 70-90, 90-110 <br>
+                    <b>Helmet</b> 50 SEK<br>
+                    Available sizes: S, M, L <br>
+                    <b>Wetsuit</b> 265 SEK<br>
+                    Available sizes: XS, S, M, L, XL   <br>
+                </div>
+            </div>
+            <div class="dates-box">
+                <div class="calendar-box">
+                    <h2>Important dates</h2>
+                    <img src="{% static 'images/calendar.png' %}" id="calendar-image">
+                </div>
+                <div class="underline" id="calendar"></div>
+                <div class="box-info" id="dates" >
+
+                    <div class="dates">
+                    {% for date in dates %}
+                        {{ date.date }} <br>
+                    {% endfor %}
+                    </div>
+                    <div class="event">
+                    {% for date in dates %}
+                        {{ date.desc }} <br>
+                    {% endfor %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
     </div>
-    <div id="team-info">
-            <div class="link-info">
-                <p class="header">Use the invitation link to add team members.</p>
-                <div class="tooltip">
-                    <div class="tooltiptext" id="myTooltip">Link copied</div>
-                    <div id="link" onclick="myFunction()" onmouseout="outFunc()">
-                        hgfdfgjklhghlink
-                        <img id="link-image" src="{% static 'images/link.png' %}">
+
+    <div class="all-team-info">
+        <div class="info-box" id="top">
+            <div class="info-header">
+                <h2 class="info-header" >Your information</h2>
+                <i id="my-info-right" class="fas fa-angle-right" onclick="showMyInfo()"></i>
+                <i id="my-info-down" class="fas fa-angle-down" onclick="showMyInfo()"></i>
+            </div>
+            <div id="my-info">
+                <div class="underline-info"></div>
+                <form method="post">
+                {{ me.management_form }}
+                <input name='type' value="me" type="hidden"/>
+                {% csrf_token %}
+                {% for field in me %}
+                <p class="header">{{ field.label_tag }}</p>
+                <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
+                <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
+                <p class="content"> {{ field }} </p>
+                <div class="underline-content-me"></div>
+                {% endfor %}
+                </form>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-header">
+                <h2 class="info-header">Team information</h2>
+                <i id="team-info-right" class="fas fa-angle-right" onclick="showTeamInfo()"></i>
+                <i id="team-info-down" class="fas fa-angle-down" onclick="showTeamInfo()"></i>
+
+            </div>
+            <div id="team-info">
+                <div class="underline-info"></div>
+                    <div class="link-info">
+                        <p class="header">Use the invitation link to add team members.</p>
+                        <div class="tooltip">
+                            <div class="tooltiptext" id="myTooltip">Link copied</div>
+                            <div id="link" onclick="myFunction()" onmouseout="outFunc()">
+                                hgfdfgjklhghlink
+                                <img id="link-image" src="{% static 'images/link.png' %}">
+                            </div>
+                        </div>
+                    </div>
+                    {% if is_leader %}
+                        <form method="post">
+                        {% csrf_token %}
+                        <input name='type' value="others" type="hidden"/>
+                        {{ others.management_form }}
+                    {% else %}
+                        <div>
+                    {% endif %}
+
+                    {% for user in others %}
+                    {% for hidden in user.hidden_fields %}{{ hidden }}{% endfor %}
+
+                    <div class="team-member-info">
+                    {% if is_leader %}
+                        <img class="edit-team" src="{% static 'images/edit.png' %} " onclick='toggleFormTeam(this)'>
+                        <img class="done-team" src="{% static 'images/done.png' %}" onclick='toggleFormTeam(this)'>
+                    {% endif %}
+                        {% for field in user.visible_fields %}
+                            <p class="header">{{ field.label_tag}}</p>
+                            <p class="content" id="input"> {{ field }}</p>
+                            <div class="underline-content-team"></div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+
+                    {% if is_leader %}
+                        </form>
+                    {% else %}
+                        </div>
+                    {% endif %}
+            </div>
+        </div>
+        <div class="info-box" id="info-box-payment">
+            <div class="info-header">
+                <h2 class="info-header">Payment</h2>
+                <i id="pay-info-right" class="fas fa-angle-right" onclick="showPayment()"></i>
+                <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
+            </div>
+            <div id="payment">
+                    <div class="payment-info">
+                        The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
+                        <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
+                    </div>
+                    <div class="payment-button">
+                        {% if is_leader %}
+                                <b>You can only pay once!</b>
+                                <br>
+                                <form class="payment-button" action="{% url 'make_payment' %}" method="get" id="send_payment" >
+                                    <input class="base-button"
+                                        type="Submit"
+                                        value="Go to UTN Pay"
+                                        {% if request.user.belongs_to_group.payment_initialized %}
+                                            disabled
+                                        {% endif %}
+                                    >
+                                </form>
+                        {% endif %}
                     </div>
                 </div>
             </div>
-            {% if is_leader %}
-                <form method="post">
-                {% csrf_token %}
-                <input name='type' value="others" type="hidden"/>
-                {{ others.management_form }}
-            {% else %}
-                <div>
-            {% endif %}
+        </div>
+    </div>
 
-            {% for user in others %}
-            {% for hidden in user.hidden_fields %}{{ hidden }}{% endfor %}
-
-            <div class="team-member-info">
-            {% if is_leader %}
-                <img class="edit-team" src="{% static 'images/edit.png' %} " onclick='toggleFormTeam(this)'>
-                <img class="done-team" src="{% static 'images/done.png' %}" onclick='toggleFormTeam(this)'>
-            {% endif %}
-                {% for field in user.visible_fields %}
-                    <p class="header">{{ field.label_tag}}</p>
-                    <p class="content" id="input"> {{ field }}</p>
-                    <div class="underline-content-team"></div>
-                {% endfor %}
+    <div class="bottom-info-mobile">
+        <div class="dates-box">
+            <div class="calendar-box">
+                <h2>Important dates</h2>
+                <img src="{% static 'images/calendar.png' %}" id="calendar-image">
             </div>
-            {% endfor %}
+            <div class="underline" id="calendar"></div>
+            <div class="box-info" id="dates" >
 
-            {% if is_leader %}
-                </form>
-            {% else %}
+                <div class="dates">
+                {% for date in dates %}
+                    {{ date.date }} <br>
+                {% endfor %}
                 </div>
-            {% endif %}
-    </div>
-</div>
-<div class="info-box" id="info-box-payment">
-    <div class="info-header">
-        <h2>Payment</h2>
-         <i id="pay-info-right" class="fas fa-angle-right" onclick="showPayment()"></i>
-         <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
-    </div>
-    <div id="payment">
-        <div class="payment-info">
-            The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
-            <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
-        </div>
-        <div class="payment-button">
-            {% if is_leader %}
-                    <b>You can only pay once!</b>
-                    <br>
-                    <form class="payment-button" action="{% url 'make_payment' %}" method="get" id="send_payment" >
-                        <input class="base-button"
-                            type="Submit"
-                            value="Go to UTN Pay"
-                            {% if request.user.belongs_to_group.payment_initialized %}
-                                disabled
-                            {% endif %}
-                        >
-                    </form>
-            {% endif %}
-        </div>
-        <div>
-    </div>
-</div>
+                <div class="event">
+                {% for date in dates %}
+                    {{ date.desc }} <br>
+                {% endfor %}
+                </div>
 
-<div class="dates-box">
-    <div class="calendar-box">
-        <h2>Important dates</h2>
-        <img src="{% static 'images/calendar.png' %}" id="calendar-image">
-    </div>
-    <div class="underline" id="calendar"></div>
-    <div class="box-info" id="dates" >
-
-        <div class="dates">
-        {% for date in dates %}
-            {{ date.date }} <br>
-        {% endfor %}
-        </div>
-        <div class="event">
-        {% for date in dates %}
-            {{ date.desc }} <br>
-        {% endfor %}
+            </div>
         </div>
 
+        <div class="equipment-box">
+            <div class="calendar-box">
+                <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+                <h2>Equipment information</h2>
+            </div>
+            <div class="underline" id="lifebuoy"></div>
+            <div class="box-info" id="equipment">
+                Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+            </div>
+            <div class="equipment-prices">
+                <b>Life jacket</b> 100 SEK <br>
+                Available sizes: 50-70, 70-90, 90-110 <br>
+                <b>Helmet</b> 50 SEK<br>
+                Available sizes: S, M, L <br>
+                <b>Wetsuit</b> 265 SEK<br>
+                Available sizes: XS, S, M, L, XL   <br>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="equipment-box">
-    <div class="calendar-box">
-        <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
-        <h2>Equipment information</h2>
-    </div>
-    <div class="underline" id="lifebuoy"></div>
-    <div class="box-info" id="equipment">
-        Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
-    </div>
-    <div class="equipment-prices">
-        <b>Life jacket</b> 100 SEK <br>
-        Available sizes: 50-70, 70-90, 90-110 <br>
-        <b>Helmet</b> 50 SEK<br>
-        Available sizes: S, M, L <br>
-        <b>Wetsuit</b> 265 SEK<br>
-        Available sizes: XS, S, M, L, XL   <br>
-    </div>
-</div>
 </div>
 
 <script type="text/javascript">
-
 
 document.getElementById("send_payment").addEventListener("click", function(event){
     if(!confirm("Are you sure?")) {
@@ -196,6 +247,8 @@ const link = document.getElementById("link");
 
 link.onclick = function() {
   document.execCommand("copy");
+  var tooltip = document.getElementById("myTooltip");
+  tooltip.innerHTML = "Link copied";
 }
 
 link.addEventListener("copy", function(event) {
