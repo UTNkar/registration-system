@@ -75,7 +75,7 @@ class RaffleEntryAdmin(admin.ModelAdmin):
         self.model.objects.all().update(status="won")
         winners = self.model.objects.filter(status="won")
         for winner in winners:
-            send_email(winner)
+            send_email(winner, request.get_host())
 
         self.message_user(request, "Randomized winners!")
         return HttpResponseRedirect("../")

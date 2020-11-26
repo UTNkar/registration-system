@@ -6,7 +6,7 @@ import requests
 from registrationSystem.models import EmailConfirmation
 
 
-def user_has_won(user):
+def user_has_won(user, domain):
     """
     Call this function when a user wins a raft.  The function sets the
     status of the raffle entry to 'won' and calls the function
@@ -16,17 +16,19 @@ def user_has_won(user):
     Parameters:
     user: RaffleEntry of the person who won.
 
+    domain: The domain the request was made to (request.domain)
+
     Returns:
     nothing
 
     """
     user.status = 'won'
     user.save()
-    send_email(user)
+    send_email(user, domain)
     return
 
 
-def send_email(user):
+def send_email(user, domain):
     """
     Call this function to send an email containing a unique link with the
     user's raffle entry.
@@ -34,6 +36,8 @@ def send_email(user):
 
     Parameters:
     user: RaffleEntry of the person to send the email.
+
+    domain: The domain the request was made to (request.domain)
 
     Returns:
     nothing
@@ -54,12 +58,11 @@ def send_email(user):
     else:
         raise FieldError('Incorrect user status in order to send an email!')
 
-    # TODO: Set domain to the actual domain on production.
     message = render_to_string(
                 template,
                 {
                     'name': user.name,
-                    'domain': 'localhost:8000',
+                    'domain': domain,
                     'token': connector.id,
                 }
             )

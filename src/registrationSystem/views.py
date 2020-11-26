@@ -77,7 +77,7 @@ def register(request):
             # original link (i.e. status still 'mail unconfirmed')
             status = raffle_entry_obj.status
             if status == "mail unconfirmed":
-                send_email(raffle_entry_obj)
+                send_email(raffle_entry_obj, request.get_host())
 
             # Update cookie. Used when changing accounts or 'logging' back in
             request.session['raffle_entry_id'] = raffle_entry_obj.id
@@ -197,7 +197,7 @@ def change_status(request):
     raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
 
     if raffle_entry_obj.status == "won":
-        user_has_won(raffle_entry_obj)
+        user_has_won(raffle_entry_obj, request.get_host())
         raffle_entry_obj.status = "accepted"
     elif raffle_entry_obj.status == "lost":
         raffle_entry_obj.status = "waiting"
