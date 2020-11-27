@@ -39,11 +39,12 @@ class CreateAccountForm(ModelForm):
             raise ValidationError("The passwords do not match!")
         return password_check
 
-    phone_nr = PhoneNumberField()
     password_check = CharField(
         widget=PasswordInput(),
         label='Confirm your password'
     )
+
+    phone_nr = PhoneNumberField()
 
     class Meta:
         model = get_user_model()
@@ -77,14 +78,14 @@ class CreateAccountForm(ModelForm):
 class CreateGroupForm(CreateAccountForm):
     def __init__(self, *args, **kwargs):
         super(CreateGroupForm, self).__init__(*args, **kwargs)
+        self.fields["name"].widget.attrs['readonly'] = 'readonly',
+        self.fields["person_nr"].widget.attrs['readonly'] = 'readonly',
+        self.fields["email"].widget.attrs['readonly'] = 'readonly'
 
 
 class JoinGroupForm(CreateAccountForm):
     def __init__(self, *args, group, **kwargs):
-        super(CreateGroupForm, self).__init__(*args, **kwargs)
-        self.fields["name"].widget.attrs['readonly'] = 'readonly',
-        self.fields["person_nr"].widget.attrs['readonly'] = 'readonly',
-        self.fields["email"].widget.attrs['readonly'] = 'readonly'
+        super(CreateAccountForm, self).__init__(*args, **kwargs)
         self.group = group
 
     def clean(self):
