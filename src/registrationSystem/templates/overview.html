@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% load static %}
 {% block content %}
 {% include "header_overview.html"%}
+
 <div class="underline"></div>
 
 <div class="desktop-box">
@@ -41,48 +42,6 @@
         {% else %}
         </div>
         {% endif %}
-
-        <div class="side-info-desktop">
-            <div class="equipment-box">
-                <div class="calendar-box">
-                    <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
-                    <h2>Equipment information</h2>
-                </div>
-                <div class="underline" id="lifebuoy"></div>
-                <div class="box-info" id="equipment">
-                    Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
-                </div>
-                <div class="equipment-prices">
-                    <b>Life jacket</b> 100 SEK <br>
-                    Available sizes: 50-70, 70-90, 90-110 <br>
-                    <b>Helmet</b> 50 SEK<br>
-                    Available sizes: S, M, L <br>
-                    <b>Wetsuit</b> 265 SEK<br>
-                    Available sizes: XS, S, M, L, XL   <br>
-                </div>
-            </div>
-            <div class="dates-box">
-                <div class="calendar-box">
-                    <h2>Important dates</h2>
-                    <img src="{% static 'images/calendar.png' %}" id="calendar-image">
-                </div>
-                <div class="underline" id="calendar"></div>
-                <div class="box-info" id="dates" >
-
-                    <div class="dates">
-                    {% for date in dates %}
-                        {{ date.date }} <br>
-                    {% endfor %}
-                    </div>
-                    <div class="event">
-                    {% for date in dates %}
-                        {{ date.desc }} <br>
-                    {% endfor %}
-                    </div>
-
-                </div>
-            </div>
-        </div>
     </div>
 
     <div class="all-team-info">
@@ -167,6 +126,7 @@
                 <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
             </div>
             <div id="payment">
+              {% include "team_payment_summary.html" %}
                     <div class="payment-info">
                         The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
                         <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
