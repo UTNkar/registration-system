@@ -397,7 +397,12 @@ select {
     }
     .side-info {
         margin: 1em;
-        margin-top: 0;
+        margin-top: 10em;
+    }
+    .team-img {
+        height: 15em;
+        left: 29em;
+        top: 5em;
     }
     #my-info,
     #team-info,
