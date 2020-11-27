@@ -39,7 +39,8 @@ input:focus {
 
 label {
     position: absolute;
-    font-size: 1em;
+    font-size: 12;
+    line-height: 1.3em;
     top: 0.5em;
     left: 0.5em;
     color: #797979;
@@ -86,7 +87,8 @@ select:-webkit-autofill:focus {
         padding-bottom: 1em;
     }
     label {
-        font-size: 1.2em;
+        font-size: 13;
+        line-height: 1.4em;
         top: 0.7em;
         left: 0.7em;
     }
