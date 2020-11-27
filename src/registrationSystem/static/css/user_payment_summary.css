@@ -7,12 +7,14 @@
 }
 
 thead {
-    font-size: 12px;
+    font-size: 12;
+    line-height: 1.3em;
     color: #A3A3A3
 }
 
 tbody {
     font-size: 15;
+    line-height: 1.3em;
     text-align: center;
 }
 
@@ -20,17 +22,17 @@ tbody {
     text-align: left;
 }
 
-#body-row-0 {
+tr {
     text-align: left;
 }
 
 #subtotal {
     text-align: right;
     font-weight: bold;
-    font-size: 12px
+    font-size: 15;
 }
 
-#subtotal > span {
+#subtotal>span {
     font-weight: normal;
-    font-size: 24px;
+    font-size: 18;
 }

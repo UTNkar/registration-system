@@ -1,0 +1,21 @@
+#payment {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: white;
+}
+
+#pay-info-down {
+    display: none;
+}
+
+@media only screen and (min-width: 600px) {
+    #payment {
+        display: flex;
+    }
+    #pay-info-right {
+        display: none;
+    }
+    #pay-info-down {
+        display: flex;
+    }
+}

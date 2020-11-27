@@ -1,0 +1,78 @@
+{% load static %}
+<div class="info-box" id="top">
+<div class="info-header">
+    <h2 class="info-header" >Your information</h2>
+    <i id="my-info-right" class="fas fa-angle-right" onclick="showMyInfo()"></i>
+    <i id="my-info-down" class="fas fa-angle-down" onclick="showMyInfo()"></i>
+</div>
+<div id="my-info">
+    <div class="underline-info"></div>
+    <form method="post">
+    {{ me.management_form }}
+    <input name='type' value="me" type="hidden"/>
+    {% csrf_token %}
+    {% for field in me %}
+    <p class="header">{{ field.label_tag }}</p>
+    <img id="edit-me" src="{% static 'images/edit.png' %} " onclick='toggleFormMe(this)'>
+    <img id="done-me" src="{% static 'images/done.png' %}" onclick='toggleFormMe(this)'>
+    <p class="content"> {{ field }} </p>
+    <div class="underline-content-me"></div>
+    {% endfor %}
+    </form>
+</div>
+</div>
+
+<div class="info-box">
+<div class="info-header">
+    <h2 class="info-header">Team information</h2>
+    <i id="team-info-right" class="fas fa-angle-right" onclick="showTeamInfo()"></i>
+    <i id="team-info-down" class="fas fa-angle-down" onclick="showTeamInfo()"></i>
+
+</div>
+<div id="team-info">
+    <div class="underline-info"></div>
+        <div class="link-info">
+            <p class="header">Use the invitation link to add team members.</p>
+            <div class="tooltip">
+                <div class="tooltiptext" id="myTooltip">Link copied</div>
+                <div id="link" onclick="myFunction()" onmouseout="outFunc()">
+                    hgfdfgjklhghlink
+                    <img id="link-image" src="{% static 'images/link.png' %}">
+                </div>
+            </div>
+        </div>
+        {% if is_leader %}
+            <form method="post">
+            {% csrf_token %}
+            <input name='type' value="others" type="hidden"/>
+            {{ others.management_form }}
+        {% else %}
+            <div>
+        {% endif %}
+
+        {% for user in others %}
+        {% for hidden in user.hidden_fields %}{{ hidden }}{% endfor %}
+
+        <div class="team-member-info">
+        {% if is_leader %}
+            <img class="edit-team" src="{% static 'images/edit.png' %} " onclick='toggleFormTeam(this)'>
+            <img class="done-team" src="{% static 'images/done.png' %}" onclick='toggleFormTeam(this)'>
+        {% endif %}
+            {% for field in user.visible_fields %}
+                <p class="header">{{ field.label_tag}}</p>
+                <p class="content" id="input"> {{ field }}</p>
+                <div class="underline-content-team"></div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        {% if is_leader %}
+            </form>
+        {% else %}
+            </div>
+        {% endif %}
+</div>
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/team_info.css' %}">
+{% endblock %}
