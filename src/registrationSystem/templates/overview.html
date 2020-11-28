@@ -112,22 +112,21 @@ const link = document.getElementById("link");
 
 link.onclick = function() {
   document.execCommand("copy");
-  var tooltip = document.getElementById("myTooltip");
+  const tooltip = document.getElementById("team-link-tooltip");
   tooltip.innerHTML = "Link copied";
 }
+
+link.addEventListener("mouseout", function(){
+    const tooltip = document.getElementById("team-link-tooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+})
 
 link.addEventListener("copy", function(event) {
   event.preventDefault();
   if (event.clipboardData) {
     event.clipboardData.setData("text/plain", link.textContent);
-    console.log(event.clipboardData.getData("text"))
   }
 });
-
-function outFunc() {
-  var tooltip = document.getElementById("myTooltip");
-  tooltip.innerHTML = "Copy to clipboard";
-}
 
 const toggleForm = button => {
     form = event.target.parentElement

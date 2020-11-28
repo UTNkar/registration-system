@@ -34,9 +34,9 @@
         <div class="link-info">
             <p class="header">Use the invitation link to add team members.</p>
             <div class="tooltip">
-                <div class="tooltiptext" id="myTooltip">Link copied</div>
-                <div id="link" onclick="myFunction()" onmouseout="outFunc()">
-                    hgfdfgjklhghlink
+                <div class="tooltiptext" id="team-link-tooltip">Link copied</div>
+                <div id="link">
+                    {{ request.scheme }}://{{ request.get_host }}{% url 'join_group' group_join_id=join_id %}
                     <img id="link-image" src="{% static 'images/link.png' %}">
                 </div>
             </div>
