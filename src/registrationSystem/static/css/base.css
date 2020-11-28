@@ -131,7 +131,7 @@ footer {
     width: 7%;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
     body {
         background-image: url(../images/background.png);
         background-size: cover;

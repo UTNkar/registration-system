@@ -253,7 +253,7 @@ select {
     display: none;
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 768px) {
     body {
         background-color: #E5E5E5;
         background-image: none;
