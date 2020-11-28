@@ -110,23 +110,16 @@ form {
     padding: 0.5em;
 }
 
-.calendar-box {
-    position: relative;
+.text-icon-box {
+    display: flex;
     width: 100%;
     text-align: center;
 }
 
-#calendar-image {
-    position: absolute;
-    top: 0.3em;
-    right: 0em;
-    width: 15%;
-}
-
-#lifebuoy-image {
-    position: absolute;
-    left: 0.3em;
-    width: 15%;
+.text-icon-box h2 {
+    flex: 1;
+    border-bottom: 1px solid #343434;
+    padding: 0;
 }
 
 .underline#calendar {
@@ -134,23 +127,9 @@ form {
     align-self: flex-start;
 }
 
-.underline#lifebuoy {
-    width: 85%;
-    align-self: flex-end;
-}
-
 .box-info {
     display: flex;
     padding: 0.5em 0;
-}
-
-#equipment {
-    margin-top: 0.5em;
-    text-align: center;
-}
-
-#dates {
-    margin-top: 0.5em;
 }
 
 .dates {

@@ -58,12 +58,11 @@
 
     <div class="bottom-info-mobile">
         <div class="dates-box">
-            <div class="calendar-box">
+            <div class="text-icon-box">
                 <h2>Important dates</h2>
-                <img src="{% static 'images/calendar.png' %}" id="calendar-image">
+                <img src="{% static 'images/calendar.png' %}">
             </div>
-            <div class="underline" id="calendar"></div>
-            <div class="box-info" id="dates" >
+            <div class="box-info">
 
                 <div class="dates">
                 {% for date in dates %}
@@ -75,17 +74,15 @@
                     {{ date.desc }} <br>
                 {% endfor %}
                 </div>
-
             </div>
         </div>
 
         <div class="equipment-box">
-            <div class="calendar-box">
-                <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+            <div class="text-icon-box">
+                <img src="{% static 'images/lifebuoy.png' %}">
                 <h2>Equipment information</h2>
             </div>
-            <div class="underline" id="lifebuoy"></div>
-            <div class="box-info" id="equipment">
+            <div class="box-info">
                 Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
             </div>
             <div class="equipment-prices">
@@ -105,10 +102,10 @@
 const payment_button = document.getElementById("send_payment");
 if (payment_button){
     payment_button.addEventListener("click", function(event){
-    if(!confirm("Are you sure?")) {
-        event.preventDefault();
-    }
-});
+        if(!confirm("Are you sure?")) {
+            event.preventDefault();
+        }
+    });
 }
 
 const link = document.getElementById("link");
