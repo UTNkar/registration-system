@@ -1,6 +1,5 @@
 from django import forms
-from django.utils.encoding import force_text
-from registrationSystem.utils import SSNValidator
+from registrationSystem.validators import SSNValidator
 from phonenumbers import parse, is_valid_number
 
 
@@ -20,15 +19,10 @@ class PhoneNumberField(forms.CharField):
 
 
 class PersonNumberField(forms.Field):
+    default_validators = [SSNValidator()]
+
     def __init__(self, *args, **kwargs):
         super(PersonNumberField, self).__init__(*args, **kwargs)
-
-    def to_python(self, value):
-        if value in self.empty_values:
-            return None, ''
-        value = force_text(value).strip()
-        SSNValidator()(value)
-        return value
 
     def widget_attrs(self, widget):
         attrs = super(PersonNumberField, self).widget_attrs(widget)
