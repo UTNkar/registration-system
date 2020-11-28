@@ -1,0 +1,41 @@
+{% extends "page_base.html" %} {% load static %}
+{% block content %}
+<div class="info-container">
+  <h1>Create your account</h1>
+  <h2>Make sure your information is correct and choose a password.</h2>
+  <p class="information-correction-redirect">If any of your information is incorrect, click <a href="">here</a></p>
+  {% comment %} TODO: Replace with working link {% endcomment %}
+</div>
+
+<form action="{{request.path}}" method="POST">
+  {% csrf_token %}
+  <div class="input-container">
+    {% for field in form.visible_fields %}
+    <div class="input-div">
+      {{ field }}
+      <label class="form-control-label">{{ field.label }}</label>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="button-container">
+    <input type="submit" value="Registrera">
+  </div>
+</form>
+
+{% if form.errors %}
+<div>
+  {% for field in form %}
+  {% for error in field.errors %}
+  <div>
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+  {% endfor %}
+  {% for error in form.non_field_errors %}
+  <div>
+    <strong>{{ error|escape }}</strong>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% endblock %}

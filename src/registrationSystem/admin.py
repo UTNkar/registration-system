@@ -11,6 +11,7 @@ from registrationSystem.models import (
 )
 
 from django.http import HttpResponseRedirect
+from registrationSystem.utils import send_email
 
 
 class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
@@ -47,6 +48,9 @@ class RaffleEntryAdmin(admin.ModelAdmin):
 
     def set_raffle_status_won(modeladmin, request, queryset):
         queryset.update(status="won")
+        for winner in queryset:
+            send_email(winner, request.get_host())
+
     set_raffle_status_won.short_description = "Set selected status to 'won'"
 
     def set_raffle_status_lost(modeladmin, request, queryset):
@@ -67,7 +71,12 @@ class RaffleEntryAdmin(admin.ModelAdmin):
         # TODO: Implement actual raffle logic.
         # params = request.POST
         # desired_utn_member_percentage = params["utn-member-percentage"]
+        # TODO: Also send mail to non-winners?
         self.model.objects.all().update(status="won")
+        winners = self.model.objects.filter(status="won")
+        for winner in winners:
+            send_email(winner, request.get_host())
+
         self.message_user(request, "Randomized winners!")
         return HttpResponseRedirect("../")
 

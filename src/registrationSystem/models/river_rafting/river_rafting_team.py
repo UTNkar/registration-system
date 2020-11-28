@@ -1,12 +1,20 @@
 from django.db import models
 from ..common.abstract_group import AbstractGroup
+from coolname import generate
+
+
+def get_cool_team_name():
+    return " ".join(x.capitalize() for x in generate(2)) + "s"
 
 
 class RiverRaftingTeam(AbstractGroup):
+
+    max_team_members = 4
+
     name = models.CharField(
         max_length=254,
-        blank=True,
-        verbose_name='Team name'
+        verbose_name='Team name',
+        default=get_cool_team_name,
     )
 
     number = models.IntegerField(
@@ -16,7 +24,8 @@ class RiverRaftingTeam(AbstractGroup):
     )
 
     environment_raft = models.BooleanField(
-        verbose_name='I want an environmentally friendly raft'
+        verbose_name='I want an environmentally friendly raft',
+        default=False
     )
 
     presentation = models.CharField(

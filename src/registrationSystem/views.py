@@ -9,18 +9,22 @@ from django.http import (
     HttpResponseForbidden
 )
 from django.urls import reverse
+from django.conf import settings
 from django.forms import modelformset_factory
 from django.contrib.auth import get_user_model
 from registrationSystem.models import (
-    RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate, RiverRaftingCost
+    RaffleEntry,
+    EmailConfirmation,
+    RiverRaftingTeam,
+    ImportantDate,
+    RiverRaftingCost
 )
 from registrationSystem.utn_pay import get_payment_link
 from registrationSystem.utils import user_has_won, send_email, is_utn_member
 from registrationSystem.forms import (
-    RaffleEntryForm, CreateAccountForm, RiverRaftingUserForm,
+    RaffleEntryForm, CreateGroupForm, JoinGroupForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
 )
-from django.conf import settings
 
 
 @login_required
@@ -63,7 +67,8 @@ def login_user(request):
         login(request, user)
         return redirect(reverse('overview'))
     else:
-        return redirect(settings.LOGIN_URL)
+        # TODO: Send show nice failed to login page
+        return HttpResponse('Unauthorized', status=401)
 
 
 def register(request):
@@ -74,7 +79,8 @@ def register(request):
             raffle_entry_obj, _ = RaffleEntry.objects.get_or_create(
                 name=form.cleaned_data['name'],
                 email=form.cleaned_data['email'],
-                person_nr=form.cleaned_data['person_nr']
+                person_nr=form.cleaned_data['person_nr'],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"])
             )
 
             # Send confirmation email, or resend email with new link
@@ -82,7 +88,7 @@ def register(request):
             # original link (i.e. status still 'mail unconfirmed')
             status = raffle_entry_obj.status
             if status == "mail unconfirmed":
-                send_email(raffle_entry_obj)
+                send_email(raffle_entry_obj, request.get_host())
 
             # Update cookie. Used when changing accounts or 'logging' back in
             request.session['raffle_entry_id'] = raffle_entry_obj.id
@@ -181,15 +187,17 @@ def overview(request, id=None):
 
     costs = RiverRaftingCost.load()
     # TODO: Clean this up.
-    # This is a bit of a hack, as _meta.fields gives back ID as its first field.
-    # A cleaner method would probably be to define this as a form of a group.
-    # The first one is empty because the users name is placed there.
-    cost_names = ["Team member"] + [ prop.verbose_name for prop in costs._meta.fields[1:] ] + ["Total"]
+    # This is a bit of a hack, as _meta.fields gives back ID as its first
+    # field. A cleaner method would probably be to define this as a form of a
+    # group. The first one is empty because the users name is placed there.
+    cost_names = ["Team member"] + [
+        prop.verbose_name for prop in costs._meta.fields[1:]
+    ] + ["Total"]
     user_costs = [
         (user.name,
          costs.lifevest if user.lifevest_size else 0,
-         costs.wetsuit  if user.wetsuite_size else 0,
-         costs.helmet   if user.helmet_size   else 0,
+         costs.wetsuit if user.wetsuite_size else 0,
+         costs.helmet if user.helmet_size else 0,
          costs.raft_fee)
         for user in group.get_group_members()
     ]
@@ -199,22 +207,26 @@ def overview(request, id=None):
     ]
 
     # This works because the totals are last
-    total = sum([ costs[-1] for costs in user_payment_summaries ])
+    total = sum([costs[-1] for costs in user_payment_summaries])
+    context = {
+        "me": my_form,
+        "group_name": group.name,
+        "group_nr": group.number,
+        "others": others_formset,
+        "group": group_formset,
+        "is_leader": is_leader,
+        "dates": dates,
+        "user_payment_summaries": user_payment_summaries,
+        "cost_names": cost_names,
+        "total": total
+    }
+
+    if is_leader:
+        context["join_id"] = group.join_id
 
     return render(request,
                   "overview.html",
-                  {
-                      "me": my_form,
-                      "group_name": group.name,
-                      "group_nr": group.number,
-                      "others": others_formset,
-                      "group": group_formset,
-                      "is_leader": is_leader,
-                      "dates": dates,
-                      "user_payment_summaries": user_payment_summaries,
-                      "cost_names": cost_names,
-                      "total": total
-                  })
+                  )
 
 
 # TODO: Remove this view when status can be changed from the admin pages
@@ -225,7 +237,7 @@ def change_status(request):
     raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
 
     if raffle_entry_obj.status == "won":
-        user_has_won(raffle_entry_obj)
+        user_has_won(raffle_entry_obj, request.get_host())
         raffle_entry_obj.status = "accepted"
     elif raffle_entry_obj.status == "lost":
         raffle_entry_obj.status = "waiting"
@@ -246,49 +258,82 @@ def activate(request, token):
         return HttpResponse('Activation link is invalid!')
 
 
-def create_account(request, uid):
-    connector = get_object_or_404(EmailConfirmation, id=uid)
+def create_group(request, email_confirm_id):
+    connector = get_object_or_404(
+        EmailConfirmation,
+        id=email_confirm_id
+    )
     user = connector.raffleEntryId
 
-    if request.method == "POST":
-        form = CreateAccountForm(request.POST)
+    if(request.method == "POST"):
+        form = CreateGroupForm(request.POST)
+        if form.is_valid():
+            # There is no need to encrypt the password here, the user manager
+            # handles that in the database. Just make sure to use create_user()
+            leader = get_user_model().objects.create_user(
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                person_nr=form.cleaned_data["person_nr"],
+                phone_nr=form.cleaned_data["phone_nr"],
+                password=form.cleaned_data["password"],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
+            )
+
+            # Create a new group and assign it to the user
+            group = RiverRaftingTeam.objects.create(leader=leader)
+
+            leader.belongs_to_group = group
+            leader.save()
+
+            # Keep the RaffleEntry (user) with status 'confirmed'
+            # for statistical purposes.
+            user.status = "confirmed"
+            user.save()
+
+            # Delete the EmailConfirmation. The randomized token
+            # should only be used once!
+            connector.delete()
+            return HttpResponseRedirect(reverse('status'))
     else:
-        form = CreateAccountForm(initial={
+        form = CreateGroupForm(initial={
             'name': user.name,
             'person_nr': user.person_nr,
             'email': user.email
         })
 
-    if form.is_valid():
-        phone_nr = form.cleaned_data['phone_nr']
-        password = form.cleaned_data['password']
-        # There is no need to encrypt the password here, the user manager
-        # handles that in the database.
-        get_user_model().objects.create(
-            name=user.name,
-            email=user.email,
-            person_nr=user.person_nr,
-            phone_nr=phone_nr,
-            password=password,
-            is_utn_member=is_utn_member(user.person_nr)
-        )
+    context = {
+        'form': form,
+    }
+    # TODO: Replace with working link
+    return render(request, 'registrationSystem/create_group.html', context)
 
-        # Keep the RaffleEntry (user) with status 'confirmed'
-        # for statistical purposes.
-        user.status = "confirmed"
-        user.save()
 
-        # Delete the EmailConfirmation. The randomized token
-        # should only be used once!
-        connector.delete()
-        return HttpResponseRedirect(reverse('status'))
+def join_group(request, group_join_id):
+    # Create a new account (without a previously existing
+    # raffle entry) and join an already existing group.
+    group = get_object_or_404(RiverRaftingTeam, join_id=group_join_id)
+
+    if request.method == "POST":
+        form = JoinGroupForm(request.POST, group=group)
+        if form.is_valid():
+            # There is no need to encrypt the password here, the user manager
+            # handles that in the database.
+            get_user_model().objects.create_user(
+                name=form.cleaned_data["name"],
+                email=form.cleaned_data["email"],
+                person_nr=form.cleaned_data["person_nr"],
+                phone_nr=form.cleaned_data["phone_nr"],
+                password=form.cleaned_data["password"],
+                is_utn_member=is_utn_member(form.cleaned_data["person_nr"]),
+                belongs_to_group=group
+            )
+
+            return HttpResponseRedirect(reverse('overview'))
+    else:
+        form = JoinGroupForm(group=group)
 
     context = {
-        'uid': uid,
-        'form': form
+        'form': form,
+        'group': group,
     }
-    return render(request, 'registrationSystem/create_account.html', context)
-
-
-def temp(request):
-    return render(request, 'registrationSystem/temp.html')
+    return render(request, 'registrationSystem/join_group.html', context)
