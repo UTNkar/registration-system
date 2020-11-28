@@ -14,7 +14,12 @@ from registrationSystem.models import (
     RaffleEntry, EmailConfirmation, RiverRaftingTeam, ImportantDate
 )
 from registrationSystem.utn_pay import get_payment_link
-from registrationSystem.utils import user_has_won, send_email, is_utn_member
+from registrationSystem.utils import (
+    user_has_won,
+    send_email,
+    is_utn_member,
+    redirect_to_status
+)
 from registrationSystem.forms import (
     RaffleEntryForm, CreateGroupForm, JoinGroupForm, RiverRaftingUserForm,
     RiverRaftingTeamForm
@@ -79,18 +84,18 @@ def register(request):
             if status == "mail unconfirmed":
                 send_email(raffle_entry_obj, request.get_host())
 
-            # Update cookie. Used when changing accounts or 'logging' back in
-            request.session['raffle_entry_id'] = raffle_entry_obj.id
-
-            raffle_entry_obj.save()
-            return redirect(reverse('status'))
+            return redirect_to_status(request, raffle_entry_obj.id)
     else:
         form = RaffleEntryForm()
     return render(request, "register_page.html", {'form': form})
 
 
 def status(request):
-    raffle_entry_id = request.session['raffle_entry_id']
+    raffle_entry_id = request.session.get('raffle_entry_id', None)
+
+    if raffle_entry_id is None:
+        return redirect(reverse("register"))
+
     raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
     status = raffle_entry_obj.status
 
@@ -193,7 +198,7 @@ def overview(request, id=None):
 def change_status(request):
     # If the user loses and wants to re-enter the raffle, of
     # if the user wins and wants their spot.
-    raffle_entry_id = request.session['raffle_entry_id']
+    raffle_entry_id = request.session.get('raffle_entry_id', None)
     raffle_entry_obj = RaffleEntry.objects.get(id=raffle_entry_id)
 
     if raffle_entry_obj.status == "won":
@@ -203,7 +208,7 @@ def change_status(request):
         raffle_entry_obj.status = "waiting"
 
     raffle_entry_obj.save()
-    return redirect(reverse('status'))
+    return redirect_to_status(request, raffle_entry_id)
 
 
 def activate(request, token):
@@ -213,7 +218,7 @@ def activate(request, token):
         user.status = 'waiting'
         confirmation.delete()
         user.save()
-        return redirect(reverse('status'))
+        return redirect_to_status(request, user.id)
     except(RaffleEntry.DoesNotExist):
         return HttpResponse('Activation link is invalid!')
 
