@@ -218,15 +218,18 @@ def overview(request, id=None):
         "dates": dates,
         "user_payment_summaries": user_payment_summaries,
         "cost_names": cost_names,
-        "total": total
+        "total": total,
+        "costs": costs
     }
 
     if is_leader:
         context["join_id"] = group.join_id
 
-    return render(request,
-                  "overview.html",
-                  )
+    return render(
+        request,
+        "overview.html",
+        context
+    )
 
 
 # TODO: Remove this view when status can be changed from the admin pages
