@@ -6,11 +6,12 @@
 }
 
 header {
-    position: relative;
     margin: 0;
     padding-top: 0.5em;
     padding-bottom: 1em;
-    height: 2.5em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 header.desktop {
@@ -18,22 +19,11 @@ header.desktop {
 }
 
 #utn {
-    position: absolute;
-    left: 0;
-}
-
-#forsranning {
-    position: absolute;
-}
-
-.logout {
-    position: absolute;
-    right: 0;
-}
-
-#utn,
-#forsranning {
     width: 25% !important;
+}
+
+#forsranning {
+    width: 30% !important;
 }
 
 .underline {
