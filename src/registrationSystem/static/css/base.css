@@ -31,14 +31,14 @@ h1 {
 }
 
 h2 {
-    font-size: 15;
+    font-size: 0.95rem;
     font-weight: normal;
     line-height: 1.3em;
     align-self: center;
 }
 
 div {
-    font-size: 12;
+    font-size: 0.75rem;
     line-height: 1.3em;
 }
 
@@ -46,9 +46,10 @@ button,
 .base-button {
     background-color: #C82D30;
     color: white;
-    padding: 1em 5em;
+    padding: 0.7em 4em;
     border: 0;
     border-radius: 5em;
+    font-size: 1.5em;
 }
 
 .button-link {
@@ -82,6 +83,7 @@ footer {
 
 .socmed-imgs {
     display: flex;
+    align-items: center;
 }
 
 #insta,
@@ -95,6 +97,12 @@ footer {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    width: 100%;
+}
+
+.contact h2 {
+    font-size: 1.95em;
+    margin: .4em 0;
 }
 
 .footer-image {
@@ -104,6 +112,8 @@ footer {
 .footer-contact {
     display: flex;
     padding: 0.5em;
+    width: 100%;
+    justify-content: center;
 }
 
 .footer-titles {
@@ -116,10 +126,16 @@ footer {
     padding-left: 0.5em;
 }
 
+.footer-content {
+    font-size: 1.1em;
+    padding: 0.3em 0;
+}
+
 .powered-by {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 0.7em 0 0;
 }
 
 .footer-websites,
@@ -128,7 +144,7 @@ footer {
 }
 
 #dk {
-    width: 7%;
+    width: 2em;
 }
 
 @media only screen and (min-width: 768px) {
@@ -143,19 +159,18 @@ footer {
     }
     #forsranning {
         width: 70%;
-        height: 30%;
     }
     h1 {
-        font-size: 19;
+        font-size: 1.19rem;
         font-weight: bolder;
         line-height: 1.4;
     }
     h2 {
-        font-size: 16;
+        font-size: 1rem;
         line-height: 1.4;
     }
     div {
-        font-size: 13;
+        font-size: 0.81rem;
         line-height: 1.4;
     }
     #dk {
@@ -184,16 +199,12 @@ footer {
         padding-top: 1em;
         padding-right: 1em;
     }
-    h2.contact {
+    .contact h2{
         display: none;
     }
     .socmed {
         flex-direction: column;
         align-items: flex-start;
-        width: 50%;
-    }
-    #insta,
-    #fb {
         width: 50%;
     }
     .footer-websites {

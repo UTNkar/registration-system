@@ -77,10 +77,15 @@ select:-webkit-autofill:focus {
         align-items: center;
     }
     main {
-        width: 30%;
-        padding: 1em;
-        background-color: rgb(229, 229, 229, 0.35);
+        width: 31.25rem;
+        flex: 1;
+        background: none;
+    }
+    .box{
+        background-color: rgb(196, 196, 196, 0.7);
         backdrop-filter: blur(1em);
+        width: 100%;
+        padding: 3em;
     }
     input {
         padding-top: 2em;
