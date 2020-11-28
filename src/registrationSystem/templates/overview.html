@@ -102,11 +102,14 @@
 
 <script type="text/javascript">
 
-document.getElementById("send_payment").addEventListener("click", function(event){
+const payment_button = document.getElementById("send_payment");
+if (payment_button){
+    payment_button.addEventListener("click", function(event){
     if(!confirm("Are you sure?")) {
         event.preventDefault();
     }
 });
+}
 
 const link = document.getElementById("link");
 
