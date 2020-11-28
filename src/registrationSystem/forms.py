@@ -9,10 +9,50 @@ from registrationSystem.models import (
 )
 from registrationSystem.fields import PersonNumberField, PhoneNumberField
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
+from registrationSystem.utils import is_utn_member
 
 
 class RaffleEntryForm(ModelForm):
     person_nr = PersonNumberField()
+
+    def clean(self):
+        try:
+            raffle_entry = RaffleEntry.objects.filter(
+                Q(person_nr=self.cleaned_data['person_nr']) |
+                Q(email=self.cleaned_data['email'])
+            ).get()
+
+            # Did the user write a personnummer that already exists
+            # but wrote the wrong email
+            if raffle_entry.email != self.cleaned_data['email']:
+                raise ValidationError(
+                    "A Person number with that email could not be found"
+                )
+
+            # Did the user write an email that already exists but
+            # wrote the wrong person nummer
+            if raffle_entry.person_nr != self.cleaned_data['person_nr']:
+                raise ValidationError("That email has already been used")
+        except ObjectDoesNotExist:
+            pass
+
+        return self.cleaned_data
+
+    def save(self):
+        raffle_entry, created = RaffleEntry.objects.get_or_create(
+            person_nr=self.cleaned_data['person_nr'],
+            email=self.cleaned_data['email'],
+            defaults={
+                'name': self.cleaned_data['name'],
+                'is_utn_member': is_utn_member(
+                    self.cleaned_data["person_nr"]
+                )
+            }
+        )
+
+        return raffle_entry, created
 
     status = forms.CharField(
         widget=forms.HiddenInput(),
@@ -23,7 +63,6 @@ class RaffleEntryForm(ModelForm):
         model = RaffleEntry
         fields = ['name',
                   'email',
-                  'person_nr',
                   'status']
 
 

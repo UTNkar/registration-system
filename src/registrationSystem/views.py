@@ -63,26 +63,15 @@ def login_user(request):
 def register(request):
     if request.POST:
         form = RaffleEntryForm(request.POST)
-
         if form.is_valid():
-            raffle_entry_obj, _ = RaffleEntry.objects.get_or_create(
-                name=form.cleaned_data['name'],
-                email=form.cleaned_data['email'],
-                person_nr=form.cleaned_data['person_nr'],
-                is_utn_member=is_utn_member(form.cleaned_data["person_nr"])
-            )
+            raffle_entry, created = form.save()
 
-            # Send confirmation email, or resend email with new link
-            # in case someone re-registers without ever pressing
-            # original link (i.e. status still 'mail unconfirmed')
-            status = raffle_entry_obj.status
-            if status == "mail unconfirmed":
-                send_email(raffle_entry_obj, request.get_host())
+            if created:
+                send_email(raffle_entry, request.get_host())
 
             # Update cookie. Used when changing accounts or 'logging' back in
-            request.session['raffle_entry_id'] = raffle_entry_obj.id
+            request.session['raffle_entry_id'] = raffle_entry.id
 
-            raffle_entry_obj.save()
             return redirect(reverse('status'))
     else:
         form = RaffleEntryForm()
