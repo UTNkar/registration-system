@@ -146,4 +146,3 @@ class RiverRaftingTeamForm(ModelForm):
             ),
             'presentation': TextInput(attrs={'readonly': 'readonly'}),
         }
-
