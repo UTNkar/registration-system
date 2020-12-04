@@ -1,0 +1,30 @@
+{% load static %}
+<header class="mobile">
+    <a class="logout" href="{% url "logout" %}">Log out</a>
+    <img src="{% static 'images/forsränning.png' %}" id="forsranning">
+    <img src="{% static 'images/utn.png' %}" id="utn">
+</header>
+
+<header class="desktop">
+    <div class="logout-box">
+        {% comment %} <img src="{% static 'images/logout.png' %}" id="logout-img"> {% endcomment %}
+        <a href="{% url "logout" %}">Log out</a>
+    </div>
+    <div class="contact-header-box">
+        <a href="https://utn.se/">UTN | &nbsp;</a>
+        <a href="https://forsranningen.utn.se/">The River Rafting official website | &nbsp;</a>
+        <div class="powered-by-2020"> Follow us on social media:&nbsp;</div>
+        <div class="link-imgs-header">
+            <a href="https://www.instagram.com/forsranningen/">
+                <img alt="insta" src="{% static 'images/instagram.png' %}" id="insta-header">
+            </a>
+            <a href="https://www.facebook.com/ForsranningenUTN/">
+                <img src="{% static 'images/facebook.png' %}" id="fb-header">
+            </a>
+        </div>
+    </div>
+    {% comment %} <img src="{% static 'images/header-overview.png' %}" id="desktop-header-img"> {% endcomment %}
+</header>
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/overview.css' %}">
+{% endblock %}

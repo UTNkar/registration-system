@@ -7,6 +7,7 @@
     <link rel="icon" type="image/ico" href="{% static 'images/logo_small.png' %}" />
     {% block extra_css %}{% endblock %}
     <link rel="stylesheet" type="text/css" href="{% static 'css/base.css' %}">
+    <script src="https://kit.fontawesome.com/5858a2c46f.js" crossorigin="anonymous"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
@@ -18,14 +19,70 @@
 <body>
     <main>
         <div class="box">
-            <header>
-                <img src="{% static 'images/forsränning.png' %}" id="forsranning">
-            </header>
+            {% block header %}{% endblock %}
             {% block content %}{% endblock %}
         </div>
     </main>
     <footer>
-        Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringkommittén
+        <img class="footer-image" src="{% static 'images/background.png' %}" id="footer-image">
+        <div class="contact">
+            <h2>Contact us</h2>
+            <div class="footer-contact">
+                <div class="footer-titles">
+                    <div class="footer-content">
+                        Payment – Guld <br>
+                    </div>
+                    <div class="footer-content">
+                        Technical – Webb <br>
+                    </div>
+                    <div class="footer-content">
+                        General – Start <br>
+                    </div>
+                    <div class="footer-content">
+                        Equipment – Mål<br>
+                    </div>
+                </div>
+                <div class="footer-emails">
+                    <div class="footer-content">
+                        guld@forsranningen.utn.se <br>
+                    </div>
+                    <div class="footer-content">
+                        webb@forsranningen.utn.se <br>
+                    </div>
+                    <div class="footer-content">
+                        start@forsranningen.utn.se <br>
+                    </div>
+                    <div class="footer-content">
+                        mal@forsranningen.utn.se
+                    </div>
+                </div>
+            </div>
+            <div class="socmed">
+                <div class="socmed-imgs">
+                    <a href="https://www.instagram.com/forsranningen/">
+                        <img alt="insta" src="{% static 'images/instagram.png' %}" id="insta">
+                    </a>
+                    <a href="https://www.facebook.com/ForsranningenUTN/">
+                        <img src="{% static 'images/facebook.png' %}" id="fb">
+                    </a>
+                </div>
+                <div class="footer-websites">
+                    <div class="footer-content">
+                        <a href="https://forsranningen.utn.se/">The River Rafting official website</a> <br>
+                    </div>
+                    <div class="footer-content">
+                        <a href="https://utn.se/">About UTN – Uppsala Union of Engineering and Science Students</a> <br>
+                    </div>
+                    <div class="footer-content">
+                        <a href="https://utn.se/blimedlem">Become a member of UTN</a><br>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="powered-by">
+            Powered by &nbsp;<img src="{% static 'images/dk.png' %}" id="dk"> &nbsp;Digitaliseringskommittén &nbsp;
+            <div class="powered-by-2020">2020</div>
+        </div>
     </footer>
 </body>
 </html>

@@ -1,0 +1,41 @@
+{% load static %}
+<div class="team-top-info">
+            {% for field in group %}
+
+                {% if is_leader %}
+                <form method="post">
+                {{ group.management_form }}
+                <img id="edit" src="{% static 'images/edit.png' %} " onclick='toggleForm(this)'>
+                <img id="done" src="{% static 'images/done.png' %}" onclick='toggleForm(this)'>
+
+                {% csrf_token %}
+                {% else %}
+                <div>
+                {% endif %}
+
+                <input name='type' value="group" type='hidden'/>
+                {% for hidden in field.hidden_fields %}{{ hidden }}{% endfor %}
+                <div class="team-name-box">
+                    <h2 id="team-name">{{ field.name | default:group_name }}</h2>
+                    <img class="team-img" src="{% static 'images/picture.png' %}" id="picture">
+                    <div class="underline-content-top-info"></div>
+                </div>
+                <p class="header">Start number: </p>
+                <p class="content">{{ group_nr | default:"Not set yet" }}</p>
+                <p class="header">Presentation: </p>
+                <p class="content" id="presentation"> {{ field.presentation}} </p>
+                <div class="underline-content-top-info"></div>
+                <p class="header">I want an environmentally friendly raft {{ field.environment_raft }}</p>
+
+            {% endfor %}
+    {% if is_leader %}
+    </form>
+</div>
+{% else %}
+</div>
+{% endif %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/team_top_info.css' %}">
+{% endblock %}
+
