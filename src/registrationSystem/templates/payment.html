@@ -1,0 +1,35 @@
+{% load static %}
+<div class="info-box" id="info-box-payment">
+    <div class="info-header">
+        <h2 class="info-header">Payment</h2>
+        <i id="pay-info-right" class="fas fa-angle-right" onclick="showPayment()"></i>
+        <i id="pay-info-down" class="fas fa-angle-down" onclick="showPayment()"></i>
+    </div>
+    <div id="payment">
+        {% include "team_payment_summary.html" %}
+            <div class="payment-info">
+                The team leader makes one collective payment for the whole team. The receipt will be sent by email. <br><br>
+                <b>Note that it takes time to register the payment and that it therefore might not show “Payment confirmed” immediately.</b>
+            </div>
+            <div class="payment-button">
+                {% if is_leader %}
+                        <b>You can only pay once!</b>
+                        <br>
+                        <form class="payment-button" action="{% url 'make_payment' %}" method="get" id="send_payment" >
+                            <input class="base-button"
+                                type="Submit"
+                                value="Go to UTN Pay"
+                                {% if request.user.belongs_to_group.payment_initialized %}
+                                    disabled
+                                {% endif %}
+                            >
+                        </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/payment.css' %}">
+{% endblock %}

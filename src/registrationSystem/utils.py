@@ -3,6 +3,8 @@ from django.core.mail import EmailMessage
 from django.core.exceptions import FieldError
 import requests
 from registrationSystem.models import EmailConfirmation
+from django.urls import reverse
+from django.shortcuts import redirect
 
 
 def user_has_won(user, domain):
@@ -94,3 +96,8 @@ def is_utn_member(person_nr):
     )
 
     return r.json()['is_member']
+
+
+def redirect_to_status(request, raffle_entry_id):
+    request.session['raffle_entry_id'] = raffle_entry_id
+    return redirect(reverse('status'))

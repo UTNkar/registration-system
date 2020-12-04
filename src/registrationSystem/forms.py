@@ -128,16 +128,19 @@ class RiverRaftingTeamForm(ModelForm):
         model = RiverRaftingTeam
 
         fields = [
+            'name',
             'environment_raft',
             'presentation',
         ]
 
         labels = {
+            'name': 'Team name',
             'evironment_raft': 'I want an environmentally friendly raft',
             'presentation': 'Group description',
         }
 
         widgets = {
+            'name': TextInput(attrs={'readonly': 'readonly'}),
             'environment_raft': CheckboxInput(
                 attrs={'disabled': True}
             ),
