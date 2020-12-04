@@ -1,0 +1,73 @@
+.info-box {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1em;
+}
+
+.info-header {
+    display: flex;
+    align-items: center;
+    background-color: white;
+}
+
+#my-info-down,
+#team-info-down {
+    display: none;
+}
+
+.edit-team,
+.done-team,
+#edit-me,
+#done-me {
+    position: absolute;
+    top: 2em;
+    right: 1em;
+}
+
+#done,
+#done-me,
+.done-team {
+    display: none;
+}
+
+#my-info {
+    display: none;
+}
+
+#team-info {
+    display: none;
+    flex-direction: column;
+}
+
+.team-member-info,
+#my-info {
+    position: relative;
+    width: 100%;
+}
+
+.team-member-info,
+#my-info {
+    margin-bottom: 1em;
+    padding: 1em;
+    background-color: white;
+}
+
+@media only screen and (min-width: 768px) {
+    #my-info,
+    #team-info {
+        display: flex;
+    }
+    #my-info-right,
+    #my-info-down {
+        display: none;
+    }
+    #team-info-right {
+        display: none;
+    }
+    #team-info-down {
+        display: flex;
+    }
+    #my-info {
+        flex-direction: column;
+    }
+}

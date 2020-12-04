@@ -1,114 +1,282 @@
-<html lang="en">
-  <body>
-    <main class="flex-container-start-page">
-      {%if is_leader %}
-      <div>
-        <h3>Team invite link</h3>
-        <br>
-        <input
-          type="text"
-          value="http://{{ request.get_host }}{% url 'join_group' group_join_id=join_id %}"
-          disabled
-        >
-      </div>
-      {% endif %}
-      <div class="team-information">
-        {% if is_leader %}
-        <form method="post">
-          <button type='button' onclick='toggleForm(this)'>Edit</button>
-          {% csrf_token %}
-        {% else %}
-        <div>
-        {% endif %}
+{% extends "base.html" %} {% load static %}
+{% block content %}
+{% include "header_overview.html"%}
 
+<div class="underline"></div>
 
-          <h3>{{ group_name }}</h3>
-          <p>Start number: {{ group_nr | default:"Not set yet" }}</p>
-          <input name='type' value="group" type='hidden'/>
-          {{ group.as_p }}
+<div class="desktop-box">
+    <div class="side-info">
+        {% include "team_top_info.html" %}
 
+        <div class="side-info-desktop">
+            <div class="equipment-box">
+                <div class="calendar-box">
+                    <img src="{% static 'images/lifebuoy.png' %}" id="lifebuoy-image">
+                    <h2>Equipment information</h2>
+                </div>
+                <div class="underline" id="lifebuoy"></div>
+                <div class="box-info" id="equipment">
+                    Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+                </div>
+                <div class="equipment-prices">
+                    <b>Life jacket</b> {{ costs.lifevest }} SEK <br>
+                    Available sizes: 50-70 kg, 70-90 kg, 90-110 kg <br>
+                    <b>Helmet</b> {{ costs.helmet }} SEK<br>
+                    Available sizes: S, M, L <br>
+                    <b>Wetsuit</b> {{ costs.wetsuit }} SEK<br>
+                    Available sizes: XS, S, M, L, XL <br>
+                </div>
+            </div>
+            <div class="dates-box">
+                <div class="calendar-box">
+                    <h2>Important dates</h2>
+                    <img src="{% static 'images/calendar.png' %}" id="calendar-image">
+                </div>
+                <div class="underline" id="calendar"></div>
+                <div class="box-info" id="dates" >
+                    <div class="dates">
+                    {% for date in dates %}
+                        {{ date.date }} <br>
+                    {% endfor %}
+                    </div>
+                    <div class="event">
+                    {% for date in dates %}
+                        {{ date.desc }} <br>
+                    {% endfor %}
+                    </div>
 
-        {% if is_leader %}
-        </form>
-        {% else %}
+                </div>
+            </div>
         </div>
-        {% endif %}
-      </div>
+    </div>
 
-      <form method="post">
-        <button type='button' onclick='toggleForm(this)'>Edit</button>
-        <input name='type' value="me" type="hidden"/>
-        {% csrf_token %}
-        {{ me }}
-      </form>
+    <div class="all-team-info">
+        {% include "team_info.html" %}
+    </div>
 
-      {% if is_leader %}
-      <form method="post">
-        <button type='button' onclick='toggleForm(this)'>Edit</button>
-        {% csrf_token %}
-        <input name='type' value="others" type="hidden"/>
+    {% include "payment.html" %}
 
-      {% else %}
-      <div>
-      {% endif %}
+    <div class="bottom-info-mobile">
+        <div class="dates-box">
+            <div class="text-icon-box">
+                <h2>Important dates</h2>
+                <img src="{% static 'images/calendar.png' %}">
+            </div>
+            <div class="box-info">
 
-        {{ others.as_p }}
+                <div class="dates">
+                {% for date in dates %}
+                    {{ date.date }} <br>
+                {% endfor %}
+                </div>
+                <div class="event">
+                {% for date in dates %}
+                    {{ date.desc }} <br>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
 
-      {% if is_leader %}
-      </form>
-      {% else %}
-      </div>
-      {% endif %}
+        <div class="equipment-box">
+            <div class="text-icon-box">
+                <img src="{% static 'images/lifebuoy.png' %}">
+                <h2>Equipment information</h2>
+            </div>
+            <div class="box-info">
+                Participants are required to wear safety equipment while rafting. You can rent it by adding it in your information above.
+            </div>
+            <div class="equipment-prices">
+                <b>Life jacket</b> {{ costs.lifevest }} SEK <br>
+                Available sizes: 50-70 kg, 70-90 kg, 90-110 kg <br>
+                <b>Helmet</b> {{ costs.helmet }} SEK<br>
+                Available sizes: S, M, L <br>
+                <b>Wetsuit</b> {{ costs.wetsuit }} SEK<br>
+                Available sizes: XS, S, M, L, XL   <br>
+            </div>
+        </div>
+    </div>
+</div>
 
-      <!--
-       !-- Dates
-        -->
-      <div>
-        {% for date in dates %}
-        <p>
-          {{ date }}
-          </p>
-        {% endfor %}
-      </div>
-      {% if is_leader %}
-            <b>You can only pay once!</b>
-            <br>
-            <form action="{% url 'make_payment' %}" method="get" id="send_payment" >
-                <input
-                    type="Submit"
-                    value="Go to UTN pay"
-                    {% if request.user.belongs_to_group.payment_initialized %}
-                        disabled
-                    {% endif %}
-                >
-            </form>
-            <script>
-                document.getElementById("send_payment").addEventListener("click", function(event){
-                    if(!confirm("Are you sure?")) {
-                        event.preventDefault();
-                    }
-                });
-            </script>
-        {% endif %}
-    </main>
-  </body>
+<script type="text/javascript">
 
-  <script type="text/javascript">
-    const toggleForm = button => {
-        form = event.target.parentElement
-        formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
-
-        for (const element of formElements) {
-            console.log(element);
-            if (element.disabled) element.toggleAttribute('disabled')
-            else element.toggleAttribute('readonly')
+const payment_button = document.getElementById("send_payment");
+if (payment_button){
+    payment_button.addEventListener("click", function(event){
+        if(!confirm("Are you sure?")) {
+            event.preventDefault();
         }
+    });
+}
 
-        if (formElements[0] && formElements[0].readOnly) {
-            form.submit();
-        } else {
-            event.target.innerHTML = 'Save';
-        }
+const link = document.getElementById("link");
+
+link.onclick = function() {
+  document.execCommand("copy");
+  const tooltip = document.getElementById("team-link-tooltip");
+  tooltip.innerHTML = "Link copied";
+}
+
+link.addEventListener("mouseout", function(){
+    const tooltip = document.getElementById("team-link-tooltip");
+    tooltip.innerHTML = "Copy to clipboard";
+})
+
+link.addEventListener("copy", function(event) {
+  event.preventDefault();
+  if (event.clipboardData) {
+    event.clipboardData.setData("text/plain", link.textContent);
+  }
+});
+
+const toggleForm = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-top-info");
+
+    var edit = document.getElementById("edit");
+    var done = document.getElementById("done");
+
+    for (const element of formElements) {
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
+        else element.toggleAttribute('readonly')
     }
-  </script>
-</html>
+
+    if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "none";
+            }
+        edit.style.display = "block";
+        done.style.display = "none";
+        form.submit();
+    } else {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
+        done.style.display = "block";
+        edit.style.display = "none";
+        event.target.innerHTML = 'Save';
+    }
+}
+
+const toggleFormMe = button => {
+    form = event.target.parentElement
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-me");
+
+    var edit = document.getElementById("edit-me");
+    var done = document.getElementById("done-me");
+
+    for (const element of formElements) {
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
+        else element.toggleAttribute('readonly')
+    }
+
+    if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "none";
+            }
+        edit.style.display = "block";
+        done.style.display = "none";
+        form.submit();
+    } else {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
+        done.style.display = "block";
+        edit.style.display = "none";
+        event.target.innerHTML = 'Save';
+    }
+}
+
+const toggleFormTeam = button => {
+    form = event.target.parentElement.parentElement;
+    formElements = form.querySelectorAll('input:not([name="csrfmiddlewaretoken"]):not([type="hidden"]), select');
+
+    var content = document.getElementsByClassName("underline-content-team");
+
+    var edit = document.getElementsByClassName("edit-team");
+    var done = document.getElementsByClassName("done-team");
+
+    for (const element of formElements) {
+        console.log(element);
+        if (element.disabled) element.toggleAttribute('disabled')
+        else element.toggleAttribute('readonly')
+    }
+
+    if (formElements[0] && formElements[0].readOnly) {
+        for (var i=0;i<done.length;i+=1){
+            done[i].style.display = "none";
+            }
+        for (var i=0;i<edit.length;i+=1){
+            edit[i].style.display = "block";
+            }
+        form.submit();
+    } else {
+        for (var i=0;i<content.length;i+=1){
+            content[i].style.display = "block";
+            }
+        for (var i=0;i<done.length;i+=1){
+            done[i].style.display = "block";
+            }
+        for (var i=0;i<edit.length;i+=1){
+            edit[i].style.display = "none";
+            }
+        event.target.innerHTML = 'Save';
+    }
+
+}
+
+function showMyInfo() {
+  var info = document.getElementById("my-info");
+  var right = document.getElementById("my-info-right");
+  var down = document.getElementById("my-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+
+function showTeamInfo() {
+  var info = document.getElementById("team-info");
+  var right = document.getElementById("team-info-right");
+  var down = document.getElementById("team-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+
+function showPayment() {
+  var info = document.getElementById("payment");
+  var right = document.getElementById("pay-info-right");
+  var down = document.getElementById("pay-info-down");
+  if (info.style.display == "flex") {
+    info.style.display = "none";
+    right.style.display = "block";
+    down.style.display = "none";
+  } else {
+    info.style.display = "flex";
+    down.style.display = "block";
+    right.style.display = "none";
+  }
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/overview.css' %}">
+{% endblock %}
