@@ -36,6 +36,8 @@ class RaffleEntryForm(ModelForm):
             if raffle_entry.person_nr != self.cleaned_data['person_nr']:
                 raise ValidationError("That email has already been used")
         except ObjectDoesNotExist:
+            # If a raffle entry does not exist the data is clean and the
+            # form should continue as normal.
             pass
 
         return self.cleaned_data
