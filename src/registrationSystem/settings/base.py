@@ -133,6 +133,7 @@ STATICFILES_FINDERS = [
 DATETIME_INPUT_FORMATS = [
     '%Y-%m-%d %H:%M'
 ]
+
 if 'test' in sys.argv:
     DATABASES = {
         'default': {
