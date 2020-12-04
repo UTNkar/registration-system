@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.0/ref/settings/
 """
 
-import os
+import os, sys
 
 # Environment variables
 PAY_RECEIVER_ID = os.environ.get('PAY_RECEIVER_ID', '')
@@ -134,13 +134,21 @@ DATETIME_INPUT_FORMATS = [
     '%Y-%m-%d %H:%M'
 ]
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DJANGO_DB_NAME', 'registrationsystem'),
-        'USER': os.environ.get('DJANGO_DB_USER', 'registrationsystem'),
-        'PASSWORD': os.environ.get('DJANGO_DB_PASS'),
-        'HOST': os.environ.get('DJANGO_DB_HOST', '127.0.0.1'),
-        'PORT':  os.environ.get('DJANGO_DB_PORT', '5432'),
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DJANGO_DB_NAME', 'registrationsystem'),
+            'USER': os.environ.get('DJANGO_DB_USER', 'registrationsystem'),
+            'PASSWORD': os.environ.get('DJANGO_DB_PASS'),
+            'HOST': os.environ.get('DJANGO_DB_HOST', '127.0.0.1'),
+            'PORT':  os.environ.get('DJANGO_DB_PORT', '5432'),
+        }
+    }

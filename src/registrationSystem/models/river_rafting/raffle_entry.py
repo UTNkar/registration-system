@@ -34,7 +34,7 @@ class RaffleEntry(models.Model):
     )
 
     name = models.CharField(max_length=254)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     person_nr = models.CharField(max_length=13, unique=True)
 
     is_utn_member = models.BooleanField(default=False)
