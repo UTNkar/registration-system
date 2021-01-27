@@ -46,7 +46,7 @@ def send_email(user, domain):
 
     # The connector binds the randomized token to the RaffleEntry
     # from which the account information will be retreived.
-    connector = EmailConfirmation.objects.create(raffleEntryId=user)
+    connector = EmailConfirmation.objects.get_or_create(raffleEntryId=user)
     connector.save()
 
     status = user.status
