@@ -13,6 +13,8 @@ from registrationSystem.models import (
 from django.http import HttpResponseRedirect
 from registrationSystem.utils import send_email
 
+from django.http import HttpResponseRedirect
+from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
 class RiverRaftingRaffleStateAdmin(admin.ModelAdmin):
     list_display = ["state"]
@@ -92,11 +94,33 @@ class RaffleEntryAdmin(admin.ModelAdmin):
             extra_context=extra_context
         )
 
+class RiverRaftingUserAdmin(BaseUserAdmin):
+    list_display = ["name", "person_nr", "email"]
+    list_filter = ["name", "person_nr", "email"]
+    ordering = ["name", "person_nr", "email"]
+
+    fieldsets = (
+        (None, {'fields': ('name', 'email',
+                           'person_nr', 'phone_nr',
+                           'password', 'is_utn_member',
+                           'is_staff', 'lifevest_size',
+                           'wetsuite_size', 'helmet_size',
+                           'belongs_to_group',)}),
+    )
+    add_fieldsets = (
+        (None, {'fields': ('name', 'email',
+                           'person_nr', 'phone_nr',
+                           'password', 'is_utn_member',
+                           'is_staff', 'lifevest_size',
+                           'wetsuite_size', 'helmet_size',
+                           'belongs_to_group')}),
+    )
+
 
 if settings.EVENT == 'RIVERRAFTING':
     admin.site.register(RaffleEntry, RaffleEntryAdmin)
     admin.site.register(RiverRaftingRaffleState, RiverRaftingRaffleStateAdmin)
-    admin.site.register(RiverRaftingUser)
+    admin.site.register(RiverRaftingUser, RiverRaftingUserAdmin)
     admin.site.register(RiverRaftingTeam)
     admin.site.register(RiverRaftingCost)
 
