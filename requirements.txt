@@ -4,7 +4,7 @@ Django[argon2]==3.1.4
 psycopg2==2.8.6
 
 # Logging to sentry
-sentry-sdk==0.19.4
+sentry-sdk==1.0.0
 
 # Pay uses php serialize wich differs from pythons
 phpserialize==1.3
